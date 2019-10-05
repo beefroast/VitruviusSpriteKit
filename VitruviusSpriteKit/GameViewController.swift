@@ -183,7 +183,12 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
                 self.playArea.isUserInteractionEnabled = true
                 
             } else {
+                
                 // Just play the card...
+                self.battleState.eventHandler.push(
+                    event: Event.playCard(CardEvent.init(cardOwner: self.battleState.player, card: card.card))
+                )
+                self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
             }
             
         } else {
@@ -243,6 +248,22 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
                     self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
                 }
                 
+            case .discardCard(let e):
+                // Animate the card going to the discard
+                
+                if let cardNode = self.scene.getFirst(fn: { (node) -> Bool in
+                    (node as? CardNode)?.card.uuid == e.card.uuid
+                }) {
+                    // TODO: Make a better discard action
+                    
+                    let discardAction = SKAction.fadeAlpha(to: 0.0, duration: 0.2)
+                    cardNode.run(discardAction, completion: {
+                        self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
+                    })
+                } else {
+                    self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
+                }
+                
             case .playerInputRequired:
                 break
                 
@@ -259,6 +280,21 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
 
 
 extension SKNode {
+    
+    func getFirst(fn: (SKNode) -> Bool) -> SKNode? {
+        
+        if fn(self) {
+            return self
+        
+        } else {
+            for c in self.children {
+                if let found =  c.getFirst(fn: fn) {
+                    return found
+                }
+            }
+            return nil
+        }
+    }
     
     func getGlobalRotation() -> CGFloat {
         return self.zRotation + (self.parent?.getGlobalRotation() ?? 0.0)

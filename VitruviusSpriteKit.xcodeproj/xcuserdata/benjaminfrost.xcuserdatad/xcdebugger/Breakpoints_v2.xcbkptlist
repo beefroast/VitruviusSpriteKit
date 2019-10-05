@@ -14,8 +14,8 @@
             filePath = "VitruviusSpriteKit/GameViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "240"
+            endingLineNumber = "240"
             landmarkName = "handle(event:state:)"
             landmarkType = "7">
          </BreakpointContent>

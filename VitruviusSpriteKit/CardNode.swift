@@ -40,6 +40,7 @@ class CardNode: SKSpriteNode {
         let scene = SKScene(fileNamed: "CardSceneWood")!
         let node = scene.childNode(withName: "root") as! CardNode
         node.card = card
+        node.title?.text = card.name
         node.removeFromParent()
         node.delegate = delegate
         return node
@@ -48,7 +49,7 @@ class CardNode: SKSpriteNode {
     // MARK: - Card Data
     
     func requiresSingleTarget() -> Bool {
-        return true
+        return self.card.requiresSingleTarget
     }
     
     // MARK: - Touch Handling
