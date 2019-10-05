@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import PromiseKit
+
 
 class CardMistForm: ICard {
     

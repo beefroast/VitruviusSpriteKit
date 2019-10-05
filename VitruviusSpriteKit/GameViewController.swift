@@ -16,10 +16,13 @@ enum State {
     case draggingCard(CardNode, SKNode)
 }
 
-class GameViewController: UIViewController, CardNodeTouchDelegate {
+class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
+ 
+    
 
     var handNode: HandNode!
     var playArea: PlayAreaNode!
+    var battleState: BattleState!
     
     var state: State = .waitingForAnimation
     var scene: SKScene!
@@ -34,7 +37,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate {
         scene?.scaleMode = .aspectFill
         self.scene = scene!
         
-        print("SCENE PARENT IS \(scene!.parent)")
+        print("SCENE PARENT IS \(String(describing: scene!.parent))")
         
         // Present the scene
         view.presentScene(scene)
@@ -49,27 +52,71 @@ class GameViewController: UIViewController, CardNodeTouchDelegate {
         
         handNode.position = CGPoint(x:0, y: -200)
         
-        // Now create and animate some cards
-        let a = CardNode.newInstance(delegate: self)
-        let b = CardNode.newInstance(delegate: self)
-        let c = CardNode.newInstance(delegate: self)
-        let d = CardNode.newInstance(delegate: self)
-        let e = CardNode.newInstance(delegate: self)
-        let f = CardNode.newInstance(delegate: self)
+        // Get that battle state happening
+        
+        let player = Actor(
+            uuid: UUID(),
+            name: "Player",
+            faction: .player,
+            body: Body(block: 0, hp: 72, maxHp: 72),
+            cardZones: CardZones(
+                hand: Hand.init(),
+                drawPile: DrawPile.init(cards: [
+                    CardDefend(),
+                    CardDefend(),
+                    CardDefend(),
+                    CardDefend(),
+                    CardDefend(),
+                ]),
+                discard: DiscardPile()
+        ))
+        
+        let goomba = Enemy(
+             uuid: UUID(),
+             name: "Goomba",
+             faction: .enemies,
+             body: Body(block: 0, hp: 40, maxHp: 40),
+             cardZones: CardZones(
+                 hand: Hand(),
+                 drawPile: DrawPile(cards: []),
+                 discard: DiscardPile()
+             ),
+             preBattleCards: []
+         )
+         
+         
+         let koopa = Enemy(
+             uuid: UUID(),
+             name: "Koopa",
+             faction: .enemies,
+             body: Body(block: 0, hp: 40, maxHp: 40),
+             cardZones: CardZones(
+                 hand: Hand(),
+                 drawPile: DrawPile(cards: []),
+                 discard: DiscardPile()
+             ),
+             preBattleCards: []
+         )
+        
+        self.battleState = BattleState.init(
+            player: player,
+            allies: [],
+            enemies: [goomba, koopa],
+            eventHandler: EventHandler(
+                eventStack: StackQueue<Event>(),
+                effectList: [EventPrinterEffect(uuid: UUID(), name: "Printer"), self]
+            )
+        )
+                
+        battleState.eventHandler.push(event:
+            Event.addEffect(DiscardThenDrawAtEndOfTurnEffect(
+                uuid: UUID(),
+                ownerUuid: player.uuid,
+                name: "Player discard then draw.",
+                cardsDrawn: 5
+            ))
+        )
 
-        scene?.run(handNode.addCardAndAnimationIntoPosiiton(cardNode: a), completion: {
-            scene?.run(handNode.addCardAndAnimationIntoPosiiton(cardNode: b), completion: {
-                scene?.run(handNode.addCardAndAnimationIntoPosiiton(cardNode: c), completion: {
-                    scene?.run(handNode.addCardAndAnimationIntoPosiiton(cardNode: d), completion: {
-                        scene?.run(handNode.addCardAndAnimationIntoPosiiton(cardNode: e), completion: {
-                            scene?.run(handNode.addCardAndAnimationIntoPosiiton(cardNode: f), completion: {
-                                // Do nothing
-                            })
-                        })
-                    })
-                })
-            })
-        })
         
         // Let's add some actors
         let playArea = PlayAreaNode()
@@ -83,6 +130,12 @@ class GameViewController: UIViewController, CardNodeTouchDelegate {
         
         // Save the play area...
         self.playArea = playArea
+        
+        battleState.eventHandler.push(event: Event.onBattleBegan)
+        battleState.eventHandler.popAndHandle(battleState: battleState)
+        
+
+
     }
 
     override var shouldAutorotate: Bool {
@@ -168,6 +221,40 @@ class GameViewController: UIViewController, CardNodeTouchDelegate {
     func touchesCancelled(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
         
     }
+    
+    
+    // IEffect handler
+    
+    var uuid: UUID = UUID()
+    var name: String = "Game UI"
+     
+    func handle(event: Event, state: BattleState) -> Bool {
+        
+        DispatchQueue.main.async {
+            
+            switch event {
+                
+            case .onCardDrawn(let e):
+                
+                // Make the card
+                let cardNode = CardNode.newInstance(card: e.card, delegate: self)
+                let drawAction = self.handNode.addCardAndAnimationIntoPosiiton(cardNode: cardNode)
+                self.scene.run(drawAction) {
+                    self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
+                }
+                
+            case .playerInputRequired:
+                break
+                
+            default:
+                self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
+                
+            
+            }
+        }
+        
+        return false
+    }
 }
 
 
@@ -214,4 +301,6 @@ extension SKNode {
         child.setGlobalXScale(x: globalXScale)
         child.setGlobalYScale(y: globalYScale)
     }
+
+    
 }

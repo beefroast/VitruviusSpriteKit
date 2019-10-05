@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import PromiseKit
 
 // Invent something that only lasts until the end of the turn
 

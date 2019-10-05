@@ -19,6 +19,7 @@ protocol CardNodeTouchDelegate: AnyObject {
 class CardNode: SKSpriteNode {
     
     weak var delegate: CardNodeTouchDelegate? = nil
+    var card: ICard!
     
     var title: SKLabelNode? = nil
     var cost: SKLabelNode? = nil
@@ -35,9 +36,10 @@ class CardNode: SKSpriteNode {
         self.image = self.childNode(withName: "image") as? SKSpriteNode
     }
     
-    class func newInstance(delegate: CardNodeTouchDelegate? = nil) -> CardNode {
+    class func newInstance(card: ICard, delegate: CardNodeTouchDelegate? = nil) -> CardNode {
         let scene = SKScene(fileNamed: "CardSceneWood")!
         let node = scene.childNode(withName: "root") as! CardNode
+        node.card = card
         node.removeFromParent()
         node.delegate = delegate
         return node

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import PromiseKit
+
 
 
 //class CardSingingSword: Card {
