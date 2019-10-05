@@ -16,13 +16,14 @@ enum State {
     case draggingCard(CardNode, SKNode)
 }
 
-class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
+class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndTurnButtonDelegate {
  
-    
-
     var handNode: HandNode!
     var playArea: PlayAreaNode!
     var battleState: BattleState!
+    var discardNode: SKNode!
+    var drawNode: SKNode!
+    var endTurnButton: EndTurnButton!
     
     var state: State = .waitingForAnimation
     var scene: SKScene!
@@ -45,10 +46,20 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
         view.showsFPS = true
         view.showsNodeCount = true
         
+        // Get the draw and discard nodes
+        self.drawNode = scene?.childNode(withName: "deckNode")
+        self.discardNode = scene?.childNode(withName: "discardNode")
+        self.endTurnButton = scene?.childNode(withName: "endTurn") as! EndTurnButton
+        self.endTurnButton.isUserInteractionEnabled = true
+        self.endTurnButton.delegate = self
+        
         // Add the hand node
         let handNode = HandNode()
+        handNode.setupNodes()
         self.handNode = handNode
         scene?.addChild(handNode)
+        
+        
         
         handNode.position = CGPoint(x:0, y: -200)
         
@@ -161,6 +172,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
         self.handNode.run(a)
         card.zPosition = 1
   
+        self.handNode.removeCardAndAnimateIntoPosition(card: card)
         self.scene.addChildPreserveTransform(child: card)
         
         card.run(SKAction.group([
@@ -194,27 +206,11 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
         } else {
             
             // Put the card back in the hand
-            
-            card.zPosition = 0
+            self.handNode.addCardAndAnimationIntoPosiiton(cardNode: card)
             
             // Move the hand back up
             let a = SKAction.moveTo(y: -200, duration: 0.2)
             self.handNode.run(a)
-            
-            switch state {
-            case .draggingCard(let card, let parent):
-                
-                parent.addChildPreserveTransform(child: card)
-                
-                card.run(SKAction.group([
-                    SKAction.move(to: CGPoint.init(x: 0, y: 0), duration: 0.2),
-                    SKAction.rotate(toAngle: 0, duration: 0.2),
-                    SKAction.scale(to: 1.0, duration: 0.1)
-                ]))
-                
-            default:
-                break
-            }
             
         }
     }
@@ -243,6 +239,13 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
                 
                 // Make the card
                 let cardNode = CardNode.newInstance(card: e.card, delegate: self)
+                self.drawNode.addChild(cardNode)
+                
+                cardNode.setScale(0.2)
+                cardNode.alpha = 0.0
+                cardNode.position = CGPoint.zero
+                cardNode.zRotation = 0.0
+                
                 let drawAction = self.handNode.addCardAndAnimationIntoPosiiton(cardNode: cardNode)
                 self.scene.run(drawAction) {
                     self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
@@ -251,21 +254,35 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
             case .discardCard(let e):
                 // Animate the card going to the discard
                 
-                if let cardNode = self.scene.getFirst(fn: { (node) -> Bool in
+                // Find the card
+                guard let cardNode = self.scene.getFirst(fn: { (node) -> Bool in
                     (node as? CardNode)?.card.uuid == e.card.uuid
-                }) {
-                    // TODO: Make a better discard action
-                    
-                    let discardAction = SKAction.fadeAlpha(to: 0.0, duration: 0.2)
-                    cardNode.run(discardAction, completion: {
-                        self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
-                    })
-                } else {
-                    self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
+                }) else {
+                    return
                 }
                 
+                // Remove from the hand
+                self.handNode.removeCardAndAnimateIntoPosition(card: cardNode)
+                
+                // Reparent to the discard node
+                self.discardNode.addChildPreserveTransform(child: cardNode)
+                
+                // Animate it disappearing
+                let discardAction = SKAction.group([
+                    SKAction.fadeAlpha(to: 0.0, duration: 0.2),
+                    SKAction.move(to: CGPoint.zero, duration: 0.2),
+                    SKAction.scale(by: 0.2, duration: 0.2)
+                ])
+                
+                cardNode.run(discardAction) {
+                    cardNode.removeFromParent()
+                }
+                    
+                // Discarding doesn't block
+                self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
+                
             case .playerInputRequired:
-                break
+                self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
                 
             default:
                 self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
@@ -275,6 +292,13 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect {
         }
         
         return false
+    }
+    
+    // MARK: - EndTurnButtonDelegate Implementation
+    
+    func endTurnPressed(button: EndTurnButton) {
+        self.battleState.eventHandler.push(event: Event.onTurnEnded(PlayerEvent.init(actor: self.battleState.player)))
+        self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
     }
 }
 
@@ -322,7 +346,16 @@ extension SKNode {
     
     func addChildPreserveTransform(child: SKNode) -> Void {
         
-        let globalPosition = child.scene!.convert(child.position, from: child.parent!)
+        if child.parent === self {
+            return
+        }
+        
+        guard let parent = child.parent else {
+            self.addChild(child)
+            return
+        }
+        
+        let globalPosition = child.scene!.convert(child.position, from: parent)
         let globalRotation = child.getGlobalRotation()
         let globalXScale = child.getGlobalXScale()
         let globalYScale = child.getGlobalYScale()

@@ -37,6 +37,7 @@
 		6472DEFC23487BAE009B75C0 /* NeutralCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEEE23487BAD009B75C0 /* NeutralCards.swift */; };
 		6472DEFD23487BAE009B75C0 /* GuileCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEEF23487BAD009B75C0 /* GuileCards.swift */; };
 		6472DEFE23487BAE009B75C0 /* Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEF023487BAE009B75C0 /* Actor.swift */; };
+		6472DF002348ADAC009B75C0 /* EndTurnButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEFF2348ADAC009B75C0 /* EndTurnButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,7 @@
 		6472DEEE23487BAD009B75C0 /* NeutralCards.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeutralCards.swift; sourceTree = "<group>"; };
 		6472DEEF23487BAD009B75C0 /* GuileCards.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuileCards.swift; sourceTree = "<group>"; };
 		6472DEF023487BAE009B75C0 /* Actor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actor.swift; sourceTree = "<group>"; };
+		6472DEFF2348ADAC009B75C0 /* EndTurnButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndTurnButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 				6472DEBA23485553009B75C0 /* ActorArea.sks */,
 				6472DEBC2348558A009B75C0 /* ActorScene.sks */,
 				6472DEBE234856E4009B75C0 /* ActorNode.swift */,
+				6472DEFF2348ADAC009B75C0 /* EndTurnButton.swift */,
 			);
 			path = VitruviusSpriteKit;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 				6472DEB7234727F7009B75C0 /* HandNode.swift in Sources */,
 				6472DEF123487BAE009B75C0 /* EventHandler.swift in Sources */,
 				6472DEF923487BAE009B75C0 /* CharmCards.swift in Sources */,
+				6472DF002348ADAC009B75C0 /* EndTurnButton.swift in Sources */,
 				6472DEFA23487BAE009B75C0 /* Enemy.swift in Sources */,
 				6472DEB923485396009B75C0 /* PlayAreaNode.swift in Sources */,
 				643588EE2345FEEF007334D9 /* CardNode.swift in Sources */,
