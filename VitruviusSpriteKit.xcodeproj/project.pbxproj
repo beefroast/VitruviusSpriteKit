@@ -1,0 +1,631 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		643588B82345FD8F007334D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588B72345FD8F007334D9 /* AppDelegate.swift */; };
+		643588BC2345FD8F007334D9 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 643588BB2345FD8F007334D9 /* Actions.sks */; };
+		643588C02345FD8F007334D9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588BF2345FD8F007334D9 /* GameViewController.swift */; };
+		643588C32345FD8F007334D9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 643588C12345FD8F007334D9 /* Main.storyboard */; };
+		643588C52345FD92007334D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 643588C42345FD92007334D9 /* Assets.xcassets */; };
+		643588C82345FD92007334D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 643588C62345FD92007334D9 /* LaunchScreen.storyboard */; };
+		643588D32345FD93007334D9 /* VitruviusSpriteKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588D22345FD93007334D9 /* VitruviusSpriteKitTests.swift */; };
+		643588DE2345FD93007334D9 /* VitruviusSpriteKitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588DD2345FD93007334D9 /* VitruviusSpriteKitUITests.swift */; };
+		643588EE2345FEEF007334D9 /* CardNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588ED2345FEEF007334D9 /* CardNode.swift */; };
+		6472DEB323461A7E009B75C0 /* BattleScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6472DEB223461A7E009B75C0 /* BattleScene.sks */; };
+		6472DEB52347072F009B75C0 /* CardSceneWood.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6472DEB42347072F009B75C0 /* CardSceneWood.sks */; };
+		6472DEB7234727F7009B75C0 /* HandNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEB6234727F7009B75C0 /* HandNode.swift */; };
+		6472DEB923485396009B75C0 /* PlayAreaNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEB823485396009B75C0 /* PlayAreaNode.swift */; };
+		6472DEBB23485553009B75C0 /* ActorArea.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6472DEBA23485553009B75C0 /* ActorArea.sks */; };
+		6472DEBD2348558A009B75C0 /* ActorScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6472DEBC2348558A009B75C0 /* ActorScene.sks */; };
+		6472DEBF234856E4009B75C0 /* ActorNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEBE234856E4009B75C0 /* ActorNode.swift */; };
+		6472DEC423487721009B75C0 /* Engine in Resources */ = {isa = PBXBuildFile; fileRef = 6472DEC323487721009B75C0 /* Engine */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		643588CF2345FD93007334D9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 643588AC2345FD8F007334D9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 643588B32345FD8F007334D9;
+			remoteInfo = VitruviusSpriteKit;
+		};
+		643588DA2345FD93007334D9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 643588AC2345FD8F007334D9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 643588B32345FD8F007334D9;
+			remoteInfo = VitruviusSpriteKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		643588B42345FD8F007334D9 /* VitruviusSpriteKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VitruviusSpriteKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		643588B72345FD8F007334D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		643588BB2345FD8F007334D9 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
+		643588BF2345FD8F007334D9 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		643588C22345FD8F007334D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		643588C42345FD92007334D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		643588C72345FD92007334D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		643588C92345FD92007334D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		643588CE2345FD93007334D9 /* VitruviusSpriteKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VitruviusSpriteKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		643588D22345FD93007334D9 /* VitruviusSpriteKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitruviusSpriteKitTests.swift; sourceTree = "<group>"; };
+		643588D42345FD93007334D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		643588D92345FD93007334D9 /* VitruviusSpriteKitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VitruviusSpriteKitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		643588DD2345FD93007334D9 /* VitruviusSpriteKitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitruviusSpriteKitUITests.swift; sourceTree = "<group>"; };
+		643588DF2345FD93007334D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		643588ED2345FEEF007334D9 /* CardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNode.swift; sourceTree = "<group>"; };
+		6472DEB223461A7E009B75C0 /* BattleScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BattleScene.sks; sourceTree = "<group>"; };
+		6472DEB42347072F009B75C0 /* CardSceneWood.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CardSceneWood.sks; sourceTree = "<group>"; };
+		6472DEB6234727F7009B75C0 /* HandNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandNode.swift; sourceTree = "<group>"; };
+		6472DEB823485396009B75C0 /* PlayAreaNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAreaNode.swift; sourceTree = "<group>"; };
+		6472DEBA23485553009B75C0 /* ActorArea.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ActorArea.sks; sourceTree = "<group>"; };
+		6472DEBC2348558A009B75C0 /* ActorScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ActorScene.sks; sourceTree = "<group>"; };
+		6472DEBE234856E4009B75C0 /* ActorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActorNode.swift; sourceTree = "<group>"; };
+		6472DEC323487721009B75C0 /* Engine */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Engine; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		643588B12345FD8F007334D9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		643588CB2345FD93007334D9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		643588D62345FD93007334D9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		643588AB2345FD8F007334D9 = {
+			isa = PBXGroup;
+			children = (
+				643588B62345FD8F007334D9 /* VitruviusSpriteKit */,
+				643588D12345FD93007334D9 /* VitruviusSpriteKitTests */,
+				643588DC2345FD93007334D9 /* VitruviusSpriteKitUITests */,
+				643588B52345FD8F007334D9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		643588B52345FD8F007334D9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				643588B42345FD8F007334D9 /* VitruviusSpriteKit.app */,
+				643588CE2345FD93007334D9 /* VitruviusSpriteKitTests.xctest */,
+				643588D92345FD93007334D9 /* VitruviusSpriteKitUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		643588B62345FD8F007334D9 /* VitruviusSpriteKit */ = {
+			isa = PBXGroup;
+			children = (
+				6472DEC323487721009B75C0 /* Engine */,
+				643588ED2345FEEF007334D9 /* CardNode.swift */,
+				643588B72345FD8F007334D9 /* AppDelegate.swift */,
+				643588BB2345FD8F007334D9 /* Actions.sks */,
+				643588BF2345FD8F007334D9 /* GameViewController.swift */,
+				643588C12345FD8F007334D9 /* Main.storyboard */,
+				643588C42345FD92007334D9 /* Assets.xcassets */,
+				643588C62345FD92007334D9 /* LaunchScreen.storyboard */,
+				643588C92345FD92007334D9 /* Info.plist */,
+				6472DEB223461A7E009B75C0 /* BattleScene.sks */,
+				6472DEB42347072F009B75C0 /* CardSceneWood.sks */,
+				6472DEB6234727F7009B75C0 /* HandNode.swift */,
+				6472DEB823485396009B75C0 /* PlayAreaNode.swift */,
+				6472DEBA23485553009B75C0 /* ActorArea.sks */,
+				6472DEBC2348558A009B75C0 /* ActorScene.sks */,
+				6472DEBE234856E4009B75C0 /* ActorNode.swift */,
+			);
+			path = VitruviusSpriteKit;
+			sourceTree = "<group>";
+		};
+		643588D12345FD93007334D9 /* VitruviusSpriteKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				643588D22345FD93007334D9 /* VitruviusSpriteKitTests.swift */,
+				643588D42345FD93007334D9 /* Info.plist */,
+			);
+			path = VitruviusSpriteKitTests;
+			sourceTree = "<group>";
+		};
+		643588DC2345FD93007334D9 /* VitruviusSpriteKitUITests */ = {
+			isa = PBXGroup;
+			children = (
+				643588DD2345FD93007334D9 /* VitruviusSpriteKitUITests.swift */,
+				643588DF2345FD93007334D9 /* Info.plist */,
+			);
+			path = VitruviusSpriteKitUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		643588B32345FD8F007334D9 /* VitruviusSpriteKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 643588E22345FD93007334D9 /* Build configuration list for PBXNativeTarget "VitruviusSpriteKit" */;
+			buildPhases = (
+				643588B02345FD8F007334D9 /* Sources */,
+				643588B12345FD8F007334D9 /* Frameworks */,
+				643588B22345FD8F007334D9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VitruviusSpriteKit;
+			productName = VitruviusSpriteKit;
+			productReference = 643588B42345FD8F007334D9 /* VitruviusSpriteKit.app */;
+			productType = "com.apple.product-type.application";
+		};
+		643588CD2345FD93007334D9 /* VitruviusSpriteKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 643588E52345FD93007334D9 /* Build configuration list for PBXNativeTarget "VitruviusSpriteKitTests" */;
+			buildPhases = (
+				643588CA2345FD93007334D9 /* Sources */,
+				643588CB2345FD93007334D9 /* Frameworks */,
+				643588CC2345FD93007334D9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				643588D02345FD93007334D9 /* PBXTargetDependency */,
+			);
+			name = VitruviusSpriteKitTests;
+			productName = VitruviusSpriteKitTests;
+			productReference = 643588CE2345FD93007334D9 /* VitruviusSpriteKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		643588D82345FD93007334D9 /* VitruviusSpriteKitUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 643588E82345FD93007334D9 /* Build configuration list for PBXNativeTarget "VitruviusSpriteKitUITests" */;
+			buildPhases = (
+				643588D52345FD93007334D9 /* Sources */,
+				643588D62345FD93007334D9 /* Frameworks */,
+				643588D72345FD93007334D9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				643588DB2345FD93007334D9 /* PBXTargetDependency */,
+			);
+			name = VitruviusSpriteKitUITests;
+			productName = VitruviusSpriteKitUITests;
+			productReference = 643588D92345FD93007334D9 /* VitruviusSpriteKitUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		643588AC2345FD8F007334D9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+				ORGANIZATIONNAME = "Benjamin Frost";
+				TargetAttributes = {
+					643588B32345FD8F007334D9 = {
+						CreatedOnToolsVersion = 11.0;
+					};
+					643588CD2345FD93007334D9 = {
+						CreatedOnToolsVersion = 11.0;
+						TestTargetID = 643588B32345FD8F007334D9;
+					};
+					643588D82345FD93007334D9 = {
+						CreatedOnToolsVersion = 11.0;
+						TestTargetID = 643588B32345FD8F007334D9;
+					};
+				};
+			};
+			buildConfigurationList = 643588AF2345FD8F007334D9 /* Build configuration list for PBXProject "VitruviusSpriteKit" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 643588AB2345FD8F007334D9;
+			productRefGroup = 643588B52345FD8F007334D9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				643588B32345FD8F007334D9 /* VitruviusSpriteKit */,
+				643588CD2345FD93007334D9 /* VitruviusSpriteKitTests */,
+				643588D82345FD93007334D9 /* VitruviusSpriteKitUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		643588B22345FD8F007334D9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				643588C32345FD8F007334D9 /* Main.storyboard in Resources */,
+				6472DEB323461A7E009B75C0 /* BattleScene.sks in Resources */,
+				643588C52345FD92007334D9 /* Assets.xcassets in Resources */,
+				6472DEBB23485553009B75C0 /* ActorArea.sks in Resources */,
+				6472DEBD2348558A009B75C0 /* ActorScene.sks in Resources */,
+				6472DEC423487721009B75C0 /* Engine in Resources */,
+				6472DEB52347072F009B75C0 /* CardSceneWood.sks in Resources */,
+				643588C82345FD92007334D9 /* LaunchScreen.storyboard in Resources */,
+				643588BC2345FD8F007334D9 /* Actions.sks in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		643588CC2345FD93007334D9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		643588D72345FD93007334D9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		643588B02345FD8F007334D9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6472DEB7234727F7009B75C0 /* HandNode.swift in Sources */,
+				6472DEB923485396009B75C0 /* PlayAreaNode.swift in Sources */,
+				643588EE2345FEEF007334D9 /* CardNode.swift in Sources */,
+				6472DEBF234856E4009B75C0 /* ActorNode.swift in Sources */,
+				643588C02345FD8F007334D9 /* GameViewController.swift in Sources */,
+				643588B82345FD8F007334D9 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		643588CA2345FD93007334D9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				643588D32345FD93007334D9 /* VitruviusSpriteKitTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		643588D52345FD93007334D9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				643588DE2345FD93007334D9 /* VitruviusSpriteKitUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		643588D02345FD93007334D9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 643588B32345FD8F007334D9 /* VitruviusSpriteKit */;
+			targetProxy = 643588CF2345FD93007334D9 /* PBXContainerItemProxy */;
+		};
+		643588DB2345FD93007334D9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 643588B32345FD8F007334D9 /* VitruviusSpriteKit */;
+			targetProxy = 643588DA2345FD93007334D9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		643588C12345FD8F007334D9 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				643588C22345FD8F007334D9 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		643588C62345FD92007334D9 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				643588C72345FD92007334D9 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		643588E02345FD93007334D9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		643588E12345FD93007334D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		643588E32345FD93007334D9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R7RTM529H4;
+				INFOPLIST_FILE = VitruviusSpriteKit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = jonathon.dollal.VitruviusSpriteKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		643588E42345FD93007334D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R7RTM529H4;
+				INFOPLIST_FILE = VitruviusSpriteKit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = jonathon.dollal.VitruviusSpriteKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		643588E62345FD93007334D9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R7RTM529H4;
+				INFOPLIST_FILE = VitruviusSpriteKitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = jonathon.dollal.VitruviusSpriteKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VitruviusSpriteKit.app/VitruviusSpriteKit";
+			};
+			name = Debug;
+		};
+		643588E72345FD93007334D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R7RTM529H4;
+				INFOPLIST_FILE = VitruviusSpriteKitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = jonathon.dollal.VitruviusSpriteKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VitruviusSpriteKit.app/VitruviusSpriteKit";
+			};
+			name = Release;
+		};
+		643588E92345FD93007334D9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R7RTM529H4;
+				INFOPLIST_FILE = VitruviusSpriteKitUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = jonathon.dollal.VitruviusSpriteKitUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VitruviusSpriteKit;
+			};
+			name = Debug;
+		};
+		643588EA2345FD93007334D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R7RTM529H4;
+				INFOPLIST_FILE = VitruviusSpriteKitUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = jonathon.dollal.VitruviusSpriteKitUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VitruviusSpriteKit;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		643588AF2345FD8F007334D9 /* Build configuration list for PBXProject "VitruviusSpriteKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				643588E02345FD93007334D9 /* Debug */,
+				643588E12345FD93007334D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		643588E22345FD93007334D9 /* Build configuration list for PBXNativeTarget "VitruviusSpriteKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				643588E32345FD93007334D9 /* Debug */,
+				643588E42345FD93007334D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		643588E52345FD93007334D9 /* Build configuration list for PBXNativeTarget "VitruviusSpriteKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				643588E62345FD93007334D9 /* Debug */,
+				643588E72345FD93007334D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		643588E82345FD93007334D9 /* Build configuration list for PBXNativeTarget "VitruviusSpriteKitUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				643588E92345FD93007334D9 /* Debug */,
+				643588EA2345FD93007334D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 643588AC2345FD8F007334D9 /* Project object */;
+}
