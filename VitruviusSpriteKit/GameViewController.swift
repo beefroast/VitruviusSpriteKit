@@ -143,13 +143,18 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         scene?.addChild(playArea)
         playArea.position = CGPoint.zero
 
+        let playerActorNode = ActorNode.newInstance(actor: player)
+        playerActorNode.image?.texture = SKTexture(image: UIImage(named: "Adventurer")!)
+        
         playArea.addPlayerAndEnemies(
-            player: ActorNode.newInstance(actor: player),
+            player: playerActorNode,
             enemies: [
                 ActorNode.newInstance(actor: goomba),
                 ActorNode.newInstance(actor: koopa)
             ]
         )
+        
+        
         
         // Save the play area...
         self.playArea = playArea

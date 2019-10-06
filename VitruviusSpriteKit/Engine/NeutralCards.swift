@@ -27,18 +27,22 @@ class CardStrike: ICard, Codable {
             return
         }
         
-        battleState.eventHandler.push(event: Event.discardCard(DiscardCardEvent.init(actor: source, card: self)))
+        battleState.eventHandler.push(events: [
         
-        battleState.eventHandler.push(
-            event: Event.attack(
-                AttackEvent(
-                    sourceUuid: self.uuid,
-                    sourceOwner: source,
-                    targets: [target],
-                    amount: 6
-                )
-            )
-        )
+            Event.discardCard(DiscardCardEvent.init(actor: source, card: self)),
+            Event.attack(
+                 AttackEvent(
+                     sourceUuid: self.uuid,
+                     sourceOwner: source,
+                     targets: [target],
+                     amount: 6
+                 )
+             )
+             
+        ])
+        
+        
+ 
     }
     
     func onDrawn(source: Actor, battleState: BattleState) {}
