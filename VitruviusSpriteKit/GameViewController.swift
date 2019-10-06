@@ -320,12 +320,23 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                     return
                 }
                 
+                // Bulge
                 actorNode.isPaused = false
-                print("Animating hit")
                 actorNode.setScale(1.05)
                 actorNode.details?.text = e.player.body.description
                 actorNode.run(SKAction.scale(to: 1.0, duration: 0.1)) {
                     self.battleState.popNext()
+                }
+                
+                // Show a hit counter
+                let label = SKLabelNode(text: "\(e.amount)")
+                label.position = actorNode.getGlobalPosition()
+                self.scene.addChild(label)
+                label.run(SKAction.sequence([
+                    SKAction.moveBy(x: 0, y: 80, duration: 0.2),
+                    SKAction.fadeAlpha(to: 0, duration: 0.2)
+                ])) {
+                    label.removeFromParent()
                 }
                 
             case .didLoseBlock(let e):
@@ -356,10 +367,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 actorNode.run(SKAction.moveBy(x: -40, y: 0, duration: 0.1)) {
                     self.battleState.popNext()
                     DispatchQueue.main.async {
-                        print("Starting to move back")
-                        actorNode.run(SKAction.moveBy(x: 40, y: 0, duration: 0.1)) {
-                            print("done")
-                        }
+                        actorNode.run(SKAction.moveBy(x: 40, y: 0, duration: 0.1))
                     }
                 }
                 
@@ -397,6 +405,13 @@ extension SKNode {
             }
             return nil
         }
+    }
+    
+    func getGlobalPosition() -> CGPoint {
+        guard let parent = self.parent, let scene = self.scene else {
+            return CGPoint.zero
+        }
+        return scene.convert(self.position, from: parent)
     }
     
     func getGlobalRotation() -> CGFloat {
