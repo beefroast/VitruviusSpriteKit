@@ -13,6 +13,7 @@ class CardRecall : ICard {
     
     var uuid: UUID = UUID()
     var name: String = "Recall"
+    var cardText: String { get { return "Draw 3 cards." }}
     var requiresSingleTarget: Bool = false
     var cost: Int = 0
     
@@ -29,6 +30,7 @@ class CardFireball: ICard {
     
     var uuid: UUID = UUID()
     var name: String = "Fireball"
+    var cardText: String { get { return "Attack each enemy for 8." }}
     var requiresSingleTarget: Bool = false
     var cost: Int = 2
     

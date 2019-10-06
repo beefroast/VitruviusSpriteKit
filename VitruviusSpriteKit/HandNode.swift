@@ -95,4 +95,10 @@ class HandNode: SKNode {
         self.animateNodePositions()
     }
     
+    func setCardsInteraction(enabled: Bool) {
+        for c in self.cards {
+            c.isUserInteractionEnabled = enabled
+        }
+    }
+    
 }

@@ -77,10 +77,16 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 hand: Hand.init(),
                 drawPile: DrawPile.init(cards: [
                     CardStrike(),
+                    CardStrike(),
+                    CardStrike(),
+                    CardStrike(),
                     CardDefend(),
                     CardDefend(),
                     CardDefend(),
                     CardDefend(),
+                    CardFireball(),
+                    CardRecall(),
+                    
                 ]),
                 discard: DiscardPile()
         ))
@@ -291,6 +297,9 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 
             case .onCardDrawn(let e):
                 
+                // Raise the hand
+                self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
+
                 // Make the card
                 let cardNode = CardNode.newInstance(card: e.card, delegate: self)
                 self.drawNode.addChild(cardNode)
@@ -360,8 +369,19 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 
                 self.battleState.popNext()
                 
+            case .onTurnEnded(let e):
+                if e.actor.faction == .player {
+                    print("DISABLED")
+                    self.handNode.setCardsInteraction(enabled: false)
+                    self.endTurnButton.isUserInteractionEnabled = false
+                }
+                self.battleState.popNext()
+                
             case .playerInputRequired:
                 self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
+                print("ENABLED")
+                self.handNode.setCardsInteraction(enabled: true)
+                self.endTurnButton.isUserInteractionEnabled = true
                 
             case .didLoseHp(let e):
                 guard let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) else {
@@ -421,6 +441,21 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                     }
                 }
                 
+            case .onEnemyDefeated(let e):
+                guard let a = self.playArea.actorNode(withUuid: e.uuid) else {
+                    self.battleState.popNext()
+                    return
+                }
+                a.run(SKAction.fadeAlpha(to: 0.0, duration: 0.1)) {
+                    a.removeFromParent()
+                    self.battleState.popNext()
+                }
+                
+            case .onBattleWon:
+                let label = SKLabelNode(text: "YOU WIN")
+                label.fontSize = 60
+                self.scene.addChild(label)
+                
             default:
                 self.battleState.popNext()
                 
@@ -456,6 +491,7 @@ extension SKNode {
             return nil
         }
     }
+
     
     func getGlobalPosition() -> CGPoint {
         guard let parent = self.parent, let scene = self.scene else {

@@ -13,6 +13,7 @@ class CardMistForm: ICard {
     
     var uuid: UUID = UUID()
     var name: String = "Mist Form"
+    var cardText: String { get { return "Until you next turn, attacks against you are reduced to 0." }}
     var requiresSingleTarget: Bool = false
     var cost: Int = 1
     
@@ -55,6 +56,7 @@ class CardPierce: ICard {
     
     var uuid: UUID = UUID()
     var name: String = "Pierce"
+    var cardText: String { get { return "Target loses 18 hp." }}
     var requiresSingleTarget: Bool = true
     var cost: Int = 2
     

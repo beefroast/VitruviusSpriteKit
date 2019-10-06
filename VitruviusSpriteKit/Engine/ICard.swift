@@ -28,6 +28,7 @@ protocol ICard {
     var name: String { get }
     var requiresSingleTarget: Bool { get }
     var cost: Int { get set }
+    var cardText: String { get }
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) -> Void
     func onDrawn(source: Actor, battleState: BattleState) -> Void

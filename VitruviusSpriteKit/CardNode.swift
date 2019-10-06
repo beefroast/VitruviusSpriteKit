@@ -28,7 +28,7 @@ class CardNode: SKSpriteNode {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.isUserInteractionEnabled = true
+        self.isUserInteractionEnabled = false
         self.isPaused = false
         self.title = self.childNode(withName: "title") as? SKLabelNode
         self.cost = self.childNode(withName: "cost") as? SKLabelNode
@@ -41,6 +41,8 @@ class CardNode: SKSpriteNode {
         let node = scene.childNode(withName: "root") as! CardNode
         node.card = card
         node.title?.text = card.name
+        node.cost?.text = "\(card.cost)"
+        node.text?.text = card.cardText
         node.removeFromParent()
         node.delegate = delegate
         return node

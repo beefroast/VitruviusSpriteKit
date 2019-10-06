@@ -10,16 +10,16 @@ import Foundation
 
 
 class CardStrike: ICard, Codable {
+
+    
     
     let uuid: UUID = UUID()
     let name =  "Strike"
+    var cardText: String { get { return "Attack for 6." }}
     let requiresSingleTarget: Bool = true
     var cost: Int = 1
     var level: Int = 0
-    
-//    func getCardText() -> String {
-//        
-//    }
+ 
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) {
         
@@ -51,6 +51,7 @@ class CardDefend: ICard {
     
     let uuid: UUID = UUID()
     let name =  "Defend"
+    var cardText: String { get { return "Block for 5." }}
     let requiresSingleTarget: Bool = false
     var cost: Int = 1
     
