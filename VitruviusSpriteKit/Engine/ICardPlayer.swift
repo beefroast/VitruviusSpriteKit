@@ -44,6 +44,10 @@ class DrawPile {
     var randomPool: [ICard]
     var draws: [CardDraw]
     
+    var count: Int {
+        get { return draws.count }
+    }
+    
     init(cards: [ICard]) {
         self.randomPool = cards
         self.draws = self.randomPool.map({ _ in return .random })

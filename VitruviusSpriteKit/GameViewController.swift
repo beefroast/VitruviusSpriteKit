@@ -248,7 +248,12 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 
                 let drawAction = self.handNode.addCardAndAnimationIntoPosiiton(cardNode: cardNode)
                 self.scene.run(drawAction) {
-                    self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
+                    self.battleState.popNext()
+                }
+                
+                // Update the count on the draw pile
+                if let label = self.drawNode.childNode(withName: "count") as? SKLabelNode {
+                    label.text = "\(self.battleState.player.cardZones.drawPile.count)"
                 }
                 
             case .discardCard(let e):
@@ -277,15 +282,34 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 cardNode.run(discardAction) {
                     cardNode.removeFromParent()
                 }
-                    
+                
+                // Update the count on the discard pile
+                if let label = self.discardNode.childNode(withName: "count") as? SKLabelNode {
+                    label.text = "\(self.battleState.player.cardZones.discard.getCount())"
+                }
+                
                 // Discarding doesn't block
-                self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
+                self.battleState.popNext()
+                
+            case .shuffleDiscardIntoDrawPile(_):
+                
+                // Update the count on the draw pile
+                if let label = self.drawNode.childNode(withName: "count") as? SKLabelNode {
+                    label.text = "\(self.battleState.player.cardZones.drawPile.count)"
+                }
+                
+                // Update the count on the discard pile
+                if let label = self.discardNode.childNode(withName: "count") as? SKLabelNode {
+                    label.text = "\(self.battleState.player.cardZones.discard.getCount())"
+                }
+                
+                self.battleState.popNext()
                 
             case .playerInputRequired:
                 self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
                 
             default:
-                self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
+                self.battleState.popNext()
                 
             
             }

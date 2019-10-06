@@ -45,6 +45,10 @@ class BattleState {
         case .enemies: return self.getAllActors(faction: .goodGuys)
         }
     }
+    
+    func popNext() -> Void {
+        _ = self.eventHandler.popAndHandle(battleState: self)
+    }
 }
 
 
