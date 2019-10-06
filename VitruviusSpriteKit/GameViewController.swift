@@ -172,7 +172,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         self.handNode.run(a)
         card.zPosition = 1
   
-        self.handNode.removeCardAndAnimateIntoPosition(card: card)
+        self.handNode.removeCardAndAnimateIntoPosition(cardNode: card)
         self.scene.addChildPreserveTransform(child: card)
         
         card.run(SKAction.group([
@@ -262,7 +262,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 }
                 
                 // Remove from the hand
-                self.handNode.removeCardAndAnimateIntoPosition(card: cardNode)
+                self.handNode.removeCardAndAnimateIntoPosition(cardNode: cardNode as! CardNode)
                 
                 // Reparent to the discard node
                 self.discardNode.addChildPreserveTransform(child: cardNode)

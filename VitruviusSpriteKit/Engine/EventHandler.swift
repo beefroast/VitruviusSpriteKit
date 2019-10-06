@@ -293,6 +293,7 @@ class EventHandler {
         case .shuffleDiscardIntoDrawPile(let event):
             
             let discardedCards = event.actor.cardZones.discard.asArray()
+            event.actor.cardZones.discard.removeAll()
             event.actor.cardZones.drawPile.shuffleIn(cards: discardedCards)
             
         case .willLoseHp(let bodyEvent):
@@ -492,7 +493,7 @@ class EventPrinterEffect: IEffect {
             print("\(e.actor.name) drew a card.")
             
         case .onCardDrawn(let e):
-            print("\(e.actor.name) drew \(e.card.name).")
+            print("\(e.actor.name) drew \(e.card.name) [\(e.card.uuid)].")
             
         case .discardCard(let e):
             print("\(e.actor.name) discarded \(e.card.name)")

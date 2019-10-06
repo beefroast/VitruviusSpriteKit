@@ -15,7 +15,7 @@ class HandNode: SKNode {
         get { return cards.count }
     }
     
-    var cards: [SKNode] = []
+    var cards: [CardNode] = []
     
     func setupNodes() {
         // Add 10 children
@@ -37,6 +37,7 @@ class HandNode: SKNode {
             let xPosition = -75 * (1 * (CGFloat(cardsInHand)-1.0) + (-2 * CGFloat(i)))
             let rot = 0.05 * (1 * (CGFloat(cardsInHand)-1.0) + (-2 * CGFloat(i)))
 
+            cardPositionNode.removeAllActions()
             cardPositionNode.run(SKAction.group([
                 SKAction.rotate(toAngle: rot, duration: duration),
                 SKAction.move(to: CGPoint(x: xPosition, y: 0), duration: duration),
@@ -58,15 +59,16 @@ class HandNode: SKNode {
         }
     }
     
-    func addCardAndAnimationIntoPosiiton(cardNode: SKNode) -> SKAction {
+    func addCardAndAnimationIntoPosiiton(cardNode: CardNode) -> SKAction {
     
+        
         // TODO: Need to re-use our pool of hand positions...
         guard cardsInHand < 10 else {
             fatalError("TODO: Handle too many cards in hand")
         }
         
         self.cards.append(cardNode)
-        
+                
         // Animate the card into the position of the node
         self.animateNodePositions()
 
@@ -75,17 +77,19 @@ class HandNode: SKNode {
         }
     }
     
-    func removeCardAndAnimateIntoPosition(card: SKNode) -> Void {
+    func removeCardAndAnimateIntoPosition(cardNode: CardNode) -> Void {
         
         // Get the parent
         guard let card = self.cards.first(where: { (node) -> Bool in
-            node === card
-        }) else { return }
-        
-        self.cards.removeAll { (node) -> Bool in
-            node === card
+            node.card.uuid == cardNode.card.uuid
+        }) else {
+            return
         }
         
+        self.cards.removeAll { (node) -> Bool in
+            node.card.uuid == cardNode.card.uuid
+        }
+                
         card.scene?.addChildPreserveTransform(child: card)
         
         self.animateNodePositions()
