@@ -11,8 +11,7 @@ import Foundation
 
 class CardStrike: ICard, Codable {
 
-    
-    
+    let cardNumber: Int = 1
     let uuid: UUID = UUID()
     let name =  "Strike"
     var cardText: String { get { return "Attack for 6." }}
@@ -52,6 +51,8 @@ class CardStrike: ICard, Codable {
 
 
 class CardDefend: ICard {
+    
+    let cardNumber: Int = 5
     
     let uuid: UUID = UUID()
     let name =  "Defend"

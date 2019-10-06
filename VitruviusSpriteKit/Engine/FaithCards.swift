@@ -11,6 +11,8 @@ import Foundation
 
 class CardDrain: ICard {
 
+    let cardNumber: Int = 4
+    
     var uuid: UUID = UUID()
     var name: String = "Drain"
     var cardText: String { get { return "Attack for 6. Gain life equal to the hp lost this way." }}

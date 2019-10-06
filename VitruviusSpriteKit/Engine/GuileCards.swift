@@ -11,6 +11,8 @@ import Foundation
 
 class CardMistForm: ICard {
     
+    let cardNumber: Int = 2
+    
     var uuid: UUID = UUID()
     var name: String = "Mist Form"
     var cardText: String { get { return "Until you next turn, attacks against you are reduced to 0." }}
@@ -53,6 +55,8 @@ class CardMistForm: ICard {
 }
 
 class CardPierce: ICard {
+    
+    let cardNumber: Int = 3
     
     var uuid: UUID = UUID()
     var name: String = "Pierce"

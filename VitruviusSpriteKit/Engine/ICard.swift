@@ -24,6 +24,7 @@ enum CardAttributes {
 
 protocol ICard {
     
+    var cardNumber: Int { get }
     var uuid: UUID { get }
     var name: String { get }
     var requiresSingleTarget: Bool { get }
@@ -34,5 +35,4 @@ protocol ICard {
     func onDrawn(source: Actor, battleState: BattleState) -> Void
     func onDiscarded(source: Actor, battleState: BattleState) -> Void
 }
-
 

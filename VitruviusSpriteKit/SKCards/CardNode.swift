@@ -43,6 +43,12 @@ class CardNode: SKSpriteNode {
         node.title?.text = card.name
         node.cost?.text = "\(card.cost)"
         node.text?.text = card.cardText
+        
+        // TODO: Need images for card UUIDs
+        let textureProvider = CardNodeImageProvider()
+
+        node.image?.texture = textureProvider.textureFor(card: card)
+        
         node.removeFromParent()
         node.delegate = delegate
         return node

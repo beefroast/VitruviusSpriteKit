@@ -38,6 +38,7 @@
 		6472DEFD23487BAE009B75C0 /* GuileCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEEF23487BAD009B75C0 /* GuileCards.swift */; };
 		6472DEFE23487BAE009B75C0 /* Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEF023487BAE009B75C0 /* Actor.swift */; };
 		6472DF002348ADAC009B75C0 /* EndTurnButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEFF2348ADAC009B75C0 /* EndTurnButton.swift */; };
+		6472DF032349D8B4009B75C0 /* CardNodeImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF022349D8B4009B75C0 /* CardNodeImageProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		6472DEEF23487BAD009B75C0 /* GuileCards.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuileCards.swift; sourceTree = "<group>"; };
 		6472DEF023487BAE009B75C0 /* Actor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actor.swift; sourceTree = "<group>"; };
 		6472DEFF2348ADAC009B75C0 /* EndTurnButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndTurnButton.swift; sourceTree = "<group>"; };
+		6472DF022349D8B4009B75C0 /* CardNodeImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNodeImageProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,8 +147,8 @@
 		643588B62345FD8F007334D9 /* VitruviusSpriteKit */ = {
 			isa = PBXGroup;
 			children = (
+				6472DF012349D893009B75C0 /* SKCards */,
 				6472DEE223487B97009B75C0 /* Engine */,
-				643588ED2345FEEF007334D9 /* CardNode.swift */,
 				643588B72345FD8F007334D9 /* AppDelegate.swift */,
 				643588BB2345FD8F007334D9 /* Actions.sks */,
 				643588BF2345FD8F007334D9 /* GameViewController.swift */,
@@ -203,6 +205,15 @@
 				6472DEE623487BAD009B75C0 /* Stack.swift */,
 			);
 			path = Engine;
+			sourceTree = "<group>";
+		};
+		6472DF012349D893009B75C0 /* SKCards */ = {
+			isa = PBXGroup;
+			children = (
+				643588ED2345FEEF007334D9 /* CardNode.swift */,
+				6472DF022349D8B4009B75C0 /* CardNodeImageProvider.swift */,
+			);
+			path = SKCards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -357,6 +368,7 @@
 				6472DEFC23487BAE009B75C0 /* NeutralCards.swift in Sources */,
 				6472DEF423487BAE009B75C0 /* Stack.swift in Sources */,
 				643588C02345FD8F007334D9 /* GameViewController.swift in Sources */,
+				6472DF032349D8B4009B75C0 /* CardNodeImageProvider.swift in Sources */,
 				643588B82345FD8F007334D9 /* AppDelegate.swift in Sources */,
 				6472DEF823487BAE009B75C0 /* IBody.swift in Sources */,
 				6472DEF323487BAE009B75C0 /* SharpCards.swift in Sources */,

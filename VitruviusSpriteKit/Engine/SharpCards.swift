@@ -11,6 +11,8 @@ import Foundation
 
 class CardRecall : ICard {
     
+    let cardNumber: Int = 6
+    
     var uuid: UUID = UUID()
     var name: String = "Recall"
     var cardText: String { get { return "Draw 3 cards." }}
@@ -29,6 +31,8 @@ class CardRecall : ICard {
 }
 
 class CardFireball: ICard {
+    
+    let cardNumber: Int = 7
     
     var uuid: UUID = UUID()
     var name: String = "Fireball"
