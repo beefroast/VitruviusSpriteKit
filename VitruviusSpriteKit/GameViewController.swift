@@ -42,9 +42,10 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         
         // Present the scene
         view.presentScene(scene)
-        view.ignoresSiblingOrder = true
+        view.ignoresSiblingOrder = false
         view.showsFPS = true
         view.showsNodeCount = true
+        view.showsDrawCount = true
         
         // Get the draw and discard nodes
         self.drawNode = scene?.childNode(withName: "deckNode")
@@ -235,8 +236,9 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
     func handle(event: Event, state: BattleState) -> Bool {
         
         DispatchQueue.main.async {
-            
+                        
             switch event {
+                
                 
             case .onCardDrawn(let e):
                 
@@ -313,10 +315,18 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
                 
             case .didLoseHp(let e):
-                if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
-                    actorNode.details?.text = e.player.body.description
+                guard let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) else {
+                    self.battleState.popNext()
+                    return
                 }
-                self.battleState.popNext()
+                
+                actorNode.isPaused = false
+                print("Animating hit")
+                actorNode.setScale(1.05)
+                actorNode.details?.text = e.player.body.description
+                actorNode.run(SKAction.scale(to: 1.0, duration: 0.1)) {
+                    self.battleState.popNext()
+                }
                 
             case .didLoseBlock(let e):
                 if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
@@ -335,6 +345,23 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                     actorNode.details?.text = e.player.body.description
                 }
                 self.battleState.popNext()
+                
+            case .attack(let e):
+                guard let actorNode = self.playArea.actorNode(withUuid: e.sourceOwner.uuid) else {
+                    self.battleState.popNext()
+                    return
+                }
+                
+                actorNode.isPaused = false
+                actorNode.run(SKAction.moveBy(x: -40, y: 0, duration: 0.1)) {
+                    self.battleState.popNext()
+                    DispatchQueue.main.async {
+                        print("Starting to move back")
+                        actorNode.run(SKAction.moveBy(x: 40, y: 0, duration: 0.1)) {
+                            print("done")
+                        }
+                    }
+                }
                 
             default:
                 self.battleState.popNext()
