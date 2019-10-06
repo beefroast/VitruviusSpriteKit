@@ -10,11 +10,12 @@ import UIKit
 import SpriteKit
 
 class PlayAreaNode: SKNode {
+    
 
     func addPlayerAndEnemies(player: ActorNode, enemies: [ActorNode]) {
 
         let totalCount = 1 + enemies.count
-        let totalWidth: CGFloat = 300.0
+        let totalWidth: CGFloat = 600.0
         let spaceBetween = totalWidth/CGFloat(totalCount)
         let left = -totalWidth/2.0
 
@@ -36,10 +37,12 @@ class PlayAreaNode: SKNode {
             }
             
         }
-
-
-
-
+    }
+    
+    func actorNode(withUuid uuid: UUID) -> ActorNode? {
+        return self.getFirstRecursive { (node) -> Bool in
+            (node as? ActorNode)?.actorUuid == uuid
+        } as? ActorNode
     }
 
     

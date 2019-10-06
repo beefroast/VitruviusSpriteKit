@@ -135,8 +135,11 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         playArea.position = CGPoint.zero
 
         playArea.addPlayerAndEnemies(
-            player: ActorNode.newInstance(),
-            enemies: [ActorNode.newInstance(), ActorNode.newInstance()]
+            player: ActorNode.newInstance(actor: player),
+            enemies: [
+                ActorNode.newInstance(actor: goomba),
+                ActorNode.newInstance(actor: koopa)
+            ]
         )
         
         // Save the play area...
@@ -260,7 +263,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 // Animate the card going to the discard
                 
                 // Find the card
-                guard let cardNode = self.scene.getFirst(fn: { (node) -> Bool in
+                guard let cardNode = self.scene.getFirstRecursive(fn: { (node) -> Bool in
                     (node as? CardNode)?.card.uuid == e.card.uuid
                 }) else {
                     return
@@ -308,6 +311,30 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
             case .playerInputRequired:
                 self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
                 
+            case .didLoseHp(let e):
+                if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
+                    actorNode.details?.text = e.player.body.description
+                }
+                self.battleState.popNext()
+                
+            case .didLoseBlock(let e):
+                if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
+                    actorNode.details?.text = e.player.body.description
+                }
+                self.battleState.popNext()
+                
+            case .didGainHp(let e):
+                if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
+                    actorNode.details?.text = e.player.body.description
+                }
+                self.battleState.popNext()
+                
+            case .didGainBlock(let e):
+                if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
+                    actorNode.details?.text = e.player.body.description
+                }
+                self.battleState.popNext()
+                
             default:
                 self.battleState.popNext()
                 
@@ -329,14 +356,14 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
 
 extension SKNode {
     
-    func getFirst(fn: (SKNode) -> Bool) -> SKNode? {
+    func getFirstRecursive(fn: (SKNode) -> Bool) -> SKNode? {
         
         if fn(self) {
             return self
         
         } else {
             for c in self.children {
-                if let found =  c.getFirst(fn: fn) {
+                if let found =  c.getFirstRecursive(fn: fn) {
                     return found
                 }
             }
