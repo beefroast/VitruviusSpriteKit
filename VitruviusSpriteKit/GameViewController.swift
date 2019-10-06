@@ -331,6 +331,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 // Show a hit counter
                 let label = SKLabelNode(text: "\(e.amount)")
                 label.position = actorNode.getGlobalPosition()
+                label.fontColor = UIColor.red
                 self.scene.addChild(label)
                 label.run(SKAction.sequence([
                     SKAction.moveBy(x: 0, y: 80, duration: 0.2),
