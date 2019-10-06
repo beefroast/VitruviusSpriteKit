@@ -466,7 +466,7 @@ class EventPrinterEffect: IEffect {
         switch event {
             
         case .playerInputRequired:
-            break
+            print("Player input required.")
             
         case .onBattleBegan:
             print("Battle began.")

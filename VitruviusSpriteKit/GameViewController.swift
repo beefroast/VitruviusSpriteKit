@@ -266,6 +266,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 guard let cardNode = self.scene.getFirstRecursive(fn: { (node) -> Bool in
                     (node as? CardNode)?.card.uuid == e.card.uuid
                 }) else {
+                    self.battleState.popNext()
                     return
                 }
                 
