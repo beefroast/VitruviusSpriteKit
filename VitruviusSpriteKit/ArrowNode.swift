@@ -17,11 +17,12 @@ class ArrowNode: SKNode {
     
     override init() {
         super.init()
-        
+        self.addTipAndTail()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        self.addTipAndTail()
     }
     
     private func addTipAndTail() {
@@ -30,6 +31,7 @@ class ArrowNode: SKNode {
         self.shapeNode = SKShapeNode(rectOf: CGSize.zero)
         self.addChild(tipNode)
         self.addChild(tailNode)
+        self.addChild(shapeNode)
     }
     
     func updateArrow() {
@@ -44,6 +46,9 @@ class ArrowNode: SKNode {
         let dashed = bezierPath.cgPath.copy(dashingWithPhase: 1, lengths: pattern)
         
         self.shapeNode.path = dashed
+        self.shapeNode.lineWidth = 4.0
+        self.shapeNode.strokeColor = UIColor.red
+        
     }
     
     

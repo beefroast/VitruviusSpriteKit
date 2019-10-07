@@ -207,6 +207,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         if card.position.y >= -100 {
             
             // Check to see if the card has a single target
+            self.arrow?.removeFromParent()
             
             if card.requiresSingleTarget() {
                 
@@ -260,6 +261,8 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         }
     }
     
+    var arrow: ArrowNode? = nil
+    
     func touchesMoved(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
         
         switch self.state {
@@ -268,7 +271,15 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
             if card.position.y >= -100 && card.card.requiresSingleTarget {
                 self.state = .selectingTarget(c, p)
                 card.run(SKAction.move(to: CGPoint(x: -300, y: 0), duration: 0.1))
+                
+                self.arrow = ArrowNode()
+                self.scene.addChild(self.arrow!)
+                arrow?.tipNode.position = touches.first!.location(in: card.parent!)
+                arrow?.tailNode.position = CGPoint(x: -300, y: 0)
+                arrow?.updateArrow()
+                
             } else {
+                self.arrow?.removeFromParent()
                 card.position = touches.first!.location(in: card.parent!)
             }
             
@@ -276,6 +287,9 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
             if touches.first!.location(in: self.scene).y < -100 {
                 self.state = .draggingCard(c, p)
                 card.position = touches.first!.location(in: card.parent!)
+            } else {
+                arrow?.tipNode.position = touches.first!.location(in: card.parent!)
+                self.arrow?.updateArrow()
             }
             
         default:
