@@ -36,7 +36,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
     
         
         let scene = SKScene(fileNamed: "BattleScene")
-        scene?.scaleMode = .aspectFill
+        scene?.scaleMode = .aspectFit
         self.scene = scene!
         
         print("SCENE PARENT IS \(String(describing: scene!.parent))")
@@ -124,7 +124,10 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
             enemies: [goomba, koopa],
             eventHandler: EventHandler(
                 eventStack: StackQueue<Event>(),
-                effectList: [EventPrinterEffect(uuid: UUID(), name: "Printer"), self]
+                effectList: [
+                    EventPrinterEffect(uuid: UUID(), name: "Printer"),
+                    self
+                ]
             )
         )
                 
@@ -423,6 +426,9 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 self.endTurnButton.isUserInteractionEnabled = true
                 
             case .didLoseHp(let e):
+                
+                print("Did lose hp at \(Date().timeIntervalSince1970)")
+                
                 guard let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) else {
                     self.battleState.popNext()
                     return
@@ -432,7 +438,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 actorNode.isPaused = false
                 actorNode.setScale(1.05)
                 actorNode.run(SKAction.scale(to: 1.0, duration: 0.1)) {
-                    self.battleState.popNext()
+                    print("Finished bulge at \(Date().timeIntervalSince1970)")
                 }
                 
                 // Update the HP bar
@@ -458,6 +464,8 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 ])) {
                     label.removeFromParent()
                 }
+                
+                self.battleState.popNext()
                 
             case .didLoseBlock(let e):
                 if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {

@@ -463,6 +463,9 @@ class EventPrinterEffect: IEffect {
     }
     
     func handle(event: Event, state: BattleState) -> Bool {
+        
+        print("At \(Date().timeIntervalSince1970)")
+        
         switch event {
             
         case .playerInputRequired:
