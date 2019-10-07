@@ -30,17 +30,33 @@ class HandNode: SKNode {
     
     func animateNodePositions(duration: TimeInterval = 0.2) -> Void {
         
+        let wedge = Double.pi/2.0
+        let b = Double(cardsInHand-1)
+        let wedgeSize = 60.0
+        let c = (Double.pi/(wedgeSize * 2.0))
+        var firstPosition = wedge - (b * c)
+        
         // Animate each of the nodes in the hand
         for (idx, cardPositionNode) in self.children.enumerated() {
             
             let i = min(cardsInHand, idx)
-            let xPosition = -75 * (1 * (CGFloat(cardsInHand)-1.0) + (-2 * CGFloat(i)))
-            let rot = 0.05 * (1 * (CGFloat(cardsInHand)-1.0) + (-2 * CGFloat(i)))
-
+            
+            // We want to use up pi/8 of an arc
+            
+            // Each part can take up pi/80
+            
+            let rotation = firstPosition + Double(i) * Double.pi/wedgeSize
+            
+            let circleRadius = 3000.0
+            
+            let xPosition = 0 + circleRadius * cos(rotation)
+            let yPosition = -circleRadius + circleRadius * sin(rotation)
+            let rot = rotation - (Double.pi/2.0)
+            
             cardPositionNode.removeAllActions()
             cardPositionNode.run(SKAction.group([
-                SKAction.rotate(toAngle: rot, duration: duration),
-                SKAction.move(to: CGPoint(x: xPosition, y: 0), duration: duration),
+                SKAction.rotate(toAngle: CGFloat(rot), duration: duration),
+                SKAction.move(to: CGPoint(x: xPosition, y: yPosition), duration: duration),
             ]))
             
             if idx < self.cards.count {
