@@ -382,6 +382,26 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 }
                 self.battleState.popNext()
                 
+            case .onTurnBegan(let e):
+                if e.actor.faction != .player {
+                    self.handNode.run(SKAction.moveTo(y: -400, duration: 0.2))
+                } else {
+                    
+                    // Show that it's your turn
+                    let yourTurnNode = SKLabelNode.init(text: "Your turn")
+                    self.scene.addChild(yourTurnNode)
+                    yourTurnNode.run(SKAction.sequence([
+                        SKAction.customAction(withDuration: 0.2, actionBlock: { (_, _) in
+                            
+                        }),
+                        SKAction.fadeOut(withDuration: 0.2)
+                    ])) {
+                        yourTurnNode.removeFromParent()
+                    }
+                    
+                }
+                self.battleState.popNext()
+                
             case .playerInputRequired:
                 self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
                 print("ENABLED")
