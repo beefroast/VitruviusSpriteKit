@@ -41,6 +41,7 @@
 		6472DF032349D8B4009B75C0 /* CardNodeImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF022349D8B4009B75C0 /* CardNodeImageProvider.swift */; };
 		6472DF052349DFF7009B75C0 /* FontHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF042349DFF7009B75C0 /* FontHandler.swift */; };
 		6472DF07234ADA85009B75C0 /* ArrowNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF06234ADA85009B75C0 /* ArrowNode.swift */; };
+		6472DF09234B3F80009B75C0 /* CardNodePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF08234B3F80009B75C0 /* CardNodePool.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +102,7 @@
 		6472DF022349D8B4009B75C0 /* CardNodeImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNodeImageProvider.swift; sourceTree = "<group>"; };
 		6472DF042349DFF7009B75C0 /* FontHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHandler.swift; sourceTree = "<group>"; };
 		6472DF06234ADA85009B75C0 /* ArrowNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowNode.swift; sourceTree = "<group>"; };
+		6472DF08234B3F80009B75C0 /* CardNodePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNodePool.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,7 +163,6 @@
 				643588C62345FD92007334D9 /* LaunchScreen.storyboard */,
 				643588C92345FD92007334D9 /* Info.plist */,
 				6472DEB223461A7E009B75C0 /* BattleScene.sks */,
-				6472DEB42347072F009B75C0 /* CardSceneWood.sks */,
 				6472DEB6234727F7009B75C0 /* HandNode.swift */,
 				6472DEB823485396009B75C0 /* PlayAreaNode.swift */,
 				6472DEBA23485553009B75C0 /* ActorArea.sks */,
@@ -218,6 +219,8 @@
 			children = (
 				643588ED2345FEEF007334D9 /* CardNode.swift */,
 				6472DF022349D8B4009B75C0 /* CardNodeImageProvider.swift */,
+				6472DEB42347072F009B75C0 /* CardSceneWood.sks */,
+				6472DF08234B3F80009B75C0 /* CardNodePool.swift */,
 			);
 			path = SKCards;
 			sourceTree = "<group>";
@@ -379,6 +382,7 @@
 				643588B82345FD8F007334D9 /* AppDelegate.swift in Sources */,
 				6472DEF823487BAE009B75C0 /* IBody.swift in Sources */,
 				6472DEF323487BAE009B75C0 /* SharpCards.swift in Sources */,
+				6472DF09234B3F80009B75C0 /* CardNodePool.swift in Sources */,
 				6472DEF723487BAE009B75C0 /* MightCards.swift in Sources */,
 				6472DEFE23487BAE009B75C0 /* Actor.swift in Sources */,
 				6472DF052349DFF7009B75C0 /* FontHandler.swift in Sources */,

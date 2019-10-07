@@ -17,6 +17,7 @@ protocol CardNodeTouchDelegate: AnyObject {
 }
 
 class CardNode: SKSpriteNode {
+
     
     weak var delegate: CardNodeTouchDelegate? = nil
     var card: ICard!
@@ -36,9 +37,9 @@ class CardNode: SKSpriteNode {
         self.image = self.childNode(withName: "image") as? SKSpriteNode
     }
     
-    class func newInstance(card: ICard, delegate: CardNodeTouchDelegate? = nil) -> CardNode {
-        let scene = SKScene(fileNamed: "CardSceneWood")!
-        let node = scene.childNode(withName: "root") as! CardNode
+    func setupWith(card: ICard, delegate: CardNodeTouchDelegate? = nil) -> CardNode {
+        
+        let node = self
         node.card = card
         node.title?.text = card.name
         node.cost?.text = "\(card.cost)"
@@ -51,6 +52,12 @@ class CardNode: SKSpriteNode {
         
         node.removeFromParent()
         node.delegate = delegate
+        return node
+    }
+    
+    class func newInstance() -> CardNode {
+        let scene = SKScene(fileNamed: "CardSceneWood")!
+        let node = scene.childNode(withName: "root") as! CardNode
         return node
     }
 
@@ -76,8 +83,8 @@ class CardNode: SKSpriteNode {
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        print("touchesCancelled on \(title?.name)")
-//        self.delegate?.touchesCancelled(card: self, touches: touches, with: event)
+        self.delegate?.touchesCancelled(card: self, touches: touches, with: event)
     }
+    
     
 }

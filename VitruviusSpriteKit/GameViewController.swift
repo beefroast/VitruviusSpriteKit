@@ -25,6 +25,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
     var discardNode: SKNode!
     var drawNode: SKNode!
     var endTurnButton: EndTurnButton!
+    var cardNodePool: CardNodePool!
     
     var state: State = .waitingForAnimation
     var scene: SKScene!
@@ -33,8 +34,41 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         super.viewDidLoad()
         
         let view = self.view as! SKView
-    
         
+        // Make a player
+        let player = Actor(
+            uuid: UUID(),
+            name: "Player",
+            faction: .player,
+            body: Body(block: 0, hp: 72, maxHp: 72),
+            cardZones: CardZones(
+                hand: Hand.init(),
+                drawPile: DrawPile.init(cards: [
+                    CardStrike(),
+                    CardStrike(),
+                    CardStrike(),
+                    CardStrike(),
+                    CardDefend(),
+                    CardDefend(),
+                    CardDefend(),
+                    CardDefend(),
+                    CardFireball(),
+                    CardRecall(),
+                    
+                ]),
+                discard: DiscardPile()
+        ))
+        
+        // Generate the card nodes to re-use
+        self.cardNodePool = CardNodePool()
+        
+        // Preload the textures
+        let imgProvider = CardNodeImageProvider()
+        let textures = player.cardZones.drawPile.randomPool.map { (c) -> SKTexture in
+            return imgProvider.textureFor(card: c)
+        }
+        
+        // Load the battle scene
         let scene = SKScene(fileNamed: "BattleScene")
         scene?.scaleMode = .aspectFit
         self.scene = scene!
@@ -42,7 +76,6 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         print("SCENE PARENT IS \(String(describing: scene!.parent))")
         
         // Present the scene
-        view.presentScene(scene)
         view.ignoresSiblingOrder = false
         view.showsFPS = true
         view.showsNodeCount = true
@@ -68,28 +101,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         
         // Get that battle state happening
         
-        let player = Actor(
-            uuid: UUID(),
-            name: "Player",
-            faction: .player,
-            body: Body(block: 0, hp: 72, maxHp: 72),
-            cardZones: CardZones(
-                hand: Hand.init(),
-                drawPile: DrawPile.init(cards: [
-                    CardStrike(),
-                    CardStrike(),
-                    CardStrike(),
-                    CardStrike(),
-                    CardDefend(),
-                    CardDefend(),
-                    CardDefend(),
-                    CardDefend(),
-                    CardFireball(),
-                    CardRecall(),
-                    
-                ]),
-                discard: DiscardPile()
-        ))
+
         
         let goomba = Enemy(
              uuid: UUID(),
@@ -157,16 +169,22 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
             ]
         )
         
-        
+        let playerAndEnemyTextures = [
+            SKTexture(imageNamed: "Adventurer"),
+            SKTexture(imageNamed: "skeleton"),
+            SKTexture(imageNamed: "frame_wood")
+        ]
+            
         
         // Save the play area...
         self.playArea = playArea
         
-        battleState.eventHandler.push(event: Event.onBattleBegan)
-        battleState.eventHandler.popAndHandle(battleState: battleState)
+        SKTexture.preload(textures + playerAndEnemyTextures) {
+            view.presentScene(scene)
+            self.battleState.eventHandler.push(event: Event.onBattleBegan)
+            self.battleState.popNext() 
+        }
         
-
-
     }
 
     override var shouldAutorotate: Bool {
@@ -323,7 +341,8 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
 
                 // Make the card
-                let cardNode = CardNode.newInstance(card: e.card, delegate: self)
+                let cardNode = self.cardNodePool.getFromPool()
+                cardNode.setupWith(card: e.card, delegate: self)
                 self.drawNode.addChild(cardNode)
                 
                 cardNode.setScale(0.2)
@@ -366,7 +385,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 ])
                 
                 cardNode.run(discardAction) {
-                    cardNode.removeFromParent()
+                    self.cardNodePool.returnToPool(cardNode: cardNode as! CardNode)
                 }
                 
                 // Update the count on the discard pile
