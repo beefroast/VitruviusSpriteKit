@@ -21,6 +21,21 @@ enum CardAttributes {
     case summons
 }
 
+protocol ICardTemplate {
+    
+    var number: Int { get }
+    var name: String { get }
+    var requiresSingleTarget: Bool { get }
+    var cost: Int { get }
+    var cardText: String { get }
+    
+    func resolve(source: Actor, battleState: BattleState, target: Actor?) -> Void
+    func onDrawn(source: Actor, battleState: BattleState) -> Void
+    func onDiscarded(source: Actor, battleState: BattleState) -> Void
+    
+}
+
+
 
 protocol ICard {
     

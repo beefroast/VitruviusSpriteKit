@@ -397,18 +397,29 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 // Bulge
                 actorNode.isPaused = false
                 actorNode.setScale(1.05)
-                actorNode.details?.text = e.player.body.description
                 actorNode.run(SKAction.scale(to: 1.0, duration: 0.1)) {
                     self.battleState.popNext()
                 }
                 
+                // Update the HP bar
+                let newWidth = 130.0 * (CGFloat(e.player.body.hp) / CGFloat(e.player.body.maxHp))
+                actorNode.healthBar?.size = CGSize(
+                    width: newWidth,
+                    height: actorNode.healthBar?.size.height ?? 0
+                )
+                actorNode.healthBarText?.text = e.player.body.description
+                
                 // Show a hit counter
                 let label = SKLabelNode(text: "\(e.amount)")
                 label.position = actorNode.getGlobalPosition()
-                label.fontColor = UIColor.red
+                label.attributedText = FontHandler().getDamageText(amount: e.amount)
+                
                 self.scene.addChild(label)
                 label.run(SKAction.sequence([
-                    SKAction.moveBy(x: 0, y: 80, duration: 0.2),
+                    SKAction.group([
+                        SKAction.moveBy(x: 0, y: 100, duration: 0.2),
+                        SKAction.scale(by: 1.5, duration: 0.2)
+                    ]),
                     SKAction.fadeAlpha(to: 0, duration: 0.2)
                 ])) {
                     label.removeFromParent()
@@ -475,7 +486,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
     
     func endTurnPressed(button: EndTurnButton) {
         self.battleState.eventHandler.push(event: Event.onTurnEnded(PlayerEvent.init(actor: self.battleState.player)))
-        self.battleState.eventHandler.popAndHandle(battleState: self.battleState)
+        self.battleState.popNext()
     }
 }
 

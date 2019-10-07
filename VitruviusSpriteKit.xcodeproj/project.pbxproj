@@ -39,6 +39,7 @@
 		6472DEFE23487BAE009B75C0 /* Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEF023487BAE009B75C0 /* Actor.swift */; };
 		6472DF002348ADAC009B75C0 /* EndTurnButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEFF2348ADAC009B75C0 /* EndTurnButton.swift */; };
 		6472DF032349D8B4009B75C0 /* CardNodeImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF022349D8B4009B75C0 /* CardNodeImageProvider.swift */; };
+		6472DF052349DFF7009B75C0 /* FontHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF042349DFF7009B75C0 /* FontHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,7 @@
 		6472DEF023487BAE009B75C0 /* Actor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actor.swift; sourceTree = "<group>"; };
 		6472DEFF2348ADAC009B75C0 /* EndTurnButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndTurnButton.swift; sourceTree = "<group>"; };
 		6472DF022349D8B4009B75C0 /* CardNodeImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNodeImageProvider.swift; sourceTree = "<group>"; };
+		6472DF042349DFF7009B75C0 /* FontHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +166,7 @@
 				6472DEBC2348558A009B75C0 /* ActorScene.sks */,
 				6472DEBE234856E4009B75C0 /* ActorNode.swift */,
 				6472DEFF2348ADAC009B75C0 /* EndTurnButton.swift */,
+				6472DF042349DFF7009B75C0 /* FontHandler.swift */,
 			);
 			path = VitruviusSpriteKit;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 				6472DEF323487BAE009B75C0 /* SharpCards.swift in Sources */,
 				6472DEF723487BAE009B75C0 /* MightCards.swift in Sources */,
 				6472DEFE23487BAE009B75C0 /* Actor.swift in Sources */,
+				6472DF052349DFF7009B75C0 /* FontHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

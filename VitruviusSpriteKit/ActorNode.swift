@@ -14,12 +14,16 @@ class ActorNode: SKNode {
     var actorUuid: UUID? = nil
     var details: SKLabelNode? = nil
     var image: SKSpriteNode? = nil
+    var healthBar: SKSpriteNode? = nil
+    var healthBarText: SKLabelNode? = nil
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.isUserInteractionEnabled = false
         self.details = self.childNode(withName: "details") as? SKLabelNode
         self.image = self.childNode(withName: "image") as? SKSpriteNode
+        self.healthBar = self.childNode(withName: "healthBar") as? SKSpriteNode
+        self.healthBarText = self.healthBar?.childNode(withName: "healthBarText") as? SKLabelNode
     }
     
     class func newInstance(actor: Actor) -> ActorNode {
