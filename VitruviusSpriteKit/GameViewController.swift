@@ -427,7 +427,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                     width: newWidth,
                     height: actorNode.healthBar?.size.height ?? 0
                 )
-                actorNode.healthBarText?.text = e.player.body.description
+                actorNode.healthBarText?.text = "\(e.player.body.hp)/\(e.player.body.maxHp)"
                 
                 // Show a hit counter
                 let label = SKLabelNode(text: "\(e.amount)")
@@ -447,7 +447,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 
             case .didLoseBlock(let e):
                 if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
-                    actorNode.details?.text = e.player.body.description
+                    actorNode.setBlock(amount: e.player.body.block)
                 }
                 self.battleState.popNext()
                 
@@ -459,7 +459,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 
             case .didGainBlock(let e):
                 if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
-                    actorNode.details?.text = e.player.body.description
+                    actorNode.setBlock(amount: e.player.body.block)
                 }
                 self.battleState.popNext()
                 
