@@ -34,7 +34,7 @@ class HandNode: SKNode {
         let b = Double(cardsInHand-1)
         let wedgeSize = 60.0
         let c = (Double.pi/(wedgeSize * 2.0))
-        var firstPosition = wedge - (b * c)
+        let firstPosition = wedge - (b * c)
         
         // Animate each of the nodes in the hand
         for (idx, cardPositionNode) in self.children.enumerated() {
@@ -52,6 +52,8 @@ class HandNode: SKNode {
             let xPosition = 0 + circleRadius * cos(rotation)
             let yPosition = -circleRadius + circleRadius * sin(rotation)
             let rot = rotation - (Double.pi/2.0)
+            
+            cardPositionNode.zPosition = CGFloat(i) * -0.001
             
             cardPositionNode.removeAllActions()
             cardPositionNode.run(SKAction.group([

@@ -41,12 +41,16 @@ class CardNode: SKSpriteNode {
         
         let node = self
         node.card = card
-        node.title?.text = card.name
+        
+        let textProvider = FontHandler()
+        
+        node.title?.attributedText = textProvider.getCardTitle(title: card.name)
         node.cost?.text = "\(card.cost)"
-        node.text?.text = card.cardText
+        node.text?.attributedText = textProvider.getCardText(text: card.cardText)
         
         // TODO: Need images for card UUIDs
         let textureProvider = CardNodeImageProvider()
+        
 
         node.image?.texture = textureProvider.textureFor(card: card)
         
@@ -70,7 +74,6 @@ class CardNode: SKSpriteNode {
     // MARK: - Touch Handling
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-
         self.delegate?.touchesBegan(card: self, touches: touches, with: event)
     }
     

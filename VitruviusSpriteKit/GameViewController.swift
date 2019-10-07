@@ -511,10 +511,13 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 }
                 
                 actorNode.isPaused = false
-                actorNode.run(SKAction.moveBy(x: -40, y: 0, duration: 0.1)) {
+                
+                let xBump: CGFloat = e.sourceOwner.faction == .player ? 40.0 : -40.0
+                
+                actorNode.run(SKAction.moveBy(x: xBump, y: 0, duration: 0.1)) {
                     self.battleState.popNext()
                     DispatchQueue.main.async {
-                        actorNode.run(SKAction.moveBy(x: 40, y: 0, duration: 0.1))
+                        actorNode.run(SKAction.moveBy(x: -xBump, y: 0, duration: 0.1))
                     }
                 }
                 
