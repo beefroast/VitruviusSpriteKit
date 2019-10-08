@@ -20,15 +20,9 @@ class Enemy: Actor {
     }
 
     func onBattleBegin(state: BattleState) -> Void {
-
-        // Push all the prebattle card effects on the stack...
+        // TODO: Push all the prebattle card effects on the stack...
         // This gives the enemy a chance to pre-buff before a battle, gaining
         // armour or something like that...
-        
-        for card in self.preBattleCards {
-            state.eventHandler.push(event: Event.playCard(CardEvent.init(cardOwner: self, card: card)))
-        }
-
     }
 
     func planTurn(state: BattleState) -> Event {
@@ -42,9 +36,7 @@ class Enemy: Actor {
                 uuid: UUID(),
                 enemy: self,
                 name: "\(self.name)'s turn",
-                events: [
-                    Event.attack(AttackEvent.init(sourceUuid: self.uuid, sourceOwner: self, targets: [state.player], amount: 12))
-                ]
+                events: []
             )
         )
     }
@@ -70,12 +62,12 @@ class EnemyTurnEffect: IEffect {
         case .onEnemyDefeated(let e):
             
             // Remove this event if the enemy is defeated...
-            return e.uuid == self.enemy.uuid
+            return e.actorUuid == self.enemy.uuid
             
         case .onTurnBegan(let e):
             
             // When our turn begins...
-            guard e.actor.uuid == self.enemy.uuid else {
+            guard e.actorUuid == self.enemy.uuid else {
                 return false
             }
             
@@ -88,7 +80,7 @@ class EnemyTurnEffect: IEffect {
                 enemy.planTurn(state: state),
                 
                 //End our turn
-                Event.onTurnEnded(PlayerEvent.init(actor: enemy))
+                Event.onTurnEnded(ActorEvent.init(actorUuid: enemy.uuid))
             
             ])
             
@@ -106,6 +98,7 @@ class TestEnemy: Enemy {
         
         let rand = Int.random(in: (0...2))
         
+        
         switch rand {
         case 2:
             return Event.onEnemyPlannedTurn(
@@ -114,7 +107,14 @@ class TestEnemy: Enemy {
                     enemy: self,
                     name: "\(self.name)'s turn",
                     events: [
-                        Event.attack(AttackEvent.init(sourceUuid: self.uuid, sourceOwner: self, targets: [state.player], amount: 18))
+                        Event.attack(
+                            AttackEvent.init(
+                                sourceUuid: self.uuid,
+                                sourceOwner: self.uuid,
+                                targets: [state.getAllActors(faction: .player).first?.uuid].compactMap({ return $0 }),
+                                amount: 18
+                            )
+                        )
                     ]
                 )
             )
@@ -125,8 +125,21 @@ class TestEnemy: Enemy {
                     enemy: self,
                     name: "\(self.name)'s turn",
                     events: [
-                        Event.attack(AttackEvent.init(sourceUuid: self.uuid, sourceOwner: self, targets: [state.player], amount: 12)),
-                        Event.willGainBlock(UpdateBodyEvent.init(player: self, sourceUuid: self.uuid, amount: 6))
+                        Event.attack(
+                            AttackEvent.init(
+                                sourceUuid: self.uuid,
+                                sourceOwner: self.uuid,
+                                targets: [state.getAllActors(faction: .player).first?.uuid].compactMap({ return $0 }),
+                                amount: 12
+                            )
+                        ),
+                        Event.willGainBlock(
+                            UpdateBodyEvent.init(
+                                targetActorUuid: self.uuid,
+                                sourceUuid: self.uuid,
+                                amount: 6
+                            )
+                        )
                     ]
                 )
             )

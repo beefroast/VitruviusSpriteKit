@@ -250,12 +250,14 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 }
                 
                 self.state = .waitingForPlayerAction
+                
+                
                 self.battleState.eventHandler.push(event: Event.playCard(
                     CardEvent.init(
-                        cardOwner: self.battleState.player,
-                        card: card.card,
-                        target: actor
-                    )
+                        actorUuid: self.battleState.player.uuid,
+                        cardUuid: card.card.uuid
+                    ),
+                    actor.uuid
                 ))
                 self.battleState.popNext()
                 
@@ -265,7 +267,10 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 // Just play the card...
                 self.state = .waitingForPlayerAction
                 self.battleState.eventHandler.push(
-                    event: Event.playCard(CardEvent.init(cardOwner: self.battleState.player, card: card.card))
+                    event: Event.playCard(
+                        CardEvent.init(actorUuid: self.battleState.player.uuid, cardUuid: card.card.uuid),
+                        nil
+                    )
                 )
                 self.battleState.popNext()
                 
@@ -343,17 +348,22 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                     return
                 }
                 
-                enemyNode.setIntentionToEvents(events: e.events)
+                enemyNode.setIntentionToEvents(battleState: state, events: e.events)
                 self.battleState.popNext()
                 
             case .onCardDrawn(let e):
+                
+                guard let card = state.player.cardZones.hand.cardWith(uuid: e.cardUuid) else {
+                    self.battleState.popNext()
+                    return
+                }
                 
                 // Raise the hand
                 self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
 
                 // Make the card
                 let cardNode = self.cardNodePool.getFromPool()
-                cardNode.setupWith(card: e.card, delegate: self)
+                cardNode.setupWith(card: card, delegate: self)
                 self.drawNode.addChild(cardNode)
                 
                 cardNode.setScale(0.2)
@@ -372,11 +382,11 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 }
                 
             case .discardCard(let e):
-                // Animate the card going to the discard
+ 
                 
                 // Find the card
                 guard let cardNode = self.scene.getFirstRecursive(fn: { (node) -> Bool in
-                    (node as? CardNode)?.card.uuid == e.card.uuid
+                    (node as? CardNode)?.card.uuid == e.cardUuid
                 }) else {
                     self.battleState.popNext()
                     return
@@ -422,7 +432,13 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 self.battleState.popNext()
                 
             case .onTurnEnded(let e):
-                if e.actor.faction == .player {
+                
+                guard let actor = state.actorWith(uuid: e.actorUuid) else {
+                    self.battleState.popNext()
+                    return
+                }
+                
+                if actor.faction == .player {
                     print("DISABLED")
                     self.handNode.setCardsInteraction(enabled: false)
                     self.endTurnButton.isUserInteractionEnabled = false
@@ -430,7 +446,13 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 self.battleState.popNext()
                 
             case .onTurnBegan(let e):
-                if e.actor.faction != .player {
+                
+                guard let actor = state.actorWith(uuid: e.actorUuid) else {
+                    self.battleState.popNext()
+                    return
+                }
+                
+                if actor.faction != .player {
                     self.handNode.run(SKAction.moveTo(y: -400, duration: 0.2))
                 } else {
                     
@@ -457,9 +479,12 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 
             case .didLoseHp(let e):
                 
-                print("Did lose hp at \(Date().timeIntervalSince1970)")
+                guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
+                    self.battleState.popNext()
+                    return
+                }
                 
-                guard let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) else {
+                guard let actorNode = self.playArea.actorNode(withUuid: actor.uuid) else {
                     self.battleState.popNext()
                     return
                 }
@@ -472,12 +497,12 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 }
                 
                 // Update the HP bar
-                let newWidth = 130.0 * (CGFloat(e.player.body.hp) / CGFloat(e.player.body.maxHp))
+                let newWidth = 130.0 * (CGFloat(actor.body.hp) / CGFloat(actor.body.maxHp))
                 actorNode.healthBar?.size = CGSize(
                     width: newWidth,
                     height: actorNode.healthBar?.size.height ?? 0
                 )
-                actorNode.healthBarText?.text = "\(e.player.body.hp)/\(e.player.body.maxHp)"
+                actorNode.healthBarText?.text = "\(actor.body.hp)/\(actor.body.maxHp)"
                 
                 // Show a hit counter
                 let label = SKLabelNode(text: "\(e.amount)")
@@ -498,32 +523,49 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 self.battleState.popNext()
                 
             case .didLoseBlock(let e):
-                if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
-                    actorNode.setBlock(amount: e.player.body.block)
+                guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
+                    self.battleState.popNext()
+                    return
+                }
+                
+                if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
+                    actorNode.setBlock(amount: actor.body.block)
                 }
                 self.battleState.popNext()
                 
             case .didGainHp(let e):
-                if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
-                    actorNode.details?.text = e.player.body.description
+                guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
+                    self.battleState.popNext()
+                    return
+                }
+                if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
+                    actorNode.details?.text = actor.body.description
                 }
                 self.battleState.popNext()
                 
             case .didGainBlock(let e):
-                if let actorNode = self.playArea.actorNode(withUuid: e.player.uuid) {
-                    actorNode.setBlock(amount: e.player.body.block)
+                guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
+                    self.battleState.popNext()
+                    return
+                }
+                if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
+                    actorNode.setBlock(amount: actor.body.block)
                 }
                 self.battleState.popNext()
                 
             case .attack(let e):
-                guard let actorNode = self.playArea.actorNode(withUuid: e.sourceOwner.uuid) else {
+                guard let ownerActor = state.actorWith(uuid: e.sourceOwner) else {
+                    self.battleState.popNext()
+                    return
+                }
+                guard let actorNode = self.playArea.actorNode(withUuid: ownerActor.uuid) else {
                     self.battleState.popNext()
                     return
                 }
                 
                 actorNode.isPaused = false
                 
-                let xBump: CGFloat = e.sourceOwner.faction == .player ? 40.0 : -40.0
+                let xBump: CGFloat = ownerActor.faction == .player ? 40.0 : -40.0
                 
                 actorNode.run(SKAction.moveBy(x: xBump, y: 0, duration: 0.1)) {
                     self.battleState.popNext()
@@ -533,7 +575,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 }
                 
             case .onEnemyDefeated(let e):
-                guard let a = self.playArea.actorNode(withUuid: e.uuid) else {
+                guard let a = self.playArea.actorNode(withUuid: e.actorUuid) else {
                     self.battleState.popNext()
                     return
                 }
@@ -560,7 +602,9 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
     // MARK: - EndTurnButtonDelegate Implementation
     
     func endTurnPressed(button: EndTurnButton) {
-        self.battleState.eventHandler.push(event: Event.onTurnEnded(PlayerEvent.init(actor: self.battleState.player)))
+        self.battleState.eventHandler.push(event:
+            Event.onTurnEnded(ActorEvent.init(actorUuid: self.battleState.player.uuid))
+        )
         self.battleState.popNext()
     }
 }

@@ -20,9 +20,10 @@ class CardMistForm: ICard {
     var cost: Int = 1
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) {
+        
         battleState.eventHandler.push(events: [
-            Event.addEffect(MistFormEffect(owner: source)),
-            Event.discardCard(DiscardCardEvent.init(actor: source, card: self))
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid)),
+            Event.addEffect(MistFormEffect(owner: source))
         ])
     }
     
@@ -66,20 +67,17 @@ class CardPierce: ICard {
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) {
         
-        // Push the discard effect
-        battleState.eventHandler.push(event: Event.discardCard(DiscardCardEvent.init(actor: source, card: self)))
+        let discardEvent = Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid))
         
-        // Attack straight through ignore armour
-        battleState.eventHandler.push(
-            event: Event.willLoseHp(
-                UpdateBodyEvent.init(
-                    player:
-                    source,
-                    sourceUuid: self.uuid,
-                    amount: 18
-                )
-            )
-        )
+        guard let drainTarget = target else {
+            battleState.eventHandler.push(events: [discardEvent])
+            return
+        }
+        
+        return battleState.eventHandler.push(events: [
+            discardEvent,
+            Event.willLoseHp(UpdateBodyEvent.init(targetActorUuid: drainTarget.uuid, sourceUuid: self.uuid, amount: 18))
+        ])
     }
     
     func onDrawn(source: Actor, battleState: BattleState) {}

@@ -26,14 +26,15 @@ class CardStrike: ICard, Codable {
             return
         }
         
+        
         battleState.eventHandler.push(events: [
         
-            Event.discardCard(DiscardCardEvent.init(actor: source, card: self)),
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid)),
             Event.attack(
                  AttackEvent(
                      sourceUuid: self.uuid,
-                     sourceOwner: source,
-                     targets: [target],
+                     sourceOwner: source.uuid,
+                     targets: [target.uuid],
                      amount: 6
                  )
              )
@@ -61,8 +62,11 @@ class CardDefend: ICard {
     var cost: Int = 1
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) {
-        battleState.eventHandler.push(event: Event.discardCard(DiscardCardEvent.init(actor: source, card: self)))
-        battleState.eventHandler.push(event: Event.willGainBlock(UpdateBodyEvent(player: source, sourceUuid: self.uuid, amount: 5)))
+        
+        battleState.eventHandler.push(events: [
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid)),
+            Event.willGainBlock(UpdateBodyEvent.init(targetActorUuid: source.uuid, sourceUuid: self.uuid, amount: 5))
+        ])
     }
     
     func onDrawn(source: Actor, battleState: BattleState) {}

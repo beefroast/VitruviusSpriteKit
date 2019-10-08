@@ -21,8 +21,8 @@ class CardRecall : ICard {
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) {
         battleState.eventHandler.push(events: [
-            Event.discardCard(DiscardCardEvent.init(actor: source, card: self)),
-            Event.willDrawCards(DrawCardsEvent.init(actor: source, amount: 3))
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid)),
+            Event.willDrawCards(DrawCardsEvent.init(actorUuid: source.uuid, amount: 3))
         ])
     }
     
@@ -39,16 +39,14 @@ class CardFireball: ICard {
     var cardText: String { get { return "Attack each enemy for 8." }}
     var requiresSingleTarget: Bool = false
     var cost: Int = 2
-    
-    // Need to somehow target everyone at once...
-    
+        
     func resolve(source: Actor, battleState: BattleState, target: Actor?) {
         
-        let targets = battleState.getAllOpponentActors(faction: source.faction)
+        let targets = battleState.getAllOpponentActors(faction: source.faction).map({ $0.uuid })
         
         battleState.eventHandler.push(events: [
-            Event.discardCard(DiscardCardEvent.init(actor: source, card: self)),
-            Event.attack(AttackEvent.init(sourceUuid: self.uuid, sourceOwner: source, targets: targets, amount: 8))
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid)),
+            Event.attack(AttackEvent.init(sourceUuid: self.uuid, sourceOwner: source.uuid, targets: targets, amount: 8))
         ])
 
     }

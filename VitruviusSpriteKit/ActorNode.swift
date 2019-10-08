@@ -52,13 +52,16 @@ class ActorNode: SKNode {
         }
     }
     
-    func setIntentionToEvents(events: [Event]) -> Void {
+    func setIntentionToEvents(battleState: BattleState, events: [Event]) -> Void {
         
         // TODO: This should be better
         self.intentionNode?.text = events.map { (e) -> String in
             switch e {
             case .attack(let a):
-                return "Attack \(a.targets.first!.name) for \(a.amount)"
+                let targetsList = a.targets
+                    .map({ battleState.descriptionForActorWith(uuid: $0) })
+                    .joined(separator: ", ")
+                return "Attack \(targetsList) for \(a.amount)"
             case .willGainBlock(let e):
                 return "Gain \(e.amount) block"
             default:

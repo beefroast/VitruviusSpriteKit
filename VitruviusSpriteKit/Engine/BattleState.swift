@@ -46,6 +46,16 @@ class BattleState {
         }
     }
     
+    func actorWith(uuid: UUID) -> Actor? {
+        return ([player] + allies + enemies).first { (a) -> Bool in
+            a.uuid == uuid
+        }
+    }
+    
+    func descriptionForActorWith(uuid: UUID) -> String {
+        return self.actorWith(uuid: uuid)?.name ?? uuid.uuidString
+    }
+    
     func popNext() -> Void {
         _ = self.eventHandler.popAndHandle(battleState: self)
     }

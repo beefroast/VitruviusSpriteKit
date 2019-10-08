@@ -21,7 +21,7 @@ class CardDrain: ICard {
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) {
 
-        guard let target = target else {
+        guard let target = target?.uuid else {
             return
         }
         
@@ -37,15 +37,15 @@ class CardDrain: ICard {
             // Attack for 6
             Event.attack(AttackEvent.init(
                 sourceUuid: self.uuid,
-                sourceOwner: source,
+                sourceOwner: source.uuid,
                 targets: [target],
                 amount: 6
             )),
             
             // Discard this card
-            Event.discardCard(DiscardCardEvent.init(
-                actor: source,
-                card: self
+            Event.discardCard(CardEvent.init(
+                actorUuid: source.uuid,
+                cardUuid: self.uuid
             )),
             
         ])
@@ -77,20 +77,14 @@ class CardDrain: ICard {
             switch event {
             
             case .didLoseHp(let bodyEvent):
-                if (bodyEvent.sourceUuid == self.sourceUuid) {
-                    state.eventHandler.push(
-                        event: Event.willGainHp(
-                            UpdateBodyEvent(
-                                player: owner,
-                                sourceUuid: self.uuid,
-                                amount: bodyEvent.amount
-                            )
-                        )
-                    )
-                    return true
-                } else {
+                
+                guard bodyEvent.sourceUuid == self.sourceUuid else {
                     return false
                 }
+                
+                state.eventHandler.push(event: Event.willGainHp(UpdateBodyEvent.init(targetActorUuid: self.owner.uuid, sourceUuid: self.uuid, amount: bodyEvent.amount)))
+                
+                return true
                 
             case .onTurnEnded(_):
                 return true

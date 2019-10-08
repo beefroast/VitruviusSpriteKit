@@ -19,128 +19,6 @@ protocol IEffect {
     func handle(event: Event, state: BattleState) -> Bool
 }
 
-enum Event {
-    
-    case playerInputRequired
-    
-    case onBattleBegan
-    
-    case onEnemyPlannedTurn(EnemyTurnEffect)
-    
-    case onTurnBegan(PlayerEvent)
-    case onTurnEnded(PlayerEvent)
-    
-    case addEffect(IEffect)
-    case removeEffect(IEffect)
-    
-    case willDrawCards(DrawCardsEvent)
-    case drawCard(PlayerEvent)
-    case onCardDrawn(CardDrawnEvent)
-    case discardCard(DiscardCardEvent)
-    case discardHand(PlayerEvent)
-    case destroyCard(DiscardCardEvent)
-    case shuffleDiscardIntoDrawPile(PlayerEvent)
-        
-    case willLoseHp(UpdateBodyEvent)
-    case willLoseBlock(UpdateBodyEvent)
-    case didLoseHp(UpdateBodyEvent)
-    case didLoseBlock(UpdateBodyEvent)
-    
-    case willGainHp(UpdateBodyEvent)
-    case willGainBlock(UpdateBodyEvent)
-    case didGainHp(UpdateBodyEvent)
-    case didGainBlock(UpdateBodyEvent)
-    
-    case playCard(CardEvent)
-    case attack(AttackEvent)
-    
-    case onEnemyDefeated(Enemy)
-    
-    case onBattleWon
-    case onBattleLost
-}
-
-class DiscardCardEvent {
-    let actor: Actor
-    let card: ICard
-    init(actor: Actor, card: ICard) {
-        self.actor = actor
-        self.card = card
-    }
-}
-
-
-class PlayerEvent {
-    var actor: Actor
-    init(actor: Actor) {
-        self.actor = actor
-    }
-}
-
-class DrawCardsEvent {
-    var actor: Actor
-    var amount: Int
-    init(actor: Actor, amount: Int) {
-        self.actor = actor
-        self.amount = amount
-    }
-}
-
-class CardDrawnEvent {
-    var actor: Actor
-    var card: ICard
-    init(actor: Actor, card: ICard) {
-        self.actor = actor
-        self.card = card
-    }
-}
-
-class CardEvent {
-    var cardOwner: Actor
-    var card: ICard
-    var target: Actor?
-    init(cardOwner: Actor, card: ICard, target: Actor? = nil) {
-        self.cardOwner = cardOwner
-        self.card = card
-        self.target = target
-    }
-}
-
-class AttackEvent {
-    
-    let sourceUuid: UUID
-    var sourceOwner: Actor
-    var targets: [Actor]
-    var amount: Int
-    
-    init(sourceUuid: UUID, sourceOwner: Actor, targets: [Actor], amount: Int) {
-        self.sourceUuid = sourceUuid
-        self.sourceOwner = sourceOwner
-        self.targets = targets
-        self.amount = amount
-    }
-}
-
-class UpdateBodyEvent {
-    
-    var player: Actor
-    let sourceUuid: UUID
-    var amount: Int
-    
-    init(player: Actor, sourceUuid: UUID, amount: Int) {
-        self.player = player
-        self.sourceUuid = sourceUuid
-        self.amount = amount
-    }
-    
-    func with(amount: Int) -> UpdateBodyEvent {
-        return UpdateBodyEvent(
-            player: self.player,
-            sourceUuid: self.sourceUuid,
-            amount: amount
-        )
-    }
-}
 
 
 class EventHandler {
@@ -198,39 +76,39 @@ class EventHandler {
         case .onBattleBegan:
             
             // The player draws their hand
-            self.eventStack.enqueue(elt: Event.willDrawCards(DrawCardsEvent.init(actor: battleState.player, amount: 5)))
+            self.eventStack.enqueue(elt: Event.willDrawCards(DrawCardsEvent.init(actorUuid: battleState.player.uuid, amount: 5)))
             
             // The enemy plans their turns
             let enemyPlansEvents = battleState.enemies.map({ $0.planTurn(state: battleState) })
             self.enqueue(events: enemyPlansEvents)
             
             // Enqueue the turn order
-            let enemyTurnsStart = battleState.enemies.map({ Event.onTurnBegan(PlayerEvent.init(actor: $0)) })
-            self.enqueue(events: [Event.onTurnBegan(PlayerEvent.init(actor: battleState.player))] + enemyTurnsStart)
+            let enemyTurnsStart = battleState.enemies.map({ Event.onTurnBegan(ActorEvent.init(actorUuid: $0.uuid)) })
+            self.enqueue(events: [Event.onTurnBegan(ActorEvent.init(actorUuid: battleState.player.uuid))] + enemyTurnsStart)
             
-            
-        case .onEnemyPlannedTurn(let effect):
-            self.effectList.append(effect)
+        case .onEnemyPlannedTurn(let e):
+            self.effectList.append(e)
         
-        case .onTurnBegan(let event):
+        case .onTurnBegan(let e):
             
-            // Lose all your block
-            // TODO: We might want to lose less block here
+            guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
+                return false
+            }
             
-            if event.actor.faction == .player {
+            if actor.faction == .player {
                 self.push(event: Event.playerInputRequired)
             }
             
-            self.push(
-                event: Event.willLoseBlock(
-                    UpdateBodyEvent(player: event.actor, sourceUuid: handlerUuid, amount: event.actor.body.block)
-                )
-            )
+            self.push(event:
+                Event.willLoseBlock(UpdateBodyEvent.init(
+                    targetActorUuid: e.actorUuid,
+                    sourceUuid: handlerUuid,
+                    amount: actor.body.block)))
         
-        case .onTurnEnded(let event):
-            
-            // Enqueue their next turn...
-            self.eventStack.enqueue(elt: Event.onTurnBegan(PlayerEvent(actor: event.actor)))
+        case .onTurnEnded(let e):
+            self.eventStack.enqueue(
+                elt: Event.onTurnBegan(ActorEvent.init(actorUuid: e.actorUuid))
+            )
             
         case .addEffect(let effect):
             self.effectList.insert(effect, at: 0)
@@ -240,156 +118,222 @@ class EventHandler {
                 e.uuid == effect.uuid
             }
         
-        case .drawCard(let event):
+        case .drawCard(let e):
             
-            guard event.actor.cardZones.drawPile.hasDraw() else {
-                guard event.actor.cardZones.discard.isEmpty == false else {
+            guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
+                return false
+            }
+            
+            guard actor.cardZones.drawPile.hasDraw() else {
+                guard actor.cardZones.discard.isEmpty == false else {
                     // Cannot draw a card or reshuffle so do nothing instead
                     return false
                 }
                 
                 // Reshuffle and then draw again
-                self.push(event: Event.drawCard(event))
-                self.push(event: Event.shuffleDiscardIntoDrawPile(event))
+                self.push(events: [
+                    Event.shuffleDiscardIntoDrawPile(ActorEvent.init(actorUuid: e.actorUuid)),
+                    Event.drawCard(ActorEvent.init(actorUuid: e.actorUuid))
+                ])
                 return false
             }
             
             // Draw a card
-            guard let card = event.actor.cardZones.drawPile.drawRandom() else {
+            guard let card = actor.cardZones.drawPile.drawRandom() else {
                 return false
             }
             
-            event.actor.cardZones.hand.cards.append(card)
-            self.push(event: Event.onCardDrawn(CardDrawnEvent(actor: event.actor, card: card)))
+            // Put the card in their hand
+            actor.cardZones.hand.cards.append(card)
+            self.push(event: Event.onCardDrawn(CardEvent.init(actorUuid: actor.uuid, cardUuid: card.uuid)))
             
-        case .discardCard(let event):
+        case .discardCard(let e):
             
-            event.actor.cardZones.hand.cards.removeAll { (card) -> Bool in
-                card.uuid == event.card.uuid
+            guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
+                return false
             }
-            event.actor.cardZones.discard.push(elt: event.card)
+
+            actor.cardZones.discard(cardUuid: e.cardUuid)
         
-        case .destroyCard(let event):
+        case .destroyCard(let e):
             break
             
-        case .discardHand(let event):
+        case .discardHand(let e):
             
-            for card in event.actor.cardZones.hand.cards {
-                self.push(event: Event.discardCard(DiscardCardEvent.init(actor: event.actor, card: card)))
+            guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
+                return false
             }
             
-        case .willDrawCards(let drawCardsEvent):
+            self.push(events:
+                actor.cardZones.hand.cards.map({
+                    Event.discardCard(CardEvent.init(actorUuid: actor.uuid, cardUuid: $0.uuid))
+                })
+            )
+            
+        case .willDrawCards(let e):
             
             // Enqueue a draw for each in amount
-            guard drawCardsEvent.amount > 0 else { return false }
-            for _ in 0...drawCardsEvent.amount-1 {
-                self.push(event: Event.drawCard(PlayerEvent(actor: drawCardsEvent.actor)))
+            guard e.amount > 0 else { return false }
+            for _ in 0...e.amount-1 {
+                self.push(event: Event.drawCard(ActorEvent(actorUuid: e.actorUuid)))
             }
             
-        case .onCardDrawn(let event):
+        case .onCardDrawn(let e):
             
-            event.card.onDrawn(source: event.actor, battleState: battleState)
+            guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
+                return false
+            }
             
-        case .shuffleDiscardIntoDrawPile(let event):
+            guard let card = actor.cardZones.hand.cards.first(where: { (c) -> Bool in
+                c.uuid == e.cardUuid
+            }) else {
+                return false
+            }
             
-            let discardedCards = event.actor.cardZones.discard.asArray()
-            event.actor.cardZones.discard.removeAll()
-            event.actor.cardZones.drawPile.shuffleIn(cards: discardedCards)
+            card.onDrawn(source: actor, battleState: battleState)
             
-        case .willLoseHp(let bodyEvent):
+        case .shuffleDiscardIntoDrawPile(let e):
+            
+            guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
+                return false
+            }
+
+            let discardedCards = actor.cardZones.discard.asArray()
+            actor.cardZones.discard.removeAll()
+            actor.cardZones.drawPile.shuffleIn(cards: discardedCards)
+            
+        case .willLoseHp(let e):
+            
+            guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {
+                return false
+            }
+            
             // Calculate the amount of lost HP
-            let remainingHp = max(bodyEvent.player.body.hp - bodyEvent.amount, 0)
-            let lostHp = bodyEvent.player.body.hp - remainingHp
+            let remainingHp = max(actor.body.hp - e.amount, 0)
+            let lostHp = actor.body.hp - remainingHp
             guard lostHp > 0 else {
                 return false
             }
-            bodyEvent.player.body.hp -= lostHp
-            self.push(event: Event.didLoseHp(bodyEvent))
+            actor.body.hp -= lostHp
+            self.push(event: Event.didLoseHp(e.with(amount: lostHp)))
             
-        case .willLoseBlock(let bodyEvent):
-            let remainingBlock = max(bodyEvent.player.body.block - bodyEvent.amount, 0)
-            let lostBlock = bodyEvent.player.body.block - remainingBlock
+        case .willLoseBlock(let e):
+            
+            guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {
+                return false
+            }
+            
+            // Calculate the amount of lost block
+            let remainingBlock = max(actor.body.block - e.amount, 0)
+            let lostBlock = actor.body.block - remainingBlock
             guard lostBlock > 0 else {
                 return false
             }
-            bodyEvent.player.body.block -= lostBlock
-            self.push(event: Event.didLoseBlock(bodyEvent))
+            actor.body.block -= lostBlock
+            self.push(event: Event.didLoseBlock(e.with(amount: lostBlock)))
             
-        case .didLoseHp(let bodyEvent):
+        case .didLoseHp(let e):
+            
+            guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {
+                return false
+            }
             
             // TODO: This is a little dodgey
-            if bodyEvent.player.body.hp == 0 {
-                if bodyEvent.player.faction == .enemies {
-                    self.push(event: Event.onEnemyDefeated(bodyEvent.player as! Enemy))
-                } else if bodyEvent.player.faction == .player {
+            if actor.body.hp == 0 {
+                if actor.faction == .enemies {
+                    self.push(event: Event.onEnemyDefeated(ActorEvent.init(actorUuid: actor.uuid)))
+                } else if actor.faction == .player {
                     self.push(event: Event.onBattleLost)
                 }
             }
             
-        case .didLoseBlock(let bodyEvent):
+        case .didLoseBlock(let e):
             break
             
-        case .willGainHp(let bodyEvent):
+        case .willGainHp(let e):
+            
+            guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {
+                return false
+            }
+            
             // Gain up to your maximum HP
-            let nextHp = min(bodyEvent.player.body.hp + bodyEvent.amount, bodyEvent.player.body.maxHp)
-            let gainedLife = nextHp - bodyEvent.player.body.hp
-            bodyEvent.player.body.hp += gainedLife
-            let event = bodyEvent.with(amount: gainedLife)
+            let nextHp = min(actor.body.hp + e.amount, actor.body.maxHp)
+            let gainedLife = nextHp - actor.body.hp
+            actor.body.hp += gainedLife
+            let event = e.with(amount: gainedLife)
             self.push(event: Event.didGainHp(event))
             
-        case .willGainBlock(let bodyEvent):
-            bodyEvent.player.body.block += bodyEvent.amount
-            self.push(event: Event.didGainBlock(bodyEvent))
+        case .willGainBlock(let e):
             
-        case .didGainHp(let bodyEvent):
+            guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {
+                return false
+            }
+            
+            actor.body.block += e.amount
+            self.push(event: Event.didGainBlock(e))
+            
+        case .didGainHp(let e):
             break
             
-        case .didGainBlock(let bodyEvent):
+        case .didGainBlock(let e):
             break
             
-        case .playCard(let cardEvent):
-            if cardEvent.cardOwner.faction == .player {
+        case .playCard(let e):
+            
+            guard let actor = battleState.actorWith(uuid: e.0.actorUuid) else {
+                break
+            }
+            
+            if actor.faction == .player {
                 self.push(event: Event.playerInputRequired)
             }
-            cardEvent.card.resolve(source: cardEvent.cardOwner, battleState: battleState, target: cardEvent.target)
             
-        case .attack(let attackEvent):
+            guard let card = actor.cardZones.hand.cardWith(uuid: e.0.cardUuid) else {
+                break
+            }
             
-            attackEvent.targets.forEach { (target) in
+            card.resolve(
+                source: actor,
+                battleState: battleState,
+                target: e.1.flatMap({ battleState.actorWith(uuid: $0) })
+            )
+            
+        case .attack(let e):
+            
+            e.targets.forEach { (targetUuid) in
                 
                 // Send the event to reduce the block
+                guard let target = battleState.actorWith(uuid: targetUuid) else {
+                    return
+                }
                 
-                let updatedBlock = max(target.body.block - attackEvent.amount, 0)
+                let updatedBlock = max(target.body.block - e.amount, 0)
                 let blockLost = target.body.block - updatedBlock
-                let damageRemaining = attackEvent.amount - blockLost
+                let damageRemaining = e.amount - blockLost
                 
                 if damageRemaining > 0 {
                     self.eventStack.push(elt:
-                        Event.willLoseHp(
-                            UpdateBodyEvent(player: target, sourceUuid: attackEvent.sourceUuid, amount: damageRemaining)
-                        )
+                        Event.willLoseHp(UpdateBodyEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: damageRemaining))
                     )
                 }
                 
                 self.eventStack.push(elt:
                     Event.willLoseBlock(
-                        UpdateBodyEvent(player: target, sourceUuid: attackEvent.sourceUuid, amount: blockLost)
+                        UpdateBodyEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: damageRemaining)
                     )
                 )
             }
             
-        case .onEnemyDefeated(let enemy):
+        case .onEnemyDefeated(let e):
             
-            // Remove the enemy from the list of enemies
-            battleState.enemies.removeAll { (e) -> Bool in
-                e.uuid == enemy.uuid
+            battleState.enemies.removeAll { (enemy) -> Bool in
+                enemy.uuid == e.actorUuid
             }
             
-            
             // Remove the queued start of turn from the queue...
-            self.eventStack.removeWhere { (e) -> Bool in
-                switch e {
-                case .onTurnBegan(let e): return e.actor.uuid == enemy.uuid
+            self.eventStack.removeWhere { (event) -> Bool in
+                switch event {
+                case .onTurnBegan(let turnBeganEvent): return turnBeganEvent.actorUuid == e.actorUuid
                 default: return false
                 }
             }
@@ -432,15 +376,19 @@ class DiscardThenDrawAtEndOfTurnEffect: IEffect {
         
         switch event {
             
-        case .onTurnEnded(let event):
+        case .onTurnEnded(let e):
             
-            guard event.actor.uuid == self.ownerUuid else {
+            guard let actor = state.actorWith(uuid: e.actorUuid) else {
+                return false
+            }
+            
+            guard actor.uuid == self.ownerUuid else {
                 return false
             }
             
             state.eventHandler.push(events: [
-                Event.discardHand(PlayerEvent(actor: event.actor)),
-                Event.willDrawCards(DrawCardsEvent(actor: event.actor, amount: self.cardsDrawn))
+                Event.discardHand(ActorEvent.init(actorUuid: e.actorUuid)),
+                Event.willDrawCards(DrawCardsEvent.init(actorUuid: e.actorUuid, amount: 5))
             ])
             
         default:
@@ -478,10 +426,12 @@ class EventPrinterEffect: IEffect {
             print("\n\(e.enemy.name) planned their next turn.")
             
         case .onTurnBegan(let e):
-            print("\n>>> \(e.actor.name) began their turn.")
+            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
+            print("\n>>> \(nameOrUuid) began their turn.")
             
         case .onTurnEnded(let e):
-            print("\n<<< \(e.actor.name) ended their turn.")
+            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
+            print("\n<<< \(nameOrUuid) ended their turn.")
             
         case .addEffect(let e):
             print("\(e.name) added to effects list.")
@@ -490,59 +440,88 @@ class EventPrinterEffect: IEffect {
             print("\(e.name) removed from effects list.")
             
         case .willDrawCards(let e):
-            print("\(e.actor.name) will draw \(e.amount) cards.")
+            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
+            print("\(nameOrUuid) will draw \(e.amount) cards.")
             
         case .drawCard(let e):
-            print("\(e.actor.name) drew a card.")
+            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
+            print("\(nameOrUuid) drew a card.")
             
         case .onCardDrawn(let e):
-            print("\(e.actor.name) drew \(e.card.name) [\(e.card.uuid)].")
+            let actor = state.actorWith(uuid: e.actorUuid)
+            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
+            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
+            print("\(nameOrUuid) drew \(cardName).")
             
         case .discardCard(let e):
-            print("\(e.actor.name) discarded \(e.card.name)")
+            let actor = state.actorWith(uuid: e.actorUuid)
+            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
+            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
+            print("\(nameOrUuid) discarded \(cardName).")
             
         case .discardHand(let e):
-            print("\(e.actor.name) discards their hand.")
+            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
+            print("\(nameOrUuid) discards their hand.")
             
         case .destroyCard(let e):
-            print("\(e.actor.name) destroys \(e.card.name)")
+            let actor = state.actorWith(uuid: e.actorUuid)
+            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
+            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
+            print("\(nameOrUuid) destroyed \(cardName).")
             
         case .shuffleDiscardIntoDrawPile(let e):
-            print("\(e.actor.name) shuffles their discard into their draw pile.")
+            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
+            print("\(nameOrUuid) shuffles their discard into their draw pile.")
             
         case .willLoseHp(let e):
-            print("\(e.player.name) will lose \(e.amount) hp -> \(e.player.body.description).")
+            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
+            print("\(nameOrUuid) will lose \(e.amount) hp.")
             
         case .willLoseBlock(let e):
-            print("\(e.player.name) will lose \(e.amount) block -> \(e.player.body.description).")
+            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
+            print("\(nameOrUuid) will lose \(e.amount) block.")
             
         case .didLoseHp(let e):
-            print("\(e.player.name) lost \(e.amount) hp -> \(e.player.body.description).")
+            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
+            print("\(nameOrUuid) lost \(e.amount) hp.")
             
         case .didLoseBlock(let e):
-            print("\(e.player.name) lost \(e.amount) block -> \(e.player.body.description).")
+            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
+            print("\(nameOrUuid) lost \(e.amount) block.")
             
         case .willGainHp(let e):
-            print("\(e.player.name) will gain \(e.amount) hp -> \(e.player.body.description).")
+            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
+            print("\(nameOrUuid) will gain \(e.amount) hp.")
             
         case .willGainBlock(let e):
-            print("\(e.player.name) will gain \(e.amount) block -> \(e.player.body.description).")
+            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
+            print("\(nameOrUuid) will gain \(e.amount) block.")
         
         case .didGainHp(let e):
-            print("\(e.player.name) gained \(e.amount) hp -> \(e.player.body.description).")
+            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
+            print("\(nameOrUuid) gained \(e.amount) hp.")
             
         case .didGainBlock(let e):
-            print("\(e.player.name) gained \(e.amount) block -> \(e.player.body.description).")
+            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
+            print("\(nameOrUuid) gained \(e.amount) block.")
             
         case .playCard(let e):
-            print("\n\(e.cardOwner.name) played \(e.card.name).")
+            let actor = state.actorWith(uuid: e.0.actorUuid)
+            let cardName = actor?.cardZones.hand.cardWith(uuid: e.0.cardUuid)?.name ?? e.0.cardUuid.uuidString
+            let nameOrUuid = actor?.name ?? e.0.actorUuid.uuidString
+            print("\n\(nameOrUuid) played \(cardName).")
             
         case .attack(let e):
-            let targetList = e.targets.map({ $0.name }).joined(separator: ", ")
-            print("\(e.sourceOwner.name) attacked \(targetList) for \(e.amount).")
+            let nameOrUuid = state.actorWith(uuid: e.sourceOwner)?.name ?? e.sourceOwner.description
+            let targetList = e.targets
+                .compactMap({ state.actorWith(uuid: $0) })
+                .map({ $0.name })
+                .joined(separator: ",")
+            print("\(nameOrUuid) attacked \(targetList) for \(e.amount).")
             
         case .onEnemyDefeated(let e):
-            print("\(e.name) was defeated.")
+            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.description
+            print("\(nameOrUuid) was defeated.")
             
         case .onBattleWon:
             print("\nPlayer won the battle.")

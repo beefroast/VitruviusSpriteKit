@@ -24,12 +24,35 @@ class CardZones {
         self.drawPile = drawPile
         self.discard = discard
     }
+    
+    func discard(cardUuid: UUID) -> Void {
+        
+        guard let card = hand.cards.first(where: { (card) -> Bool in
+            card.uuid == cardUuid
+        }) else {
+            return
+        }
+        
+        hand.cards.removeAll { (card) -> Bool in
+            card.uuid == cardUuid
+        }
+        
+        discard.push(elt: card)
+    }
 }
 
 class Hand {
+    
     var cards: [ICard]
+    
     init(cards: [ICard] = []) {
         self.cards = cards
+    }
+    
+    func cardWith(uuid: UUID) -> ICard? {
+        return cards.first { (c) -> Bool in
+            c.uuid == uuid
+        }
     }
 }
 
