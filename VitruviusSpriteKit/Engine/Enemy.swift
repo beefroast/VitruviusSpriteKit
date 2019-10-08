@@ -43,8 +43,7 @@ class Enemy: Actor {
                 enemy: self,
                 name: "\(self.name)'s turn",
                 events: [
-                    Event.playCard(CardEvent(cardOwner: self, card: CardStrike(), target: state.player)),
-                    Event.playCard(CardEvent(cardOwner: self, card: CardStrike(), target: state.player)),
+                    Event.attack(AttackEvent.init(sourceUuid: self.uuid, sourceOwner: self, targets: [state.player], amount: 12))
                 ]
             )
         )
@@ -102,63 +101,39 @@ class EnemyTurnEffect: IEffect {
     }
 }
 
+class TestEnemy: Enemy {
+    override func planTurn(state: BattleState) -> Event {
+        
+        let rand = Int.random(in: (0...2))
+        
+        switch rand {
+        case 2:
+            return Event.onEnemyPlannedTurn(
+                EnemyTurnEffect.init(
+                    uuid: UUID(),
+                    enemy: self,
+                    name: "\(self.name)'s turn",
+                    events: [
+                        Event.attack(AttackEvent.init(sourceUuid: self.uuid, sourceOwner: self, targets: [state.player], amount: 18))
+                    ]
+                )
+            )
+        default:
+            return Event.onEnemyPlannedTurn(
+                EnemyTurnEffect.init(
+                    uuid: UUID(),
+                    enemy: self,
+                    name: "\(self.name)'s turn",
+                    events: [
+                        Event.attack(AttackEvent.init(sourceUuid: self.uuid, sourceOwner: self, targets: [state.player], amount: 12)),
+                        Event.willGainBlock(UpdateBodyEvent.init(player: self, sourceUuid: self.uuid, amount: 6))
+                    ]
+                )
+            )
+        }
+        
+        
+        
+    }
+}
 
-//class Lagavulin: Enemy {
-//    
-//    var turnCount: Int = 0
-//    
-//    override func planTurn(state: BattleState) -> Event {
-//
-//        self.turnCount = (self.turnCount + 1) % 4
-//        
-//        if turnCount == 0 {
-//            
-//            // Debuff the enemy
-//            
-//        } else {
-//            
-//            
-//            
-//        }
-//        
-//        
-//        
-//        
-//        if isAsleep {
-//            return Event.onEnemyPlannedTurn(
-//                EnemyTurnEffect(
-//                    uuid: UUID(),
-//                    enemy: self,
-//                    name: "\(self.name)'s turn",
-//                    events: [
-//                        Event.playCard(CardEvent(cardOwner: self, card: CardStrike(), target: state.player)),
-//                        Event.playCard(CardEvent(cardOwner: self, card: CardStrike(), target: state.player)),
-//                    ]
-//                )
-//            )
-//        
-//        } else {
-//            
-//            
-//            
-//            
-//        }
-//        
-//        // Can't modify the effects list stack here, so we need to
-//        // enqueue a plan event...
-//        // This is fine because we can listen for that event anyway...
-//        
-//        return Event.onEnemyPlannedTurn(
-//            EnemyTurnEffect(
-//                uuid: UUID(),
-//                enemy: self,
-//                name: "\(self.name)'s turn",
-//                events: [
-//                    Event.playCard(CardEvent(cardOwner: self, card: CardStrike(), target: state.player)),
-//                    Event.playCard(CardEvent(cardOwner: self, card: CardStrike(), target: state.player)),
-//                ]
-//            )
-//        )
-//    }
-//    
-//}

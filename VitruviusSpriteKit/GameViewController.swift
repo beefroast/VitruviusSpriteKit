@@ -103,7 +103,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         
 
         
-        let goomba = Enemy(
+        let goomba = TestEnemy(
              uuid: UUID(),
              name: "Goomba",
              faction: .enemies,
@@ -117,7 +117,7 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
          )
          
          
-         let koopa = Enemy(
+         let koopa = TestEnemy(
              uuid: UUID(),
              name: "Koopa",
              faction: .enemies,
@@ -334,6 +334,17 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                         
             switch event {
                 
+                
+            case .onEnemyPlannedTurn(let e):
+                
+                // Get the enemy that has planned their turn
+                guard let enemyNode = self.playArea.actorNode(withUuid: e.enemy.uuid) else {
+                    self.battleState.popNext()
+                    return
+                }
+                
+                enemyNode.setIntentionToEvents(events: e.events)
+                self.battleState.popNext()
                 
             case .onCardDrawn(let e):
                 

@@ -18,6 +18,7 @@ class ActorNode: SKNode {
     var healthBarText: SKLabelNode? = nil
     var blockNode: SKSpriteNode? = nil
     var blockAmount: SKLabelNode? = nil
+    var intentionNode: SKLabelNode? = nil
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -29,6 +30,7 @@ class ActorNode: SKNode {
         self.blockNode = self.childNode(withName: "blockNode") as? SKSpriteNode
         self.blockAmount = self.blockNode?.childNode(withName: "blockAmount") as? SKLabelNode
         self.blockNode?.isHidden = true
+        self.intentionNode = self.childNode(withName: "intentionNode") as? SKLabelNode
     }
     
     class func newInstance(actor: Actor) -> ActorNode {
@@ -48,6 +50,22 @@ class ActorNode: SKNode {
             self.blockNode?.isHidden = false
             self.blockAmount?.text = "\(amount)"
         }
+    }
+    
+    func setIntentionToEvents(events: [Event]) -> Void {
+        
+        // TODO: This should be better
+        self.intentionNode?.text = events.map { (e) -> String in
+            switch e {
+            case .attack(let a):
+                return "Attack \(a.targets.first!.name) for \(a.amount)"
+            case .willGainBlock(let e):
+                return "Gain \(e.amount) block"
+            default:
+                return "unknown"
+            }
+        }.joined(separator: " & ")
+        
     }
     
 }
