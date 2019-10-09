@@ -102,7 +102,7 @@ class Stack<T> {
 }
 
 
-class StackQueue<T> {
+class StackQueue<T>: Codable where T: Codable {
     
     private var first: LinkedListElement<T>? = nil
     private var last: LinkedListElement<T>? = nil
@@ -111,6 +111,8 @@ class StackQueue<T> {
     var isEmpty: Bool {
         return count == 0
     }
+    
+    init() {}
     
     func getCount() -> Int {
         return count
@@ -166,5 +168,24 @@ class StackQueue<T> {
         self.last = nil
         self.count = 0
     }
+    
+    // MARK: - Codable Implementation
+
+    enum CodingKeys: String, CodingKey {
+         case list
+     }
+    
+    func encode(to encoder: Encoder) throws {
+       var container = encoder.container(keyedBy: CodingKeys.self)
+       try container.encode(self.asArray(), forKey: .list)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let list = try values.decode(Array<T>.self, forKey: .list)
+        list.reversed().forEach { (x) in self.push(elt: x) }
+    }
+    
 }
+
 

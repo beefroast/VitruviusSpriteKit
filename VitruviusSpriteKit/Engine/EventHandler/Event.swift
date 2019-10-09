@@ -8,8 +8,8 @@
 
 import Foundation
 
-enum Event {
-    
+enum Event: Codable {
+
     case playerInputRequired
     
     case onBattleBegan
@@ -47,9 +47,119 @@ enum Event {
     
     case onBattleWon
     case onBattleLost
+    
+    // MARK: - Codable Implementation
+    
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case data
+    }
+
+    init(from decoder: Decoder) throws {
+
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let type = try values.decode(String.self, forKey: .type)
+        
+        self = .playerInputRequired
+        
+        switch type {
+        
+        case "playerInputRequired": break
+        case "onBattleBegan": break
+        case "onEnemyPlannedTurn": break
+        case "onTurnBegan": break
+        case "onTurnEnded": break
+        case "addEffect": break
+        case "removeEffect": break
+        case "willDrawCards": break
+        case "drawCard": break
+        case "onCardDrawn": break
+        case "discardCard": break
+        case "discardHand": break
+        case "destroyCard":
+            let data = try values.decode(CardEvent.self, forKey: .data)
+            self = .destroyCard(data)
+            
+        case "shuffleDiscardIntoDrawPile": break
+        case "willLoseHp": break
+        case "willLoseBlock": break
+        case "didLoseHp": break
+        case "didLoseBlock": break
+        case "willGainHp": break
+        case "willGainBlock": break
+        case "didGainHp": break
+        case "didGainBlock": break
+        case "playCard": break
+        case "attack": break
+        case "onEnemyDefeated": break
+        
+        case "onBattleWon":
+            self = .onBattleWon
+            
+        case "onBattleLost": break
+            
+        default: break
+            
+        }
+
+    }
+
+    func encode(to encoder: Encoder) throws {
+         var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        switch self {
+        
+        case .playerInputRequired:
+            try container.encode("playerInputRequired", forKey: .type)
+            
+        case .onBattleBegan:
+            try container.encode("onBattleBegan", forKey: .type)
+            
+        case .onEnemyPlannedTurn(let e):
+            try container.encode("onEnemyPlannedTurn", forKey: .type)
+//            try container.encode(e, forKey: .data)
+            
+        case .onTurnBegan(let e): break
+        case .onTurnEnded(let e): break
+        case .addEffect(let e): break
+        case .removeEffect(let e): break
+        case .willDrawCards(let e): break
+        case .drawCard(let e): break
+        case .onCardDrawn(let e): break
+        case .discardCard(let e): break
+        case .discardHand(let e): break
+        case .destroyCard(let e):
+            try container.encode("destroyCard", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .shuffleDiscardIntoDrawPile(let e): break
+        case .willLoseHp(let e): break
+        case .willLoseBlock(let e): break
+        case .didLoseHp(let e): break
+        case .didLoseBlock(let e): break
+        case .willGainHp(let e): break
+        case .willGainBlock(let e): break
+        case .didGainHp(let e): break
+        case .didGainBlock(let e): break
+        case .playCard(let e, let uuid): break
+        case .attack(let e): break
+        case .onEnemyDefeated(let e): break
+        
+        case .onBattleWon:
+            try container.encode("\(self)", forKey: .type)
+            
+        case .onBattleLost: break
+        }
+     }
+     
+
+    
+
+    
 }
 
-class CardEvent {
+class CardEvent: Codable {
     let actorUuid: UUID
     let cardUuid: UUID
     init(actorUuid: UUID, cardUuid: UUID) {
@@ -58,23 +168,26 @@ class CardEvent {
     }
 }
 
-class PlayCardEvent: CardEvent {
+class PlayCardEvent: Codable {
+    let actorUuid: UUID
+    let cardUuid: UUID
     let targets: [UUID]
     init(actorUuid: UUID, cardUuid: UUID, targets: [UUID]) {
+        self.actorUuid = actorUuid
+        self.cardUuid = cardUuid
         self.targets = targets
-        super.init(actorUuid: actorUuid, cardUuid: cardUuid)
     }
 }
 
 
-class ActorEvent {
+class ActorEvent: Codable {
     var actorUuid: UUID
     init(actorUuid: UUID) {
         self.actorUuid = actorUuid
     }
 }
 
-class DrawCardsEvent {
+class DrawCardsEvent: Codable {
     var actorUuid: UUID
     var amount: Int
     init(actorUuid: UUID, amount: Int) {
@@ -84,7 +197,7 @@ class DrawCardsEvent {
 }
 
 
-class AttackEvent {
+class AttackEvent: Codable {
     
     let sourceUuid: UUID
     var sourceOwner: UUID
@@ -99,7 +212,7 @@ class AttackEvent {
     }
 }
 
-class UpdateBodyEvent {
+class UpdateBodyEvent: Codable {
     
     var targetActorUuid: UUID
     let sourceUuid: UUID
