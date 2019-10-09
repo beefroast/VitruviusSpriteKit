@@ -9,8 +9,15 @@
 import UIKit
 import SpriteKit
 
+protocol BattleSceneDelegate: AnyObject {
+    func onBattleWon(sender: BattleScene)
+    func onBattleLost(sender: BattleScene)
+}
+
 class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegate {
 
+    weak var battleSceneDelegate: BattleSceneDelegate? = nil
+    
     enum State {
         case waitingForAnimation
         case waitingForPlayerAction
@@ -362,6 +369,11 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
                    let label = SKLabelNode(text: "YOU WIN")
                    label.fontSize = 60
                    self.addChild(label)
+                   
+                   // Fade out everything
+                   self.isUserInteractionEnabled = false
+                   self.run(SKAction.fadeOut(withDuration: 1.0))
+                
                    
                default:
                    self.battleState.popNext()

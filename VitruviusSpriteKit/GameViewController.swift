@@ -21,6 +21,7 @@ class GameViewController: UIViewController {
         
         let view = self.view as! SKView
         
+        
         // Make a test battle state
         
         let player = Actor(

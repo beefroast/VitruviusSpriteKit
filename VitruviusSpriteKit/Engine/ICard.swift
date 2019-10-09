@@ -51,3 +51,46 @@ protocol ICard {
     func onDiscarded(source: Actor, battleState: BattleState) -> Void
 }
 
+
+class Card: Codable {
+    
+    let uuid: UUID
+    let card: ICard
+    
+    init(uuid: UUID, card: ICard) {
+        self.uuid = uuid
+        self.card = card
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case uuid
+        case cardNumber
+    }
+    
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(uuid, forKey: .uuid)
+        try container.encode(card.cardNumber, forKey: .cardNumber)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        uuid = try values.decode(UUID.self, forKey: .uuid)
+        let number = try values.decode(Int.self, forKey: .cardNumber)
+        
+        switch number {
+        case 1: self.card = CardStrike()
+        case 5: self.card = CardDefend()
+        default:
+            throw NSError.init(domain: "CardDeserializeError", code: 0, userInfo: nil)
+        
+        }
+        
+    }
+
+}
+
+
+
