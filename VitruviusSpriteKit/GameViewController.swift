@@ -21,18 +21,6 @@ class GameViewController: UIViewController {
         
         let view = self.view as! SKView
         
-        // Test some god darn event serialization
-        let x = [
-            Event.destroyCard(CardEvent.init(actorUuid: UUID(), cardUuid: UUID())),
-            Event.onBattleWon
-        ]
-        
-        let dat = try! JSONEncoder().encode(x)
-        let s = String(data: dat, encoding: .utf8)
-
-        let y = try! JSONDecoder().decode([Event].self, from: dat)
-        print(y)
-        
         
         // Make a test battle state
         
