@@ -475,8 +475,10 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
                 self.state = .waitingForPlayerAction
                 self.battleState.eventHandler.push(
                     event: Event.playCard(
-                        CardEvent.init(actorUuid: self.battleState.player.uuid, cardUuid: card.card.uuid),
-                        nil
+                        PlayCardEvent.init(
+                            actorUuid: self.battleState.player.uuid,
+                            cardUuid: card.card.uuid
+                        )
                     )
                 )
                 self.battleState.popNext()
@@ -509,13 +511,12 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
             self.state = .waitingForPlayerAction
             
             
-            self.battleState.eventHandler.push(event: Event.playCard(
-                CardEvent.init(
-                    actorUuid: self.battleState.player.uuid,
-                    cardUuid: card.card.uuid
-                ),
-                actor.uuid
-            ))
+            self.battleState.eventHandler.push(event: Event.playCard(PlayCardEvent.init(
+                actorUuid: self.battleState.player.uuid,
+                cardUuid: card.card.uuid,
+                target: actorNode.actorUuid
+            )))
+                
             self.battleState.popNext()
             
             

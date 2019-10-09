@@ -283,7 +283,7 @@ class EventHandler {
             
         case .playCard(let e):
             
-            guard let actor = battleState.actorWith(uuid: e.0.actorUuid) else {
+            guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
                 break
             }
             
@@ -291,14 +291,14 @@ class EventHandler {
                 self.push(event: Event.playerInputRequired)
             }
             
-            guard let card = actor.cardZones.hand.cardWith(uuid: e.0.cardUuid) else {
+            guard let card = actor.cardZones.hand.cardWith(uuid: e.cardUuid) else {
                 break
             }
             
             card.resolve(
                 source: actor,
                 battleState: battleState,
-                target: e.1.flatMap({ battleState.actorWith(uuid: $0) })
+                target: e.target.flatMap(battleState.actorWith(uuid:))
             )
             
         case .attack(let e):
@@ -508,9 +508,9 @@ class EventPrinterEffect: IEffect {
             print("\(nameOrUuid) gained \(e.amount) block.")
             
         case .playCard(let e):
-            let actor = state.actorWith(uuid: e.0.actorUuid)
-            let cardName = actor?.cardZones.hand.cardWith(uuid: e.0.cardUuid)?.name ?? e.0.cardUuid.uuidString
-            let nameOrUuid = actor?.name ?? e.0.actorUuid.uuidString
+            let actor = state.actorWith(uuid: e.actorUuid)
+            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
+            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
             print("\n\(nameOrUuid) played \(cardName).")
             
         case .attack(let e):

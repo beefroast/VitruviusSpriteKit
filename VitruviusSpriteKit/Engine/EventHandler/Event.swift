@@ -40,7 +40,7 @@ enum Event: Codable {
     case didGainHp(UpdateBodyEvent)
     case didGainBlock(UpdateBodyEvent)
     
-    case playCard(CardEvent, UUID?)
+    case playCard(PlayCardEvent)
     case attack(AttackEvent)
     
     case onEnemyDefeated(ActorEvent)
@@ -116,35 +116,98 @@ enum Event: Codable {
         case .onBattleBegan:
             try container.encode("onBattleBegan", forKey: .type)
             
-        case .onEnemyPlannedTurn(let e):
-            try container.encode("onEnemyPlannedTurn", forKey: .type)
+        case .onEnemyPlannedTurn(let e): break
+//            try container.encode("onEnemyPlannedTurn", forKey: .type)
 //            try container.encode(e, forKey: .data)
             
-        case .onTurnBegan(let e): break
-        case .onTurnEnded(let e): break
+        case .onTurnBegan(let e):
+            try container.encode("onTurnBegan", forKey:. type)
+            try container.encode(e, forKey: .data)
+            
+        case .onTurnEnded(let e):
+            try container.encode("onTurnEnded", forKey:. type)
+            try container.encode(e, forKey: .data)
+            
         case .addEffect(let e): break
+//            try container.encode("addEffect", forKey:. type)
+//            try container.encode(e, forKey: .data)
+            
         case .removeEffect(let e): break
-        case .willDrawCards(let e): break
-        case .drawCard(let e): break
-        case .onCardDrawn(let e): break
-        case .discardCard(let e): break
-        case .discardHand(let e): break
+//            try container.encode("removeEffect", forKey:. type)
+//            try container.encode(e, forKey: .data)
+            
+        case .willDrawCards(let e):
+            try container.encode("willDrawCards", forKey:. type)
+            try container.encode(e, forKey: .data)
+            
+        case .drawCard(let e):
+            try container.encode("drawCard", forKey:. type)
+            try container.encode(e, forKey: .data)
+            
+        case .onCardDrawn(let e):
+            try container.encode("onCardDrawn", forKey:. type)
+            try container.encode(e, forKey: .data)
+            
+        case .discardCard(let e):
+            try container.encode("discardCard", forKey:. type)
+            try container.encode(e, forKey: .data)
+            
+        case .discardHand(let e):
+            try container.encode("discardHand", forKey:. type)
+            try container.encode(e, forKey: .data)
+            
         case .destroyCard(let e):
             try container.encode("destroyCard", forKey: .type)
             try container.encode(e, forKey: .data)
             
-        case .shuffleDiscardIntoDrawPile(let e): break
-        case .willLoseHp(let e): break
-        case .willLoseBlock(let e): break
-        case .didLoseHp(let e): break
-        case .didLoseBlock(let e): break
-        case .willGainHp(let e): break
-        case .willGainBlock(let e): break
-        case .didGainHp(let e): break
-        case .didGainBlock(let e): break
-        case .playCard(let e, let uuid): break
-        case .attack(let e): break
-        case .onEnemyDefeated(let e): break
+        case .shuffleDiscardIntoDrawPile(let e):
+            try container.encode("shuffleDiscardIntoDrawPile", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .willLoseHp(let e):
+            try container.encode("willLoseHp", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .willLoseBlock(let e):
+            try container.encode("willLoseBlock", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .didLoseHp(let e):
+            try container.encode("didLoseHp", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .didLoseBlock(let e):
+            try container.encode("didLoseBlock", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .willGainHp(let e):
+            try container.encode("willGainHp", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .willGainBlock(let e):
+            try container.encode("willGainBlock", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .didGainHp(let e):
+            try container.encode("didGainHp", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .didGainBlock(let e):
+            try container.encode("didGainBlock", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .playCard(let e):
+            try container.encode("playCard", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .attack(let e):
+            try container.encode("attack", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .onEnemyDefeated(let e):
+            try container.encode("onEnemyDefeated", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
         
         case .onBattleWon:
             try container.encode("\(self)", forKey: .type)
@@ -171,11 +234,11 @@ class CardEvent: Codable {
 class PlayCardEvent: Codable {
     let actorUuid: UUID
     let cardUuid: UUID
-    let targets: [UUID]
-    init(actorUuid: UUID, cardUuid: UUID, targets: [UUID]) {
+    let target: UUID?
+    init(actorUuid: UUID, cardUuid: UUID, target: UUID? = nil) {
         self.actorUuid = actorUuid
         self.cardUuid = cardUuid
-        self.targets = targets
+        self.target = target
     }
 }
 

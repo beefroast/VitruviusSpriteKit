@@ -21,35 +21,36 @@ class EventSerializationTests: XCTestCase {
 
     func testEventSerialization() {
         
-        let events: [Event] = [
-            .playerInputRequired,
-            .onBattleBegan,
-//            .onEnemyPlannedTurn(EnemyTurnEffect.init(uuid: UUID, enemy: <#T##Enemy#>, name: <#T##String#>, events: <#T##[Event]#>)),
-            .onTurnBegan(ActorEvent.init(actorUuid: UUID())),
-            .onTurnEnded(ActorEvent.init(actorUuid: UUID())),
-//            .addEffect(IEffect),
-//            .removeEffect(IEffect),
-            .willDrawCards(DrawCardsEvent.init(actorUuid: UUID(), amount: 7)),
-            .drawCard(ActorEvent.init(actorUuid: UUID())),
-            .onCardDrawn(CardEvent.init(actorUuid: UUID(), cardUuid: UUID())),
-            .discardCard(CardEvent.init(actorUuid: UUID(), cardUuid: UUID())),
-            .discardHand(ActorEvent.init(actorUuid: UUID())),
-            .destroyCard(CardEvent.init(actorUuid: UUID(), cardUuid: UUID())),
-            .shuffleDiscardIntoDrawPile(ActorEvent.init(actorUuid: UUID())),
-            .willLoseHp(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)),
-            .willLoseBlock(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)),
-            .didLoseHp(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)),
-            .didLoseBlock(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)),
-            .willGainHp(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)),
-            .willGainBlock(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)),
-            .didGainHp(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)),
-            .didGainBlock(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)),
-            .playCard(CardEvent.init(actorUuid: UUID(), cardUuid: UUID()), UUID()),
-            .attack(AttackEvent.init(sourceUuid: UUID(), sourceOwner: UUID(), targets: [UUID()], amount: 7)),
-            .onEnemyDefeated(ActorEvent.init(actorUuid: UUID())),
-            .onBattleWon,
-            .onBattleLost,
-        ]
+        var events: [Event] = []
+        
+        events.append(.playerInputRequired)
+        events.append(.onBattleBegan)
+        events.append(.onEnemyPlannedTurn(EnemyTurnEffect.init(uuid: UUID(), enemyUuid: UUID(), name: "", events: [])))
+        events.append(.onTurnBegan(ActorEvent.init(actorUuid: UUID())))
+        events.append(.onTurnEnded(ActorEvent.init(actorUuid: UUID())))
+//        events.append(.addEffect(IEffect))
+//        events.append(.removeEffect(IEffect))
+        events.append(.willDrawCards(DrawCardsEvent.init(actorUuid: UUID(), amount: 7)))
+        events.append(.drawCard(ActorEvent.init(actorUuid: UUID())))
+        events.append(.onCardDrawn(CardEvent.init(actorUuid: UUID(), cardUuid: UUID())))
+        events.append(.discardCard(CardEvent.init(actorUuid: UUID(), cardUuid: UUID())))
+        events.append(.discardHand(ActorEvent.init(actorUuid: UUID())))
+        events.append(.destroyCard(CardEvent.init(actorUuid: UUID(), cardUuid: UUID())))
+        events.append(.shuffleDiscardIntoDrawPile(ActorEvent.init(actorUuid: UUID())))
+        events.append(.willLoseHp(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)))
+        events.append(.willLoseBlock(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)))
+        events.append(.didLoseHp(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)))
+        events.append(.didLoseBlock(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)))
+        events.append(.willGainHp(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)))
+        events.append(.willGainBlock(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)))
+        events.append(.didGainHp(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)))
+        events.append(.didGainBlock(UpdateBodyEvent.init(targetActorUuid: UUID(), sourceUuid: UUID(), amount: 7)))
+        events.append(.playCard(PlayCardEvent.init(actorUuid: UUID(), cardUuid: UUID(), target: UUID())))
+        events.append(.attack(AttackEvent.init(sourceUuid: UUID(), sourceOwner: UUID(), targets: [UUID()], amount: 7)))
+        events.append(.onEnemyDefeated(ActorEvent.init(actorUuid: UUID())))
+        events.append(.onBattleWon)
+        events.append(.onBattleLost)
+        
         
         do {
             
