@@ -424,7 +424,8 @@ class EventPrinterEffect: IEffect {
             print("Battle began.")
             
         case .onEnemyPlannedTurn(let e):
-            print("\n\(e.enemy.name) planned their next turn.")
+            let nameOrUuid = state.actorWith(uuid: e.enemyUuid)?.name ?? e.enemyUuid.uuidString
+            print("\n\(nameOrUuid) planned their next turn.")
             
         case .onTurnBegan(let e):
             let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString

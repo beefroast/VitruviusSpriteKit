@@ -51,19 +51,27 @@ class EventSerializationTests: XCTestCase {
             .onBattleLost,
         ]
         
-        let data = try! JSONEncoder().encode(events)
-        let s = String(data: data, encoding: .utf8)
-        
-        print(s)
-
-        let deserializedArray = try! JSONDecoder().decode([Event].self, from: data)
-        
-        zip(events, deserializedArray).forEach { (eventPair) in
-            let originalEvent = eventPair.0
-            let deserializedEvent = eventPair.1
+        do {
             
-            // TODO: Compare the events and make sure that they're the same
+            let data = try JSONEncoder().encode(events)
+             let s = String(data: data, encoding: .utf8)
+             
+             print(s)
+
+             let deserializedArray = try JSONDecoder().decode([Event].self, from: data)
+             
+             zip(events, deserializedArray).forEach { (eventPair) in
+                 let originalEvent = eventPair.0
+                 let deserializedEvent = eventPair.1
+                 
+                 // TODO: Compare the events and make sure that they're the same
+             }
+            
+        } catch (let error) {
+            XCTFail(error.localizedDescription)
         }
+        
+ 
      
     }
 

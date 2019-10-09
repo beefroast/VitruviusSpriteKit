@@ -34,7 +34,7 @@ class Enemy: Actor {
         return Event.onEnemyPlannedTurn(
             EnemyTurnEffect(
                 uuid: UUID(),
-                enemy: self,
+                enemyUuid: self.uuid,
                 name: "\(self.name)'s turn",
                 events: []
             )
@@ -45,13 +45,13 @@ class Enemy: Actor {
 class EnemyTurnEffect: IEffect {
 
     var uuid: UUID
-    var enemy: Enemy
+    var enemyUuid: UUID
     var effectName: String
     var events: [Event]
     
-    init(uuid: UUID, enemy: Enemy, name: String, events: [Event]) {
+    init(uuid: UUID, enemyUuid: UUID, name: String, events: [Event]) {
         self.uuid = uuid
-        self.enemy = enemy
+        self.enemyUuid = enemyUuid
         self.effectName = name
         self.events = events
     }
@@ -62,13 +62,18 @@ class EnemyTurnEffect: IEffect {
         case .onEnemyDefeated(let e):
             
             // Remove this event if the enemy is defeated...
-            return e.actorUuid == self.enemy.uuid
+            return e.actorUuid == self.enemyUuid
             
         case .onTurnBegan(let e):
             
             // When our turn begins...
-            guard e.actorUuid == self.enemy.uuid else {
+            guard e.actorUuid == self.enemyUuid else {
                 return false
+            }
+            
+            // Find the enemy
+            guard let enemy = state.actorWith(uuid: enemyUuid) as? Enemy else {
+                return true
             }
             
             state.eventHandler.push(events:
@@ -80,7 +85,7 @@ class EnemyTurnEffect: IEffect {
                 enemy.planTurn(state: state),
                 
                 //End our turn
-                Event.onTurnEnded(ActorEvent.init(actorUuid: enemy.uuid))
+                Event.onTurnEnded(ActorEvent.init(actorUuid: enemyUuid))
             
             ])
             
@@ -104,7 +109,7 @@ class TestEnemy: Enemy {
             return Event.onEnemyPlannedTurn(
                 EnemyTurnEffect.init(
                     uuid: UUID(),
-                    enemy: self,
+                    enemyUuid: self.uuid,
                     name: "\(self.name)'s turn",
                     events: [
                         Event.attack(
@@ -122,7 +127,7 @@ class TestEnemy: Enemy {
             return Event.onEnemyPlannedTurn(
                 EnemyTurnEffect.init(
                     uuid: UUID(),
-                    enemy: self,
+                    enemyUuid: self.uuid,
                     name: "\(self.name)'s turn",
                     events: [
                         Event.attack(

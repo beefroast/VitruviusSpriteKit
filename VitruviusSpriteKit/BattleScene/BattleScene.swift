@@ -127,7 +127,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
                case .onEnemyPlannedTurn(let e):
                    
                    // Get the enemy that has planned their turn
-                   guard let enemyNode = self.playArea.actorNode(withUuid: e.enemy.uuid) else {
+                guard let enemyNode = self.playArea.actorNode(withUuid: e.enemyUuid) else {
                        self.battleState.popNext()
                        return
                    }
