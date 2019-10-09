@@ -10,12 +10,6 @@ import UIKit
 import SpriteKit
 import GameplayKit
 
-enum State {
-    case waitingForAnimation
-    case waitingForPlayerAction
-    case draggingCard(CardNode, SKNode)
-    case selectingTarget(CardNode, SKNode)
-}
 
 // TODO: Move this into a scene
 

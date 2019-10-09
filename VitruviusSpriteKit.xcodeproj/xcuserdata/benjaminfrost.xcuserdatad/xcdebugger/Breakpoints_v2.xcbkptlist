@@ -46,73 +46,9 @@
             filePath = "VitruviusSpriteKit/BattleScene/BattleScene.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
             landmarkName = "init(coder:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "723A7082-3C26-4713-9AF8-7D29CBF14E14"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VitruviusSpriteKit/BattleScene/BattleScene.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
-            landmarkName = "handle(event:state:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "723A7082-3C26-4713-9AF8-7D29CBF14E14 - d80927b33488c775"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "VitruviusSpriteKit.BattleScene.handle(event: VitruviusSpriteKit.Event, state: VitruviusSpriteKit.BattleState) -&gt; Swift.Bool"
-                  moduleName = "VitruviusSpriteKit"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/benjaminfrost/Documents/Projects/VitruviusSpriteKit/VitruviusSpriteKit/BattleScene/BattleScene.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "104"
-                  endingLineNumber = "104"
-                  offsetFromSymbolStart = "190">
-               </Location>
-               <Location
-                  uuid = "723A7082-3C26-4713-9AF8-7D29CBF14E14 - 5998cb9ff5bc2f23"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; () in VitruviusSpriteKit.BattleScene.handle(event: VitruviusSpriteKit.Event, state: VitruviusSpriteKit.BattleState) -&gt; Swift.Bool"
-                  moduleName = "VitruviusSpriteKit"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/benjaminfrost/Documents/Projects/VitruviusSpriteKit/VitruviusSpriteKit/BattleScene/BattleScene.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "102"
-                  endingLineNumber = "102"
-                  offsetFromSymbolStart = "454">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "353EA6D4-676E-4AED-9994-2575B2EB6AB1"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VitruviusSpriteKit/BattleScene/BattleScene.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
-            landmarkName = "handle(event:state:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

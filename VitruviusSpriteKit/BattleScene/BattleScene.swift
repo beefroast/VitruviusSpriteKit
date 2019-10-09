@@ -11,13 +11,14 @@ import SpriteKit
 
 class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegate {
 
-    
-    
-    
-    
+    enum State {
+        case waitingForAnimation
+        case waitingForPlayerAction
+        case draggingCard(CardNode, SKNode)
+        case selectingTarget(CardNode, SKNode)
+    }
 
     
-
     var battleState: BattleState!
     var state: State = .waitingForAnimation
     
@@ -32,7 +33,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        print("Loaded scene with decoder!")
     }
     
     func setBattleState(battleState: BattleState) {
@@ -94,6 +94,14 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
         
         // Now pop the first event of the stack
         battleState.popNext()
+    }
+    
+    var lastTime: TimeInterval = 0
+    
+    override func update(_ currentTime: TimeInterval) {
+        let deltaTime = currentTime - lastTime
+        self.arrow.updateWithTimeInterval(timeInterval: deltaTime)
+        self.lastTime = currentTime
     }
     
     
@@ -208,7 +216,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
                    }
                    
                    if actor.faction == .player {
-                       print("DISABLED")
                        self.handNode.setCardsInteraction(enabled: false)
                        self.endTurnButton.isUserInteractionEnabled = false
                    }
@@ -242,7 +249,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
                    
                case .playerInputRequired:
                    self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
-                   print("ENABLED")
                    self.handNode.setCardsInteraction(enabled: true)
                    self.endTurnButton.isUserInteractionEnabled = true
                    
@@ -262,7 +268,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
                    actorNode.isPaused = false
                    actorNode.setScale(1.05)
                    actorNode.run(SKAction.scale(to: 1.0, duration: 0.1)) {
-                       print("Finished bulge at \(Date().timeIntervalSince1970)")
                    }
                    
                    // Update the HP bar
@@ -382,7 +387,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
     func touchesBegan(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
           
         self.touchNode.position =  touches.first!.location(in: self)
-        print(self.touchNode.position)
         
         self.state = .draggingCard(card, card.parent!)
             
