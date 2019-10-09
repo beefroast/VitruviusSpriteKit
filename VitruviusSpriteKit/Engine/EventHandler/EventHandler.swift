@@ -322,7 +322,7 @@ class EventHandler {
                 
                 self.eventStack.push(elt:
                     Event.willLoseBlock(
-                        UpdateBodyEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: damageRemaining)
+                        UpdateBodyEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: blockLost)
                     )
                 )
             }
