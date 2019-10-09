@@ -65,39 +65,112 @@ enum Event: Codable {
         
         switch type {
         
-        case "playerInputRequired": break
-        case "onBattleBegan": break
-        case "onEnemyPlannedTurn": break
-        case "onTurnBegan": break
-        case "onTurnEnded": break
-        case "addEffect": break
-        case "removeEffect": break
-        case "willDrawCards": break
-        case "drawCard": break
-        case "onCardDrawn": break
-        case "discardCard": break
-        case "discardHand": break
+        case "playerInputRequired":
+            self = .playerInputRequired
+            
+        case "onBattleBegan":
+            self = .onBattleBegan
+            
+        case "onEnemyPlannedTurn":
+            break
+//            let data = try values.decode(CardEvent.self, forKey: .data)
+//            self = .onEnemyPlannedTurn(data)
+            
+        case "onTurnBegan":
+            let data = try values.decode(ActorEvent.self, forKey: .data)
+            self = .onTurnBegan(data)
+            
+        case "onTurnEnded":
+            let data = try values.decode(ActorEvent.self, forKey: .data)
+            self = .onTurnEnded(data)
+            
+        case "addEffect":
+            break
+//            let data = try values.decode(CardEvent.self, forKey: .data)
+//            self = .addEffect(data)
+            
+        case "removeEffect":
+            break
+//            let data = try values.decode(CardEvent.self, forKey: .data)
+//            self = .removeEffect(data)
+            
+        case "willDrawCards":
+            let data = try values.decode(DrawCardsEvent.self, forKey: .data)
+            self = .willDrawCards(data)
+            
+        case "drawCard":
+            let data = try values.decode(ActorEvent.self, forKey: .data)
+            self = .drawCard(data)
+            
+        case "onCardDrawn":
+            let data = try values.decode(CardEvent.self, forKey: .data)
+            self = .onCardDrawn(data)
+            
+        case "discardCard":
+            let data = try values.decode(CardEvent.self, forKey: .data)
+            self = .discardCard(data)
+            
+        case "discardHand":
+            let data = try values.decode(ActorEvent.self, forKey: .data)
+            self = .discardHand(data)
+            
         case "destroyCard":
             let data = try values.decode(CardEvent.self, forKey: .data)
             self = .destroyCard(data)
             
-        case "shuffleDiscardIntoDrawPile": break
-        case "willLoseHp": break
-        case "willLoseBlock": break
-        case "didLoseHp": break
-        case "didLoseBlock": break
-        case "willGainHp": break
-        case "willGainBlock": break
-        case "didGainHp": break
-        case "didGainBlock": break
-        case "playCard": break
-        case "attack": break
-        case "onEnemyDefeated": break
-        
+        case "shuffleDiscardIntoDrawPile":
+            let data = try values.decode(ActorEvent.self, forKey: .data)
+            self = .shuffleDiscardIntoDrawPile(data)
+            
+        case "willLoseHp":
+            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            self = .willLoseHp(data)
+            
+        case "willLoseBlock":
+            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            self = .willLoseBlock(data)
+            
+        case "didLoseHp":
+            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            self = .didLoseHp(data)
+            
+        case "didLoseBlock":
+            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            self = .didLoseBlock(data)
+            
+        case "willGainHp":
+            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            self = .willGainHp(data)
+            
+        case "willGainBlock":
+            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            self = .willGainBlock(data)
+            
+        case "didGainHp":
+            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            self = .didGainHp(data)
+            
+        case "didGainBlock":
+            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            self = .didGainBlock(data)
+            
+        case "playCard":
+            let data = try values.decode(PlayCardEvent.self, forKey: .data)
+            self = .playCard(data)
+            
+        case "attack":
+            let data = try values.decode(AttackEvent.self, forKey: .data)
+            self = .attack(data)
+            
+        case "onEnemyDefeated":
+            let data = try values.decode(ActorEvent.self, forKey: .data)
+            self = .onEnemyDefeated(data)
+            
         case "onBattleWon":
             self = .onBattleWon
             
-        case "onBattleLost": break
+        case "onBattleLost":
+            self = .onBattleLost
             
         default: break
             
@@ -208,11 +281,11 @@ enum Event: Codable {
             try container.encode("onEnemyDefeated", forKey: .type)
             try container.encode(e, forKey: .data)
             
-        
         case .onBattleWon:
-            try container.encode("\(self)", forKey: .type)
+            try container.encode("onBattleWon", forKey: .type)
             
-        case .onBattleLost: break
+        case .onBattleLost:
+            try container.encode("onBattleLost", forKey: .type)
         }
      }
      
