@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		64096039234D82390046E0A1 /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64096038234D82390046E0A1 /* EventTests.swift */; };
 		643588B82345FD8F007334D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588B72345FD8F007334D9 /* AppDelegate.swift */; };
 		643588BC2345FD8F007334D9 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 643588BB2345FD8F007334D9 /* Actions.sks */; };
 		643588C02345FD8F007334D9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588BF2345FD8F007334D9 /* GameViewController.swift */; };
@@ -64,6 +65,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		64096038234D82390046E0A1 /* EventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
 		643588B42345FD8F007334D9 /* VitruviusSpriteKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VitruviusSpriteKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		643588B72345FD8F007334D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		643588BB2345FD8F007334D9 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
@@ -134,6 +136,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		64096037234D82200046E0A1 /* EventTests */ = {
+			isa = PBXGroup;
+			children = (
+				64096038234D82390046E0A1 /* EventTests.swift */,
+			);
+			path = EventTests;
+			sourceTree = "<group>";
+		};
 		643588AB2345FD8F007334D9 = {
 			isa = PBXGroup;
 			children = (
@@ -182,6 +192,7 @@
 		643588D12345FD93007334D9 /* VitruviusSpriteKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				64096037234D82200046E0A1 /* EventTests */,
 				643588D22345FD93007334D9 /* VitruviusSpriteKitTests.swift */,
 				643588D42345FD93007334D9 /* Info.plist */,
 			);
@@ -417,6 +428,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64096039234D82390046E0A1 /* EventTests.swift in Sources */,
 				643588D32345FD93007334D9 /* VitruviusSpriteKitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
