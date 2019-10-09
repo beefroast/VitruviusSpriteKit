@@ -65,7 +65,7 @@ class CardDrain: ICard {
         let owner: Actor
         let sourceUuid: UUID
         var uuid: UUID = UUID()
-        var name: String = "Drain"
+        var effectName: String = "Drain"
         
         init(owner: Actor, sourceUuid: UUID) {
             self.owner = owner

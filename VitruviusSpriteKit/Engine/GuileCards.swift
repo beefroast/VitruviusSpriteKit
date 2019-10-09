@@ -34,7 +34,7 @@ class CardMistForm: ICard {
         
         let owner: Actor
         var uuid: UUID = UUID()
-        var name: String = "Mist Form"
+        var effectName: String = "Mist Form"
         
         init(owner: Actor) {
             self.owner = owner

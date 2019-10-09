@@ -17,25 +17,18 @@ enum State {
     case selectingTarget(CardNode, SKNode)
 }
 
-class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndTurnButtonDelegate {
- 
-    var handNode: HandNode!
-    var playArea: PlayAreaNode!
-    var battleState: BattleState!
-    var discardNode: SKNode!
-    var drawNode: SKNode!
-    var endTurnButton: EndTurnButton!
-    var cardNodePool: CardNodePool!
-    
-    var state: State = .waitingForAnimation
-    var scene: SKScene!
+// TODO: Move this into a scene
+
+class GameViewController: UIViewController {
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let view = self.view as! SKView
         
-        // Make a player
+        // Make a test battle state
+        
         let player = Actor(
             uuid: UUID(),
             name: "Player",
@@ -58,50 +51,6 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
                 ]),
                 discard: DiscardPile()
         ))
-        
-        // Generate the card nodes to re-use
-        self.cardNodePool = CardNodePool()
-        
-        // Preload the textures
-        let imgProvider = CardNodeImageProvider()
-        let textures = player.cardZones.drawPile.randomPool.map { (c) -> SKTexture in
-            return imgProvider.textureFor(card: c)
-        }
-        
-        // Load the battle scene
-        let scene = SKScene(fileNamed: "BattleScene")
-        scene?.scaleMode = .aspectFit
-        self.scene = scene!
-        
-        print("SCENE PARENT IS \(String(describing: scene!.parent))")
-        
-        // Present the scene
-        view.ignoresSiblingOrder = false
-        view.showsFPS = true
-        view.showsNodeCount = true
-        view.showsDrawCount = true
-        
-        // Get the draw and discard nodes
-        self.drawNode = scene?.childNode(withName: "deckNode")
-        self.discardNode = scene?.childNode(withName: "discardNode")
-        self.endTurnButton = scene?.childNode(withName: "endTurn") as! EndTurnButton
-        self.endTurnButton.isUserInteractionEnabled = true
-        self.endTurnButton.delegate = self
-        
-        // Add the hand node
-        let handNode = HandNode()
-        handNode.setupNodes()
-        handNode.zPosition = 20.0
-        self.handNode = handNode
-        scene?.addChild(handNode)
-        
-        
-        
-        handNode.position = CGPoint(x:0, y: -200)
-        
-        // Get that battle state happening
-        
-
         
         let goomba = TestEnemy(
              uuid: UUID(),
@@ -130,15 +79,14 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
              preBattleCards: []
          )
         
-        self.battleState = BattleState.init(
+        let battleState = BattleState.init(
             player: player,
             allies: [],
             enemies: [goomba, koopa],
             eventHandler: EventHandler(
                 eventStack: StackQueue<Event>(),
                 effectList: [
-                    EventPrinterEffect(uuid: UUID(), name: "Printer"),
-                    self
+                    EventPrinterEffect(uuid: UUID(), name: "Printer")
                 ]
             )
         )
@@ -152,38 +100,19 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
             ))
         )
 
+ 
+        // Load the battle scene
+        let scene = SKScene(fileNamed: "BattleScene") as! BattleScene
+        scene.scaleMode = .aspectFit
+        scene.setBattleState(battleState: battleState)
         
-        // Let's add some actors
-        let playArea = PlayAreaNode()
-        scene?.addChild(playArea)
-        playArea.position = CGPoint.zero
+        // Present the scene
+        view.ignoresSiblingOrder = false
+        view.showsFPS = true
+        view.showsNodeCount = true
+        view.showsDrawCount = true
+        view.presentScene(scene)
 
-        let playerActorNode = ActorNode.newInstance(actor: player)
-        playerActorNode.image?.texture = SKTexture(image: UIImage(named: "Adventurer")!)
-        
-        playArea.addPlayerAndEnemies(
-            player: playerActorNode,
-            enemies: [
-                ActorNode.newInstance(actor: goomba),
-                ActorNode.newInstance(actor: koopa)
-            ]
-        )
-        
-        let playerAndEnemyTextures = [
-            SKTexture(imageNamed: "Adventurer"),
-            SKTexture(imageNamed: "skeleton"),
-            SKTexture(imageNamed: "frame_wood")
-        ]
-            
-        
-        // Save the play area...
-        self.playArea = playArea
-        
-        SKTexture.preload(textures + playerAndEnemyTextures) {
-            view.presentScene(scene)
-            self.battleState.eventHandler.push(event: Event.onBattleBegan)
-            self.battleState.popNext() 
-        }
         
     }
 
@@ -199,414 +128,8 @@ class GameViewController: UIViewController, CardNodeTouchDelegate, IEffect, EndT
         return true
     }
     
-    // CardNodeTouchDelegate
-    
-    func touchesBegan(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
-        
-        self.state = .draggingCard(card, card.parent!)
-        
-        // Move the hand down...
-        let a = SKAction.moveTo(y: -400, duration: 0.2)
-        self.handNode.run(a)
-        card.zPosition = 100
-  
-        self.handNode.removeCardAndAnimateIntoPosition(cardNode: card)
-        self.scene.addChildPreserveTransform(child: card)
-        
-        card.run(SKAction.group([
-            SKAction.rotate(toAngle: 0, duration: 0.1),
-            SKAction.scale(to: 1.0, duration: 0.1)
-        ]))
-    }
-    
 
-    func touchesEnded(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
-        
-        print(touches.first!.location(in: self.scene).y)
-        
-        // Check to see if the card has been dragged out enough
-        if card.position.y >= -100 {
-            
-            // Check to see if the card has a single target
-            self.arrow?.removeFromParent()
-            
-            if card.requiresSingleTarget() {
-                
-                // Check to see if we dragged onto a target
-                let draggedTo = touches.first!.location(in: self.scene)
-                let nodes = self.scene.nodes(at: draggedTo)
-                
-                guard let actorNode = nodes.compactMap({ $0 as? ActorNode }).first,
-                    let actor = self.battleState.enemies.first(where: { (e) -> Bool in
-                        e.uuid == actorNode.actorUuid
-                    }) else {
-                        
-                        // Put the card back in the hand & move the hand up
-                        self.handNode.addCardAndAnimationIntoPosiiton(cardNode: card)
-                        let a = SKAction.moveTo(y: -200, duration: 0.2)
-                        self.handNode.run(a)
-                        self.state = .waitingForPlayerAction
-                        return
-                }
-                
-                self.state = .waitingForPlayerAction
-                
-                
-                self.battleState.eventHandler.push(event: Event.playCard(
-                    CardEvent.init(
-                        actorUuid: self.battleState.player.uuid,
-                        cardUuid: card.card.uuid
-                    ),
-                    actor.uuid
-                ))
-                self.battleState.popNext()
-                
-                
-            } else {
-                
-                // Just play the card...
-                self.state = .waitingForPlayerAction
-                self.battleState.eventHandler.push(
-                    event: Event.playCard(
-                        CardEvent.init(actorUuid: self.battleState.player.uuid, cardUuid: card.card.uuid),
-                        nil
-                    )
-                )
-                self.battleState.popNext()
-                
-            }
-            
-        } else {
-            
-            // Put the card back in the hand & move the hand up
-            self.handNode.addCardAndAnimationIntoPosiiton(cardNode: card)
-            let a = SKAction.moveTo(y: -200, duration: 0.2)
-            self.handNode.run(a)
-            self.state = .waitingForPlayerAction
-            
-        }
-    }
-    
-    var arrow: ArrowNode? = nil
-    
-    func touchesMoved(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
-        
-        switch self.state {
-        case .draggingCard(let c, let p):
-            
-            if card.position.y >= -100 && card.card.requiresSingleTarget {
-                self.state = .selectingTarget(c, p)
-                card.run(SKAction.move(to: CGPoint(x: -300, y: 0), duration: 0.1))
-                
-                self.arrow = ArrowNode()
-                self.scene.addChild(self.arrow!)
-                arrow?.tipNode.position = touches.first!.location(in: card.parent!)
-                arrow?.tailNode.position = CGPoint(x: -300, y: 0)
-                arrow?.updateArrow()
-                
-            } else {
-                self.arrow?.removeFromParent()
-                card.position = touches.first!.location(in: card.parent!)
-            }
-            
-        case .selectingTarget(let c, let p):
-            if touches.first!.location(in: self.scene).y < -100 {
-                self.state = .draggingCard(c, p)
-                card.position = touches.first!.location(in: card.parent!)
-            } else {
-                arrow?.tipNode.position = touches.first!.location(in: card.parent!)
-                self.arrow?.updateArrow()
-            }
-            
-        default:
-            card.position = touches.first!.location(in: card.parent!)
-        }
-    }
-    
-    func touchesCancelled(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
-        
-    }
-    
-    
-    // IEffect handler
-    
-    var uuid: UUID = UUID()
-    var name: String = "Game UI"
-     
-    func handle(event: Event, state: BattleState) -> Bool {
-        
-        DispatchQueue.main.async {
-                        
-            switch event {
-                
-                
-            case .onEnemyPlannedTurn(let e):
-                
-                // Get the enemy that has planned their turn
-                guard let enemyNode = self.playArea.actorNode(withUuid: e.enemy.uuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                
-                enemyNode.setIntentionToEvents(battleState: state, events: e.events)
-                self.battleState.popNext()
-                
-            case .onCardDrawn(let e):
-                
-                guard let card = state.player.cardZones.hand.cardWith(uuid: e.cardUuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                
-                // Raise the hand
-                self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
 
-                // Make the card
-                let cardNode = self.cardNodePool.getFromPool()
-                cardNode.setupWith(card: card, delegate: self)
-                self.drawNode.addChild(cardNode)
-                
-                cardNode.setScale(0.2)
-                cardNode.alpha = 0.0
-                cardNode.position = CGPoint.zero
-                cardNode.zRotation = 0.0
-                
-                let drawAction = self.handNode.addCardAndAnimationIntoPosiiton(cardNode: cardNode)
-                self.scene.run(drawAction) {
-                    self.battleState.popNext()
-                }
-                
-                // Update the count on the draw pile
-                if let label = self.drawNode.childNode(withName: "count") as? SKLabelNode {
-                    label.text = "\(self.battleState.player.cardZones.drawPile.count)"
-                }
-                
-            case .discardCard(let e):
- 
-                
-                // Find the card
-                guard let cardNode = self.scene.getFirstRecursive(fn: { (node) -> Bool in
-                    (node as? CardNode)?.card.uuid == e.cardUuid
-                }) else {
-                    self.battleState.popNext()
-                    return
-                }
-                
-                // Remove from the hand
-                self.handNode.removeCardAndAnimateIntoPosition(cardNode: cardNode as! CardNode)
-                
-                // Reparent to the discard node
-                self.discardNode.addChildPreserveTransform(child: cardNode)
-                
-                // Animate it disappearing
-                let discardAction = SKAction.group([
-                    SKAction.fadeAlpha(to: 0.0, duration: 0.2),
-                    SKAction.move(to: CGPoint.zero, duration: 0.2),
-                    SKAction.scale(by: 0.2, duration: 0.2)
-                ])
-                
-                cardNode.run(discardAction) {
-                    self.cardNodePool.returnToPool(cardNode: cardNode as! CardNode)
-                }
-                
-                // Update the count on the discard pile
-                if let label = self.discardNode.childNode(withName: "count") as? SKLabelNode {
-                    label.text = "\(self.battleState.player.cardZones.discard.getCount())"
-                }
-                
-                // Discarding doesn't block
-                self.battleState.popNext()
-                
-            case .shuffleDiscardIntoDrawPile(_):
-                
-                // Update the count on the draw pile
-                if let label = self.drawNode.childNode(withName: "count") as? SKLabelNode {
-                    label.text = "\(self.battleState.player.cardZones.drawPile.count)"
-                }
-                
-                // Update the count on the discard pile
-                if let label = self.discardNode.childNode(withName: "count") as? SKLabelNode {
-                    label.text = "\(self.battleState.player.cardZones.discard.getCount())"
-                }
-                
-                self.battleState.popNext()
-                
-            case .onTurnEnded(let e):
-                
-                guard let actor = state.actorWith(uuid: e.actorUuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                
-                if actor.faction == .player {
-                    print("DISABLED")
-                    self.handNode.setCardsInteraction(enabled: false)
-                    self.endTurnButton.isUserInteractionEnabled = false
-                }
-                self.battleState.popNext()
-                
-            case .onTurnBegan(let e):
-                
-                guard let actor = state.actorWith(uuid: e.actorUuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                
-                if actor.faction != .player {
-                    self.handNode.run(SKAction.moveTo(y: -400, duration: 0.2))
-                } else {
-                    
-                    // Show that it's your turn
-                    let yourTurnNode = SKLabelNode.init(text: "Your turn")
-                    self.scene.addChild(yourTurnNode)
-                    yourTurnNode.run(SKAction.sequence([
-                        SKAction.customAction(withDuration: 0.2, actionBlock: { (_, _) in
-                            
-                        }),
-                        SKAction.fadeOut(withDuration: 0.2)
-                    ])) {
-                        yourTurnNode.removeFromParent()
-                    }
-                    
-                }
-                self.battleState.popNext()
-                
-            case .playerInputRequired:
-                self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
-                print("ENABLED")
-                self.handNode.setCardsInteraction(enabled: true)
-                self.endTurnButton.isUserInteractionEnabled = true
-                
-            case .didLoseHp(let e):
-                
-                guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                
-                guard let actorNode = self.playArea.actorNode(withUuid: actor.uuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                
-                // Bulge
-                actorNode.isPaused = false
-                actorNode.setScale(1.05)
-                actorNode.run(SKAction.scale(to: 1.0, duration: 0.1)) {
-                    print("Finished bulge at \(Date().timeIntervalSince1970)")
-                }
-                
-                // Update the HP bar
-                let newWidth = 130.0 * (CGFloat(actor.body.hp) / CGFloat(actor.body.maxHp))
-                actorNode.healthBar?.size = CGSize(
-                    width: newWidth,
-                    height: actorNode.healthBar?.size.height ?? 0
-                )
-                actorNode.healthBarText?.text = "\(actor.body.hp)/\(actor.body.maxHp)"
-                
-                // Show a hit counter
-                let label = SKLabelNode(text: "\(e.amount)")
-                label.position = actorNode.getGlobalPosition()
-                label.attributedText = FontHandler().getDamageText(amount: e.amount)
-                
-                self.scene.addChild(label)
-                label.run(SKAction.sequence([
-                    SKAction.group([
-                        SKAction.moveBy(x: 0, y: 100, duration: 0.2),
-                        SKAction.scale(by: 1.5, duration: 0.2)
-                    ]),
-                    SKAction.fadeAlpha(to: 0, duration: 0.2)
-                ])) {
-                    label.removeFromParent()
-                }
-                
-                self.battleState.popNext()
-                
-            case .didLoseBlock(let e):
-                guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                
-                if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
-                    actorNode.setBlock(amount: actor.body.block)
-                }
-                self.battleState.popNext()
-                
-            case .didGainHp(let e):
-                guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
-                    actorNode.details?.text = actor.body.description
-                }
-                self.battleState.popNext()
-                
-            case .didGainBlock(let e):
-                guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
-                    actorNode.setBlock(amount: actor.body.block)
-                }
-                self.battleState.popNext()
-                
-            case .attack(let e):
-                guard let ownerActor = state.actorWith(uuid: e.sourceOwner) else {
-                    self.battleState.popNext()
-                    return
-                }
-                guard let actorNode = self.playArea.actorNode(withUuid: ownerActor.uuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                
-                actorNode.isPaused = false
-                
-                let xBump: CGFloat = ownerActor.faction == .player ? 40.0 : -40.0
-                
-                actorNode.run(SKAction.moveBy(x: xBump, y: 0, duration: 0.1)) {
-                    self.battleState.popNext()
-                    DispatchQueue.main.async {
-                        actorNode.run(SKAction.moveBy(x: -xBump, y: 0, duration: 0.1))
-                    }
-                }
-                
-            case .onEnemyDefeated(let e):
-                guard let a = self.playArea.actorNode(withUuid: e.actorUuid) else {
-                    self.battleState.popNext()
-                    return
-                }
-                a.run(SKAction.fadeAlpha(to: 0.0, duration: 0.1)) {
-                    a.removeFromParent()
-                    self.battleState.popNext()
-                }
-                
-            case .onBattleWon:
-                let label = SKLabelNode(text: "YOU WIN")
-                label.fontSize = 60
-                self.scene.addChild(label)
-                
-            default:
-                self.battleState.popNext()
-                
-            
-            }
-        }
-        
-        return false
-    }
-    
-    // MARK: - EndTurnButtonDelegate Implementation
-    
-    func endTurnPressed(button: EndTurnButton) {
-        self.battleState.eventHandler.push(event:
-            Event.onTurnEnded(ActorEvent.init(actorUuid: self.battleState.player.uuid))
-        )
-        self.battleState.popNext()
-    }
 }
 
 

@@ -15,7 +15,7 @@ import Foundation
 
 protocol IEffect {
     var uuid: UUID { get }
-    var name: String { get }
+    var effectName: String { get }
     func handle(event: Event, state: BattleState) -> Bool
 }
 
@@ -44,6 +44,9 @@ class EventHandler {
         eventStack.push(elt: event)
     }
     
+    func appendToEffectsList(effect: IEffect) {
+        self.effectList.append(effect)
+    }
     
     
     func flushEvents(battleState: BattleState) -> Void {
@@ -362,13 +365,13 @@ class DiscardThenDrawAtEndOfTurnEffect: IEffect {
     
     var uuid: UUID
     let ownerUuid: UUID
-    var name: String
+    var effectName: String
     let cardsDrawn: Int
     
     init(uuid: UUID, ownerUuid: UUID, name: String, cardsDrawn: Int) {
         self.uuid = uuid
         self.ownerUuid = ownerUuid
-        self.name = name
+        self.effectName = name
         self.cardsDrawn = cardsDrawn
     }
     
@@ -403,11 +406,11 @@ class DiscardThenDrawAtEndOfTurnEffect: IEffect {
 class EventPrinterEffect: IEffect {
     
     var uuid: UUID
-    var name: String
+    var effectName: String
     
     init(uuid: UUID, name: String) {
         self.uuid = uuid
-        self.name = name
+        self.effectName = name
     }
     
     func handle(event: Event, state: BattleState) -> Bool {
@@ -434,10 +437,10 @@ class EventPrinterEffect: IEffect {
             print("\n<<< \(nameOrUuid) ended their turn.")
             
         case .addEffect(let e):
-            print("\(e.name) added to effects list.")
+            print("\(e.effectName) added to effects list.")
             
         case .removeEffect(let e):
-            print("\(e.name) removed from effects list.")
+            print("\(e.effectName) removed from effects list.")
             
         case .willDrawCards(let e):
             let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString

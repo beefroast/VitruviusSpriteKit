@@ -46,13 +46,13 @@ class EnemyTurnEffect: IEffect {
 
     var uuid: UUID
     var enemy: Enemy
-    var name: String
+    var effectName: String
     var events: [Event]
     
     init(uuid: UUID, enemy: Enemy, name: String, events: [Event]) {
         self.uuid = uuid
         self.enemy = enemy
-        self.name = name
+        self.effectName = name
         self.events = events
     }
     

@@ -43,6 +43,7 @@
 		6472DF07234ADA85009B75C0 /* ArrowNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF06234ADA85009B75C0 /* ArrowNode.swift */; };
 		6472DF09234B3F80009B75C0 /* CardNodePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF08234B3F80009B75C0 /* CardNodePool.swift */; };
 		6472DF0C234C11B6009B75C0 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0B234C11B6009B75C0 /* Event.swift */; };
+		6472DF0F234C3D0F009B75C0 /* BattleScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0E234C3D0F009B75C0 /* BattleScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +106,7 @@
 		6472DF06234ADA85009B75C0 /* ArrowNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowNode.swift; sourceTree = "<group>"; };
 		6472DF08234B3F80009B75C0 /* CardNodePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNodePool.swift; sourceTree = "<group>"; };
 		6472DF0B234C11B6009B75C0 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		6472DF0E234C3D0F009B75C0 /* BattleScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +157,7 @@
 		643588B62345FD8F007334D9 /* VitruviusSpriteKit */ = {
 			isa = PBXGroup;
 			children = (
+				6472DF0D234C3B4F009B75C0 /* BattleScene */,
 				6472DF012349D893009B75C0 /* SKCards */,
 				6472DEE223487B97009B75C0 /* Engine */,
 				643588B72345FD8F007334D9 /* AppDelegate.swift */,
@@ -164,7 +167,6 @@
 				643588C42345FD92007334D9 /* Assets.xcassets */,
 				643588C62345FD92007334D9 /* LaunchScreen.storyboard */,
 				643588C92345FD92007334D9 /* Info.plist */,
-				6472DEB223461A7E009B75C0 /* BattleScene.sks */,
 				6472DEB6234727F7009B75C0 /* HandNode.swift */,
 				6472DEB823485396009B75C0 /* PlayAreaNode.swift */,
 				6472DEBA23485553009B75C0 /* ActorArea.sks */,
@@ -202,7 +204,6 @@
 				6472DEE723487BAD009B75C0 /* BattleState.swift */,
 				6472DEEB23487BAD009B75C0 /* CharmCards.swift */,
 				6472DEEC23487BAD009B75C0 /* Enemy.swift */,
-				6472DEE323487BAD009B75C0 /* EventHandler.swift */,
 				6472DF0A234C1199009B75C0 /* EventHandler */,
 				6472DEE823487BAD009B75C0 /* FaithCards.swift */,
 				6472DEEF23487BAD009B75C0 /* GuileCards.swift */,
@@ -232,8 +233,18 @@
 			isa = PBXGroup;
 			children = (
 				6472DF0B234C11B6009B75C0 /* Event.swift */,
+				6472DEE323487BAD009B75C0 /* EventHandler.swift */,
 			);
 			path = EventHandler;
+			sourceTree = "<group>";
+		};
+		6472DF0D234C3B4F009B75C0 /* BattleScene */ = {
+			isa = PBXGroup;
+			children = (
+				6472DF0E234C3D0F009B75C0 /* BattleScene.swift */,
+				6472DEB223461A7E009B75C0 /* BattleScene.sks */,
+			);
+			path = BattleScene;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -387,6 +398,7 @@
 				6472DF0C234C11B6009B75C0 /* Event.swift in Sources */,
 				6472DEBF234856E4009B75C0 /* ActorNode.swift in Sources */,
 				6472DEF523487BAE009B75C0 /* BattleState.swift in Sources */,
+				6472DF0F234C3D0F009B75C0 /* BattleScene.swift in Sources */,
 				6472DEFC23487BAE009B75C0 /* NeutralCards.swift in Sources */,
 				6472DEF423487BAE009B75C0 /* Stack.swift in Sources */,
 				643588C02345FD8F007334D9 /* GameViewController.swift in Sources */,
