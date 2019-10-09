@@ -17,10 +17,14 @@ class ArrowNode: SKNode {
     
     override init() {
         super.init()
+        self.shapeNode = SKShapeNode()
+        self.addChild(shapeNode)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        self.shapeNode = SKShapeNode()
+        self.addChild(shapeNode)
     }
     
     func updateArrow() {
@@ -33,11 +37,14 @@ class ArrowNode: SKNode {
         let bezierPath = UIBezierPath()
         let startPoint = tip.position
         let endPoint = tail.position
+                
         bezierPath.move(to: startPoint)
         bezierPath.addLine(to: endPoint)
 
         let pattern : [CGFloat] = [10.0, 10.0]
         let dashed = bezierPath.cgPath.copy(dashingWithPhase: 1, lengths: pattern)
+        
+        print("Arrow from \(endPoint) to \(startPoint)")
         
         self.shapeNode.path = dashed
         self.shapeNode.lineWidth = 4.0

@@ -89,6 +89,9 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
         // Add ourself to the effects list
         battleState.eventHandler.appendToEffectsList(effect: self)
         
+        // Push the battle began event
+        self.battleState.eventHandler.push(event: Event.onBattleBegan)
+        
         // Now pop the first event of the stack
         battleState.popNext()
     }
@@ -378,132 +381,144 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
     
     func touchesBegan(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
           
-        self.touchNode.position =  touches.first!.location(in: card.parent!)
+        self.touchNode.position =  touches.first!.location(in: self)
+        print(self.touchNode.position)
         
-            self.state = .draggingCard(card, card.parent!)
+        self.state = .draggingCard(card, card.parent!)
             
-  
-          // Move the hand down...
-          let a = SKAction.moveTo(y: -400, duration: 0.2)
-          self.handNode.run(a)
-          card.zPosition = 100
-    
-          self.handNode.removeCardAndAnimateIntoPosition(cardNode: card)
-        self.touchNode.addChildPreserveTransform(child: card)
-          
-          card.run(SKAction.group([
-              SKAction.rotate(toAngle: 0, duration: 0.1),
-              SKAction.scale(to: 1.0, duration: 0.1)
-          ]))
-      }
-      
+        // Move the hand down...
+        let a = SKAction.moveTo(y: -400, duration: 0.2)
+        self.handNode.run(a)
+        card.zPosition = 100
 
-      func touchesEnded(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
-          
-          print(touches.first!.location(in: self).y)
-          
-          // Check to see if the card has been dragged out enough
-          if card.position.y >= -100 {
-              
-              // Check to see if the card has a single target
-              self.arrow?.removeFromParent()
-              
-              if card.requiresSingleTarget() {
-                  
-                  // Check to see if we dragged onto a target
-                  let draggedTo = touches.first!.location(in: self)
-                  let nodes = self.nodes(at: draggedTo)
-                  
-                  guard let actorNode = nodes.compactMap({ $0 as? ActorNode }).first,
-                      let actor = self.battleState.enemies.first(where: { (e) -> Bool in
-                          e.uuid == actorNode.actorUuid
-                      }) else {
-                          
-                          // Put the card back in the hand & move the hand up
-                          self.handNode.addCardAndAnimationIntoPosiiton(cardNode: card)
-                          let a = SKAction.moveTo(y: -200, duration: 0.2)
-                          self.handNode.run(a)
-                          self.state = .waitingForPlayerAction
-                          return
-                  }
-                  
-                  self.state = .waitingForPlayerAction
-                  
-                  
-                  self.battleState.eventHandler.push(event: Event.playCard(
-                      CardEvent.init(
-                          actorUuid: self.battleState.player.uuid,
-                          cardUuid: card.card.uuid
-                      ),
-                      actor.uuid
-                  ))
-                  self.battleState.popNext()
-                  
-                  
-              } else {
-                  
-                  // Just play the card...
-                  self.state = .waitingForPlayerAction
-                  self.battleState.eventHandler.push(
-                      event: Event.playCard(
-                          CardEvent.init(actorUuid: self.battleState.player.uuid, cardUuid: card.card.uuid),
-                          nil
-                      )
-                  )
-                  self.battleState.popNext()
-                  
-              }
-              
-          } else {
-              
-              // Put the card back in the hand & move the hand up
-              self.handNode.addCardAndAnimationIntoPosiiton(cardNode: card)
-              let a = SKAction.moveTo(y: -200, duration: 0.2)
-              self.handNode.run(a)
-              self.state = .waitingForPlayerAction
-              
-          }
+        self.handNode.removeCardAndAnimateIntoPosition(cardNode: card)
+        self.touchNode.addChildPreserveTransform(child: card)
+
+        card.run(SKAction.group([
+            SKAction.rotate(toAngle: 0, duration: 0.1),
+            SKAction.scale(to: 1.0, duration: 0.1)
+        ]))
+        
       }
-      
-      
+    
       func touchesMoved(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
           
-        self.touchNode.position =  touches.first!.location(in: card.parent!)
+        self.touchNode.position =  touches.first!.location(in: self)
         
-          switch self.state {
-          case .draggingCard(let c, let p):
-              
-              if card.position.y >= -100 && card.card.requiresSingleTarget {
-                  self.state = .selectingTarget(c, p)
-                  card.run(SKAction.move(to: CGPoint(x: -300, y: 0), duration: 0.1))
-
+        switch self.state {
+            
+        case .draggingCard(let cardNode, let previousParentNode):
+            
+            if self.touchNode.position.y >= -100 && card.card.requiresSingleTarget {
+                self.state = .selectingTarget(cardNode, previousParentNode)
+                self.addChildPreserveTransform(child: cardNode)
+                card.run(SKAction.move(to: CGPoint(x: -300, y: 0), duration: 0.1))
                 self.arrow.isHidden = false
                 self.arrow.tailNode = card
+                self.arrow.tipNode = self.touchNode
                 self.arrow.updateArrow()
-                  
-              } else {
-                
+            
+            } else {
                 self.arrow.isHidden = true
+                self.arrow.tipNode = nil
+                self.arrow.tailNode = nil
+            }
+            
+        case .selectingTarget(let cardNode, let previousParentNode):
+            
+            if self.touchNode.position.y < -100 {
+                self.state = .draggingCard(cardNode, previousParentNode)
+                self.touchNode.addChildPreserveTransform(child: cardNode)
+                card.run(SKAction.move(to: CGPoint(x: 0, y: 0), duration: 0.1))
+                self.arrow.isHidden = true
+                self.arrow.tipNode = nil
+                self.arrow.tailNode = nil
                 
-                  self.arrow?.removeFromParent()
-                  card.position = touches.first!.location(in: card.parent!)
-              }
-              
-          case .selectingTarget(let c, let p):
-              if touches.first!.location(in: self).y < -100 {
-                  self.state = .draggingCard(c, p)
-                  card.position = touches.first!.location(in: card.parent!)
-              } else {
-                
-                
-//                self.arrow arrow?.tipNode.position = touches.first!.location(in: card.parent!)
-//                  self.arrow?.updateArrow()
-              }
-              
-          default:
-              card.position = touches.first!.location(in: card.parent!)
-          }
+            } else {
+                self.arrow.isHidden = false
+                self.arrow.tailNode = card
+                self.arrow.tipNode = self.touchNode
+                self.arrow.updateArrow()
+            }
+            
+        default:
+            break
+            
+        }
       }
+      
+    func touchesEnded(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.touchNode.position =  touches.first!.location(in: self)
+
+        if self.touchNode.position.y >= -100 {
+            
+            guard card.requiresSingleTarget() else {
+                
+                // We don't need to check for a valid target, we can just play the card...
+                self.state = .waitingForPlayerAction
+                self.battleState.eventHandler.push(
+                    event: Event.playCard(
+                        CardEvent.init(actorUuid: self.battleState.player.uuid, cardUuid: card.card.uuid),
+                        nil
+                    )
+                )
+                self.battleState.popNext()
+                return
+                
+            }
+            
+            // Hide the arrow
+            self.arrow.isHidden = true
+            self.arrow.tipNode = nil
+            self.arrow.tailNode = nil
+            
+            // Make sure we have a valid target to play the card against
+              let draggedTo = touches.first!.location(in: self)
+              let nodes = self.nodes(at: draggedTo)
+              
+              guard let actorNode = nodes.compactMap({ $0 as? ActorNode }).first,
+                  let actor = self.battleState.enemies.first(where: { (e) -> Bool in
+                      e.uuid == actorNode.actorUuid
+                  }) else {
+                      
+                      // Put the card back in the hand & move the hand up
+                      self.handNode.addCardAndAnimationIntoPosiiton(cardNode: card)
+                      let a = SKAction.moveTo(y: -200, duration: 0.2)
+                      self.handNode.run(a)
+                      self.state = .waitingForPlayerAction
+                    return
+              }
+            
+            self.state = .waitingForPlayerAction
+            
+            
+            self.battleState.eventHandler.push(event: Event.playCard(
+                CardEvent.init(
+                    actorUuid: self.battleState.player.uuid,
+                    cardUuid: card.card.uuid
+                ),
+                actor.uuid
+            ))
+            self.battleState.popNext()
+            
+            
+        } else {
+            
+            // Put the card back in the hand & move the hand up
+            self.handNode.addCardAndAnimationIntoPosiiton(cardNode: card)
+            let a = SKAction.moveTo(y: -200, duration: 0.2)
+            self.handNode.run(a)
+            self.state = .waitingForPlayerAction
+        }
+        
+        
+    }
+
+    
+      
+      
+
       
       func touchesCancelled(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
           
