@@ -76,15 +76,14 @@ class Effect: Codable {
         let identifier = try values.decode(EffectIdentifier.self, forKey: .identifier)
  
         switch identifier {
-        
             
+        case .mistForm:
+            self.strategy = try values.decode(CardMistForm.MistFormEffect.self, forKey: .strategy)
             
         default:
-            break
+            fatalError("Poops")
         }
-        
-        fatalError("Poops")
-        
+
     }
     
 }

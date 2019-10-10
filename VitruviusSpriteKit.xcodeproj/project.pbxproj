@@ -20,6 +20,7 @@
 		643588D32345FD93007334D9 /* VitruviusSpriteKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588D22345FD93007334D9 /* VitruviusSpriteKitTests.swift */; };
 		643588DE2345FD93007334D9 /* VitruviusSpriteKitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588DD2345FD93007334D9 /* VitruviusSpriteKitUITests.swift */; };
 		643588EE2345FEEF007334D9 /* CardNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588ED2345FEEF007334D9 /* CardNode.swift */; };
+		645DAD5B234EEECE00F633F3 /* EffectSerializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645DAD5A234EEECE00F633F3 /* EffectSerializationTests.swift */; };
 		6472DEB323461A7E009B75C0 /* BattleScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6472DEB223461A7E009B75C0 /* BattleScene.sks */; };
 		6472DEB52347072F009B75C0 /* CardSceneWood.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6472DEB42347072F009B75C0 /* CardSceneWood.sks */; };
 		6472DEB7234727F7009B75C0 /* HandNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DEB6234727F7009B75C0 /* HandNode.swift */; };
@@ -87,6 +88,7 @@
 		643588DD2345FD93007334D9 /* VitruviusSpriteKitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitruviusSpriteKitUITests.swift; sourceTree = "<group>"; };
 		643588DF2345FD93007334D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		643588ED2345FEEF007334D9 /* CardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNode.swift; sourceTree = "<group>"; };
+		645DAD5A234EEECE00F633F3 /* EffectSerializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectSerializationTests.swift; sourceTree = "<group>"; };
 		6472DEB223461A7E009B75C0 /* BattleScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BattleScene.sks; sourceTree = "<group>"; };
 		6472DEB42347072F009B75C0 /* CardSceneWood.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CardSceneWood.sks; sourceTree = "<group>"; };
 		6472DEB6234727F7009B75C0 /* HandNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandNode.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 			children = (
 				6409603D234DACFB0046E0A1 /* SerializationTests.swift */,
 				6409603F234DC9040046E0A1 /* EventSerializationTests.swift */,
+				645DAD5A234EEECE00F633F3 /* EffectSerializationTests.swift */,
 			);
 			path = SerializationTests;
 			sourceTree = "<group>";
@@ -450,6 +453,7 @@
 				64096040234DC9040046E0A1 /* EventSerializationTests.swift in Sources */,
 				6409603B234D9E770046E0A1 /* NeutralCardTests.swift in Sources */,
 				643588D32345FD93007334D9 /* VitruviusSpriteKitTests.swift in Sources */,
+				645DAD5B234EEECE00F633F3 /* EffectSerializationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
