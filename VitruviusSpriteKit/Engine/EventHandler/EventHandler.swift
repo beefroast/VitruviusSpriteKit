@@ -18,27 +18,36 @@ enum EffectIdentifier: Int, Codable {
     case gameInterface
 }
 
-protocol IEffect : Codable {
-    var identifier: EffectIdentifier { get }
-    var effectName: String { get }
-    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool
+class HandleEffectStrategy: Codable {
+    
+    let identifier: EffectIdentifier
+    let effectName: String
+    
+    init(identifier: EffectIdentifier, effectName: String) {
+        self.identifier = identifier
+        self.effectName = effectName
+    }
+    
+    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
+        fatalError("Abstract method, must override!" )
+    }
 }
 
 class Effect: Codable {
     
-    let effect: IEffect
     let uuid: UUID
+    let strategy: HandleEffectStrategy
     
-    var identifier: EffectIdentifier { get { self.effect.identifier } }
-    var effectName: String { get { self.effect.effectName } }
+    var identifier: EffectIdentifier { get { self.strategy.identifier } }
+    var effectName: String { get { self.strategy.effectName } }
     
     func handle(event: Event, state: BattleState) -> Bool {
-        self.effect.handle(event: event, state: state, effectUuid: self.uuid)
+        self.strategy.handle(event: event, state: state, effectUuid: self.uuid)
     }
     
-    init(uuid: UUID, effect: IEffect) {
+    init(uuid: UUID, effect: HandleEffectStrategy) {
         self.uuid = uuid
-        self.effect = effect
+        self.strategy = effect
     }
     
     // MARK: - Codable Implementation
@@ -46,7 +55,7 @@ class Effect: Codable {
     private enum CodingKeys: String, CodingKey {
         case identifier
         case uuid
-        case effect
+        case strategy
     }
     
     func encode(to encoder: Encoder) throws {
@@ -55,16 +64,32 @@ class Effect: Codable {
              
         try container.encode(self.uuid, forKey: .uuid)
         try container.encode(self.identifier, forKey: .identifier)
-        try container.encode(self.effect, forKey: .effect)
+        try container.encode(self.strategy, forKey: .strategy)
     }
     
     required init(from decoder: Decoder) throws {
+        
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.uuid = try values.decode(UUID.self, forKey: .uuid)
+        
+        let identifier = try values.decode(EffectIdentifier.self, forKey: .identifier)
+ 
+        switch identifier {
+        
+            
+            
+        default:
+            break
+        }
+        
+        fatalError("Poops")
         
     }
     
 }
 
-extension IEffect {
+extension HandleEffectStrategy {
     func withWrapper(uuid: UUID) -> Effect {
         return Effect(uuid: uuid, effect: self)
     }
@@ -423,19 +448,21 @@ class EventHandler {
 }
 
 
-class DiscardThenDrawAtEndOfTurnEffect: IEffect, Codable {
+class DiscardThenDrawAtEndOfTurnEffect: HandleEffectStrategy {
 
-    let identifier: EffectIdentifier = .discardThenDrawEndOfTurn
-    let effectName: String = "Discard then draw at end of turn"
     let ownerUuid: UUID
     let cardsDrawn: Int
     
     init(ownerUuid: UUID, cardsDrawn: Int) {
         self.ownerUuid = ownerUuid
         self.cardsDrawn = cardsDrawn
+        super.init(
+            identifier: .discardThenDrawEndOfTurn,
+            effectName: "Discard then draw at end of turn"
+        )
     }
     
-    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
+    override func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
     
         switch event {
             
@@ -460,17 +487,42 @@ class DiscardThenDrawAtEndOfTurnEffect: IEffect, Codable {
         
         return false
     }
+    
+    // MARK: - Codable Implementation
+    
+    private enum CodingKeys: String, CodingKey {
+        case ownerUuid
+        case cardsDrawn
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.ownerUuid = try values.decode(UUID.self, forKey: .ownerUuid)
+        self.cardsDrawn = try values.decode(Int.self, forKey: .cardsDrawn)
+        try super.init(from: decoder)
+    }
+
+    override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.ownerUuid, forKey: .ownerUuid)
+        try container.encode(self.cardsDrawn, forKey: .cardsDrawn)
+    }
+    
 }
 
 
-class EventPrinterEffect: IEffect {
+class EventPrinterEffect: HandleEffectStrategy {
     
-    let identifier: EffectIdentifier = .eventPrinter
-    let effectName: String = "Event printer"
+    init() {
+        super.init(identifier: .eventPrinter, effectName: "Event Printer")
+    }
     
-    init() {}
+    required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
     
-    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
+    override func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
 
         switch event {
             

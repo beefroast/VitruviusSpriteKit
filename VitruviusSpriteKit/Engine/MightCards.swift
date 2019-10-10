@@ -25,7 +25,7 @@ import Foundation
 //
 //    func onDiscarded(source: Actor, battleState: BattleState) {}
 //
-//    class EffectAngryPants: IEffect {
+//    class EffectAngryPants: HandleEffectStrategy {
 //
 //        var uuid: UUID
 //        var name: String

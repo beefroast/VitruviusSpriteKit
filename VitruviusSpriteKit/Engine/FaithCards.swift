@@ -53,26 +53,24 @@ class CardDrain: ICard {
         
     }
 
-    
     func onDrawn(source: Actor, battleState: BattleState) {
     }
     
     func onDiscarded(source: Actor, battleState: BattleState) {
     }
     
-    class DrainEffect: IEffect, Codable {
+    class DrainEffect: HandleEffectStrategy {
         
-        let identifier: EffectIdentifier = .drain
         let ownerUuid: UUID
         let sourceUuid: UUID
-        let effectName: String = "Drain"
         
         init(ownerUuid: UUID, sourceUuid: UUID) {
             self.ownerUuid = ownerUuid
             self.sourceUuid = sourceUuid
+            super.init(identifier: .drain, effectName: "Drain")
         }
         
-        func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
+        override func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
             
             switch event {
             
@@ -101,6 +99,28 @@ class CardDrain: ICard {
                 return false
             }
         }
+        
+        // MARK: - Codable Implementation
+        
+        private enum CodingKeys: String, CodingKey {
+            case ownerUuid
+            case sourceUuid
+        }
+        
+        required init(from decoder: Decoder) throws {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            self.ownerUuid = try values.decode(UUID.self, forKey: .ownerUuid)
+            self.sourceUuid = try values.decode(UUID.self, forKey: .sourceUuid)
+            try super.init(from: decoder)
+        }
+
+        override func encode(to encoder: Encoder) throws {
+            try super.encode(to: encoder)
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.ownerUuid, forKey: .ownerUuid)
+            try container.encode(self.sourceUuid, forKey: .sourceUuid)
+        }
+        
     }
 }
 

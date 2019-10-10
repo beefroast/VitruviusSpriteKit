@@ -41,21 +41,39 @@ class Enemy: Actor {
     }
 }
 
-class EnemyTurnEffect: IEffect, Codable {
+class EnemyTurnEffect: HandleEffectStrategy {
     
-    let identifier: EffectIdentifier = .enemyTurn
     let enemyUuid: UUID
-    let effectName: String
-    
     var events: [Event]
     
     init(enemyUuid: UUID, name: String, events: [Event]) {
         self.enemyUuid = enemyUuid
-        self.effectName = name
         self.events = events
+        super.init(identifier: .enemyTurn, effectName: name)
     }
     
-    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
+    // MARK: - Codable Implementation
+    
+    private enum CodingKeys: String, CodingKey {
+        case enemyUuid
+        case events
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.enemyUuid = try values.decode(UUID.self, forKey: .enemyUuid)
+        self.events = try values.decode([Event].self, forKey: .events)
+        try super.init(from: decoder)
+    }
+
+    override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.enemyUuid, forKey: .enemyUuid)
+        try container.encode(self.events, forKey: .events)
+    }
+    
+    override func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
         switch event {
             
         case .onEnemyDefeated(let e):

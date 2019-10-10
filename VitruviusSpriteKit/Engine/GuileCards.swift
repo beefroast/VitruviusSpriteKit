@@ -32,17 +32,19 @@ class CardMistForm: ICard {
     func onDrawn(source: Actor, battleState: BattleState) {}
     func onDiscarded(source: Actor, battleState: BattleState) {}
     
-    class MistFormEffect: IEffect, Codable {
+    class MistFormEffect: HandleEffectStrategy {
         
-        let identifier: EffectIdentifier = .mistForm
-        let effectName: String = "Mist Form"
         let ownerUuid: UUID
         
         init(ownerUuid: UUID) {
             self.ownerUuid = ownerUuid
+            super.init(
+                identifier: .mistForm,
+                effectName: "Mistform"
+            )
         }
         
-        func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
+        override func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
             switch event {
                 
             case .attack(let attackEvent):
@@ -54,6 +56,23 @@ class CardMistForm: ICard {
             }
         }
         
+        // MARK: - Codable Implementation
+        
+        private enum CodingKeys: String, CodingKey {
+            case ownerUuid
+        }
+        
+        required init(from decoder: Decoder) throws {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            self.ownerUuid = try values.decode(UUID.self, forKey: .ownerUuid)
+            try super.init(from: decoder)
+        }
+
+        override func encode(to encoder: Encoder) throws {
+            try super.encode(to: encoder)
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.ownerUuid, forKey: .ownerUuid)
+        }
     }
 }
 

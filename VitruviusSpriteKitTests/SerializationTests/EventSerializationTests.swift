@@ -35,8 +35,8 @@ class EventSerializationTests: XCTestCase {
 
         events.append(.onTurnBegan(ActorEvent.init(actorUuid: UUID())))
         events.append(.onTurnEnded(ActorEvent.init(actorUuid: UUID())))
-//        events.append(.addEffect(IEffect))
-//        events.append(.removeEffect(IEffect))
+//        events.append(.addEffect(HandleEffectStrategy))
+//        events.append(.removeEffect(HandleEffectStrategy))
         events.append(.willDrawCards(DrawCardsEvent.init(actorUuid: UUID(), amount: 7)))
         events.append(.drawCard(ActorEvent.init(actorUuid: UUID())))
         events.append(.onCardDrawn(CardEvent.init(actorUuid: UUID(), cardUuid: UUID())))

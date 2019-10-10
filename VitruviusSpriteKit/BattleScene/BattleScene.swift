@@ -114,7 +114,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
     }
     
     
-    // MARK: - IEffect Implementation
+    // MARK: - HandleEffectStrategy Implementation
     
     var uuid: UUID = UUID()
     var effectName: String = "Game interface"
@@ -122,6 +122,8 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
     
     func onEvent(sender: EventHandler, battleState: BattleState, event: Event) {
            
+        let state = battleState
+        
            DispatchQueue.main.async {
                            
                switch event {
@@ -385,7 +387,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                }
            }
            
-           return false
+           return
        }
     
     // MARK: - EndTurnButtonDelegate Implementation
