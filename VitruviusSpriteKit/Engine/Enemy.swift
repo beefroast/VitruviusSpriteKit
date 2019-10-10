@@ -42,7 +42,7 @@ class Enemy: Actor {
     }
 }
 
-class EnemyTurnEffect: IEffect {
+class EnemyTurnEffect: IEffect, Codable {
 
     var uuid: UUID
     var enemyUuid: UUID

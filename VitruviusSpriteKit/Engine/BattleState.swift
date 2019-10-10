@@ -9,7 +9,7 @@
 import Foundation
 
 
-enum Faction {
+enum Faction: Int, Codable {
     case player
     case allies
     case goodGuys

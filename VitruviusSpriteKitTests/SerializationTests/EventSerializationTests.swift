@@ -23,9 +23,14 @@ class EventSerializationTests: XCTestCase {
         
         var events: [Event] = []
         
+        // TODO: Need to work out how to serialize effects, probably similiar to what we're doing with
+        // cards.
+        
         events.append(.playerInputRequired)
         events.append(.onBattleBegan)
-//        events.append(.onEnemyPlannedTurn(EnemyTurnEffect.init(uuid: UUID(), enemyUuid: UUID(), name: "", events: [])))
+        events.append(.onEnemyPlannedTurn(EnemyTurnEffect.init(uuid: UUID(), enemyUuid: UUID(), name: "Goomba's Turn", events: [
+            Event.onTurnBegan(ActorEvent.init(actorUuid: UUID()))
+        ])))
         events.append(.onTurnBegan(ActorEvent.init(actorUuid: UUID())))
         events.append(.onTurnEnded(ActorEvent.init(actorUuid: UUID())))
 //        events.append(.addEffect(IEffect))
