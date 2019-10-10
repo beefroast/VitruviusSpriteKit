@@ -23,24 +23,26 @@ class CardMistForm: ICard {
         
         battleState.eventHandler.push(events: [
             Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid)),
-            Event.addEffect(MistFormEffect(owner: source))
+            Event.addEffect(
+                MistFormEffect.init(ownerUuid: source.uuid).withWrapper(uuid: UUID())
+            )
         ])
     }
     
     func onDrawn(source: Actor, battleState: BattleState) {}
     func onDiscarded(source: Actor, battleState: BattleState) {}
     
-    class MistFormEffect: IEffect {
+    class MistFormEffect: IEffect, Codable {
         
-        let owner: Actor
-        var uuid: UUID = UUID()
-        var effectName: String = "Mist Form"
+        let identifier: EffectIdentifier = .mistForm
+        let effectName: String = "Mist Form"
+        let ownerUuid: UUID
         
-        init(owner: Actor) {
-            self.owner = owner
+        init(ownerUuid: UUID) {
+            self.ownerUuid = ownerUuid
         }
         
-        func handle(event: Event, state: BattleState) -> Bool {
+        func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
             switch event {
                 
             case .attack(let attackEvent):

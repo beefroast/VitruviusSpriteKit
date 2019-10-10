@@ -28,9 +28,11 @@ class EventSerializationTests: XCTestCase {
         
         events.append(.playerInputRequired)
         events.append(.onBattleBegan)
-        events.append(.onEnemyPlannedTurn(EnemyTurnEffect.init(uuid: UUID(), enemyUuid: UUID(), name: "Goomba's Turn", events: [
+        
+        events.append(.onEnemyPlannedTurn(EnemyTurnEffect.init(enemyUuid: UUID(), name: "Goomba's Turn", events: [
             Event.onTurnBegan(ActorEvent.init(actorUuid: UUID()))
         ])))
+
         events.append(.onTurnBegan(ActorEvent.init(actorUuid: UUID())))
         events.append(.onTurnEnded(ActorEvent.init(actorUuid: UUID())))
 //        events.append(.addEffect(IEffect))

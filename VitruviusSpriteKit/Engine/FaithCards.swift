@@ -28,12 +28,13 @@ class CardDrain: ICard {
         battleState.eventHandler.push(events: [
             
             // Listen for damage done by this source, and gain that much life
-            Event.addEffect(DrainEffect(
-                owner: source,
-                sourceUuid:
-                source.uuid
-            )),
-            
+            Event.addEffect(
+                DrainEffect.init(
+                    ownerUuid: source.uuid,
+                    sourceUuid: self.uuid
+                ).withWrapper(uuid: UUID())
+            ),
+                
             // Attack for 6
             Event.attack(AttackEvent.init(
                 sourceUuid: self.uuid,
@@ -51,7 +52,6 @@ class CardDrain: ICard {
         ])
         
     }
-    
 
     
     func onDrawn(source: Actor, battleState: BattleState) {
@@ -60,19 +60,19 @@ class CardDrain: ICard {
     func onDiscarded(source: Actor, battleState: BattleState) {
     }
     
-    class DrainEffect: IEffect {
+    class DrainEffect: IEffect, Codable {
         
-        let owner: Actor
+        let identifier: EffectIdentifier = .drain
+        let ownerUuid: UUID
         let sourceUuid: UUID
-        var uuid: UUID = UUID()
-        var effectName: String = "Drain"
+        let effectName: String = "Drain"
         
-        init(owner: Actor, sourceUuid: UUID) {
-            self.owner = owner
+        init(ownerUuid: UUID, sourceUuid: UUID) {
+            self.ownerUuid = ownerUuid
             self.sourceUuid = sourceUuid
         }
         
-        func handle(event: Event, state: BattleState) -> Bool {
+        func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
             
             switch event {
             
@@ -82,7 +82,15 @@ class CardDrain: ICard {
                     return false
                 }
                 
-                state.eventHandler.push(event: Event.willGainHp(UpdateBodyEvent.init(targetActorUuid: self.owner.uuid, sourceUuid: self.uuid, amount: bodyEvent.amount)))
+                state.eventHandler.push(
+                    event: Event.willGainHp(
+                        UpdateBodyEvent.init(
+                            targetActorUuid: self.ownerUuid,
+                            sourceUuid: effectUuid,
+                            amount: bodyEvent.amount
+                        )
+                    )
+                )
                 
                 return true
                 

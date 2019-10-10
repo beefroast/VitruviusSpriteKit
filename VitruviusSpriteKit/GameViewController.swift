@@ -81,18 +81,17 @@ class GameViewController: UIViewController {
             eventHandler: EventHandler(
                 eventStack: StackQueue<Event>(),
                 effectList: [
-                    EventPrinterEffect(uuid: UUID(), name: "Printer")
+                    EventPrinterEffect.init().withWrapper(uuid: UUID())
                 ]
             )
         )
                 
         battleState.eventHandler.push(event:
-            Event.addEffect(DiscardThenDrawAtEndOfTurnEffect(
-                uuid: UUID(),
-                ownerUuid: player.uuid,
-                name: "Player discard then draw.",
-                cardsDrawn: 5
-            ))
+            Event.addEffect(
+                DiscardThenDrawAtEndOfTurnEffect(
+                    ownerUuid: player.uuid, cardsDrawn: 5
+                ).withWrapper(uuid: UUID())
+            )
         )
 
  

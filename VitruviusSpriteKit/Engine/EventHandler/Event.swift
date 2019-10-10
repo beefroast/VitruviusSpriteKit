@@ -19,8 +19,8 @@ enum Event: Codable {
     case onTurnBegan(ActorEvent)
     case onTurnEnded(ActorEvent)
     
-    case addEffect(IEffect)
-    case removeEffect(IEffect)
+    case addEffect(Effect)
+    case removeEffect(Effect)
     
     case willDrawCards(DrawCardsEvent)
     case drawCard(ActorEvent)

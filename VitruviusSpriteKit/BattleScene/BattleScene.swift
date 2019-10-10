@@ -16,6 +16,8 @@ protocol BattleSceneDelegate: AnyObject {
 
 class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegate {
 
+    
+
     weak var battleSceneDelegate: BattleSceneDelegate? = nil
     
     enum State {
@@ -94,7 +96,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
         self.arrow.tipNode = self.touchNode
         
         // Add ourself to the effects list
-        battleState.eventHandler.appendToEffectsList(effect: self)
+        battleState.eventHandler.appendToEffectsList(effect: self.withWrapper(uuid: UUID()))
         
         // Push the battle began event
         self.battleState.eventHandler.push(event: Event.onBattleBegan)
@@ -115,9 +117,10 @@ class BattleScene: SKScene, EndTurnButtonDelegate, IEffect, CardNodeTouchDelegat
     // MARK: - IEffect Implementation
     
     var uuid: UUID = UUID()
-    var effectName: String = "Battle Scene"
+    var effectName: String = "Game interface"
+    var identifier: EffectIdentifier = .gameInterface
     
-    func handle(event: Event, state: BattleState) -> Bool {
+    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
            
            DispatchQueue.main.async {
                            

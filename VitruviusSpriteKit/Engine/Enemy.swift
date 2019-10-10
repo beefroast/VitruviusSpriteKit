@@ -33,7 +33,6 @@ class Enemy: Actor {
         
         return Event.onEnemyPlannedTurn(
             EnemyTurnEffect(
-                uuid: UUID(),
                 enemyUuid: self.uuid,
                 name: "\(self.name)'s turn",
                 events: []
@@ -43,20 +42,20 @@ class Enemy: Actor {
 }
 
 class EnemyTurnEffect: IEffect, Codable {
-
-    var uuid: UUID
-    var enemyUuid: UUID
-    var effectName: String
+    
+    let identifier: EffectIdentifier = .enemyTurn
+    let enemyUuid: UUID
+    let effectName: String
+    
     var events: [Event]
     
-    init(uuid: UUID, enemyUuid: UUID, name: String, events: [Event]) {
-        self.uuid = uuid
+    init(enemyUuid: UUID, name: String, events: [Event]) {
         self.enemyUuid = enemyUuid
         self.effectName = name
         self.events = events
     }
     
-    func handle(event: Event, state: BattleState) -> Bool {
+    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
         switch event {
             
         case .onEnemyDefeated(let e):
@@ -108,7 +107,6 @@ class TestEnemy: Enemy {
         case 2:
             return Event.onEnemyPlannedTurn(
                 EnemyTurnEffect.init(
-                    uuid: UUID(),
                     enemyUuid: self.uuid,
                     name: "\(self.name)'s turn",
                     events: [
@@ -120,13 +118,11 @@ class TestEnemy: Enemy {
                                 amount: 18
                             )
                         )
-                    ]
-                )
+                    ])
             )
         default:
             return Event.onEnemyPlannedTurn(
                 EnemyTurnEffect.init(
-                    uuid: UUID(),
                     enemyUuid: self.uuid,
                     name: "\(self.name)'s turn",
                     events: [
@@ -145,8 +141,7 @@ class TestEnemy: Enemy {
                                 amount: 6
                             )
                         )
-                    ]
-                )
+                    ])
             )
         }
         

@@ -9,25 +9,53 @@
 import Foundation
 
 
-
-
-
-
-protocol IEffect {
-    var uuid: UUID { get }
-    var effectName: String { get }
-    func handle(event: Event, state: BattleState) -> Bool
+enum EffectIdentifier: Int, Codable {
+    case drain
+    case enemyTurn
+    case discardThenDrawEndOfTurn
+    case eventPrinter
+    case mistForm
+    case gameInterface
 }
 
+protocol IEffect {
+    var identifier: EffectIdentifier { get }
+    var effectName: String { get }
+    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool
+}
+
+class Effect {
+    
+    let effect: IEffect
+    let uuid: UUID
+    
+    var identifier: EffectIdentifier { get { self.effect.identifier } }
+    var effectName: String { get { self.effect.effectName } }
+    
+    func handle(event: Event, state: BattleState) -> Bool {
+        self.effect.handle(event: event, state: state, effectUuid: self.uuid)
+    }
+    
+    init(uuid: UUID, effect: IEffect) {
+        self.uuid = uuid
+        self.effect = effect
+    }
+}
+
+extension IEffect {
+    func withWrapper(uuid: UUID) -> Effect {
+        return Effect(uuid: uuid, effect: self)
+    }
+}
 
 
 class EventHandler {
     
     let handlerUuid: UUID = UUID()
     var eventStack: StackQueue<Event>
-    private var effectList: [IEffect]
+    private var effectList: [Effect]
     
-    init(eventStack: StackQueue<Event>, effectList: [IEffect]) {
+    init(eventStack: StackQueue<Event>, effectList: [Effect]) {
         self.eventStack = eventStack
         self.effectList = effectList
     }
@@ -44,7 +72,7 @@ class EventHandler {
         eventStack.push(elt: event)
     }
     
-    func appendToEffectsList(effect: IEffect) {
+    func appendToEffectsList(effect: Effect) {
         self.effectList.append(effect)
     }
     
@@ -90,7 +118,7 @@ class EventHandler {
             self.enqueue(events: [Event.onTurnBegan(ActorEvent.init(actorUuid: battleState.player.uuid))] + enemyTurnsStart)
             
         case .onEnemyPlannedTurn(let e):
-            self.effectList.append(e)
+            self.effectList.append(e.withWrapper(uuid: UUID()))
         
         case .onTurnBegan(let e):
             
@@ -361,22 +389,20 @@ class EventHandler {
 }
 
 
-class DiscardThenDrawAtEndOfTurnEffect: IEffect {
-    
-    var uuid: UUID
+class DiscardThenDrawAtEndOfTurnEffect: IEffect, Codable {
+
+    let identifier: EffectIdentifier = .discardThenDrawEndOfTurn
+    let effectName: String = "Discard then draw at end of turn"
     let ownerUuid: UUID
-    var effectName: String
     let cardsDrawn: Int
     
-    init(uuid: UUID, ownerUuid: UUID, name: String, cardsDrawn: Int) {
-        self.uuid = uuid
+    init(ownerUuid: UUID, cardsDrawn: Int) {
         self.ownerUuid = ownerUuid
-        self.effectName = name
         self.cardsDrawn = cardsDrawn
     }
     
-    func handle(event: Event, state: BattleState) -> Bool {
-        
+    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
+    
         switch event {
             
         case .onTurnEnded(let e):
@@ -405,16 +431,13 @@ class DiscardThenDrawAtEndOfTurnEffect: IEffect {
 
 class EventPrinterEffect: IEffect {
     
-    var uuid: UUID
-    var effectName: String
+    let identifier: EffectIdentifier = .eventPrinter
+    let effectName: String = "Event printer"
     
-    init(uuid: UUID, name: String) {
-        self.uuid = uuid
-        self.effectName = name
-    }
+    init() {}
     
-    func handle(event: Event, state: BattleState) -> Bool {
-                
+    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
+
         switch event {
             
         case .playerInputRequired:

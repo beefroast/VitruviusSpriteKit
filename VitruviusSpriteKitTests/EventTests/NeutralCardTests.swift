@@ -56,7 +56,7 @@ class NeutralCardTests: XCTestCase {
             allies: [],
             enemies: [enemy],
             eventHandler: EventHandler.init(eventStack: StackQueue<Event>(), effectList: [
-                EventPrinterEffect(uuid: UUID(), name: "Printer")
+                EventPrinterEffect().withWrapper(uuid: UUID())
             ])
         )
     }
