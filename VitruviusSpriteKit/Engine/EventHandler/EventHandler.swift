@@ -18,13 +18,13 @@ enum EffectIdentifier: Int, Codable {
     case gameInterface
 }
 
-protocol IEffect {
+protocol IEffect : Codable {
     var identifier: EffectIdentifier { get }
     var effectName: String { get }
     func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool
 }
 
-class Effect {
+class Effect: Codable {
     
     let effect: IEffect
     let uuid: UUID
@@ -40,6 +40,28 @@ class Effect {
         self.uuid = uuid
         self.effect = effect
     }
+    
+    // MARK: - Codable Implementation
+    
+    private enum CodingKeys: String, CodingKey {
+        case identifier
+        case uuid
+        case effect
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+             
+        try container.encode(self.uuid, forKey: .uuid)
+        try container.encode(self.identifier, forKey: .identifier)
+        try container.encode(self.effect, forKey: .effect)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        
+    }
+    
 }
 
 extension IEffect {
@@ -48,8 +70,14 @@ extension IEffect {
     }
 }
 
+protocol EventHandlerDelegate: AnyObject {
+    func onEvent(sender: EventHandler, battleState: BattleState, event: Event)
+}
+
 
 class EventHandler {
+    
+    weak var delegate: EventHandlerDelegate? = nil
     
     let handlerUuid: UUID = UUID()
     var eventStack: StackQueue<Event>
@@ -98,6 +126,12 @@ class EventHandler {
         self.effectList.removeAll { (effect) -> Bool in
             effect.handle(event: event, state: battleState)
         }
+        
+        // Post the event to the delegate, this is used to
+        // allow the game to perform animation and respond to
+        // events, we don't want the game manager in the effects
+        // list because then it's more difficult to serialize
+        self.delegate?.onEvent(sender: self, battleState: battleState, event: event)
     
         switch event {
             
