@@ -15,7 +15,6 @@ enum EffectIdentifier: Int, Codable {
     case discardThenDrawEndOfTurn
     case eventPrinter
     case mistForm
-    case gameInterface
 }
 
 class HandleEffectStrategy: Codable {
@@ -77,11 +76,21 @@ class Effect: Codable {
  
         switch identifier {
             
+        case .drain:
+            self.strategy = try values.decode(CardDrain.DrainEffect.self, forKey: .strategy)
+            
+        case .enemyTurn:
+            self.strategy = try values.decode(EnemyTurnEffect.self, forKey: .strategy)
+            
+        case .discardThenDrawEndOfTurn:
+            self.strategy = try values.decode(DiscardThenDrawAtEndOfTurnEffect.self, forKey: .strategy)
+            
+        case .eventPrinter:
+            self.strategy = try values.decode(EventPrinterEffect.self, forKey: .strategy)
+            
         case .mistForm:
             self.strategy = try values.decode(CardMistForm.MistFormEffect.self, forKey: .strategy)
-            
-        default:
-            fatalError("Poops")
+
         }
 
     }

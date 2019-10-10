@@ -114,11 +114,8 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
     }
     
     
-    // MARK: - HandleEffectStrategy Implementation
+    // MARK: - EventHandlerDelegate Implementation
     
-    var uuid: UUID = UUID()
-    var effectName: String = "Game interface"
-    var identifier: EffectIdentifier = .gameInterface
     
     func onEvent(sender: EventHandler, battleState: BattleState, event: Event) {
            
