@@ -70,3 +70,24 @@ class CardDefend: CardStrategy {
     func onDrawn(source: Actor, battleState: BattleState) {}
     func onDiscarded(source: Actor, battleState: BattleState) {}
 }
+
+
+class CardHealthPotion: CardStrategy {
+    
+    let cardNumber: Int = 8
+    let name =  "Health Potion"
+    let cardText: String = "Gain 10 hp. Expend Health Potion."
+    var requiresSingleTarget: Bool = false
+    var cost: Int = 0
+    
+    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
+        battleState.eventHandler.push(events: [
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
+            Event.willGainHp(UpdateBodyEvent.init(targetActorUuid: source.uuid, sourceUuid: cardUuid, amount: 10)),
+            Event.expendCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid))
+        ])
+    }
+    
+    func onDrawn(source: Actor, battleState: BattleState) {}
+    func onDiscarded(source: Actor, battleState: BattleState) {}
+}

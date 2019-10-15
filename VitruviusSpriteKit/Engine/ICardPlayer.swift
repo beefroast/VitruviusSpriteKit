@@ -40,6 +40,12 @@ class CardZones: Codable {
         discard.push(elt: card)
     }
     
+    func remove(cardUuid: UUID) -> Void {
+        hand.cards.removeAll { (card) -> Bool in
+            card.uuid == cardUuid
+        }
+    }
+    
     static func newEmpty() -> CardZones {
         return CardZones(
             hand: Hand.newEmpty(),

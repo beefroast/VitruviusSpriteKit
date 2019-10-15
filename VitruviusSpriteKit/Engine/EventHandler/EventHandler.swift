@@ -255,7 +255,25 @@ class EventHandler: Codable {
             actor.cardZones.discard(cardUuid: e.cardUuid)
         
         case .destroyCard(let e):
-            break
+            
+            guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
+                return false
+            }
+            
+            actor.cardZones.remove(cardUuid: e.cardUuid)
+            
+        case .expendCard(let e):
+            
+            // TODO: Remove the card from the deck
+            // This needs to refer back to the game state, more
+            // persistant than the battle state.
+            // For now we just destroy the card
+            
+            guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
+                return false
+            }
+            
+            actor.cardZones.remove(cardUuid: e.cardUuid)
             
         case .discardHand(let e):
             
@@ -614,6 +632,12 @@ class EventPrinterEffect: HandleEffectStrategy {
             let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
             let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
             print("\(nameOrUuid) destroyed \(cardName).")
+            
+        case .expendCard(let e):
+            let actor = state.actorWith(uuid: e.actorUuid)
+            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
+            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
+            print("\(nameOrUuid) expended \(cardName).")
             
         case .shuffleDiscardIntoDrawPile(let e):
             let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
