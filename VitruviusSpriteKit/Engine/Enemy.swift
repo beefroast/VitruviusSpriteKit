@@ -165,7 +165,7 @@ class TestEnemy: Enemy {
                             )
                         ),
                         Event.willGainBlock(
-                            UpdateBodyEvent.init(
+                            UpdateAmountEvent.init(
                                 targetActorUuid: self.uuid,
                                 sourceUuid: self.uuid,
                                 amount: 6

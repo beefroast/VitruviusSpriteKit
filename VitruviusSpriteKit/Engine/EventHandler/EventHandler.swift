@@ -199,7 +199,7 @@ class EventHandler: Codable {
             }
             
             self.push(event:
-                Event.willLoseBlock(UpdateBodyEvent.init(
+                Event.willLoseBlock(UpdateAmountEvent.init(
                     targetActorUuid: e.actorUuid,
                     sourceUuid: uuid,
                     amount: actor.body.block)))
@@ -430,13 +430,13 @@ class EventHandler: Codable {
                 
                 if damageRemaining > 0 {
                     self.eventStack.push(elt:
-                        Event.willLoseHp(UpdateBodyEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: damageRemaining))
+                        Event.willLoseHp(UpdateAmountEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: damageRemaining))
                     )
                 }
                 
                 self.eventStack.push(elt:
                     Event.willLoseBlock(
-                        UpdateBodyEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: blockLost)
+                        UpdateAmountEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: blockLost)
                     )
                 )
             }

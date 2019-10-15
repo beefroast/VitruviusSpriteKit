@@ -81,7 +81,7 @@ class CardDrain: CardStrategy {
                 
                 state.eventHandler.push(
                     event: Event.willGainHp(
-                        UpdateBodyEvent.init(
+                        UpdateAmountEvent.init(
                             targetActorUuid: self.ownerUuid,
                             sourceUuid: effectUuid,
                             amount: bodyEvent.amount

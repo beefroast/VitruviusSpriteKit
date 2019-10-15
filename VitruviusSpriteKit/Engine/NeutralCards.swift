@@ -63,7 +63,7 @@ class CardDefend: CardStrategy {
         
         battleState.eventHandler.push(events: [
             Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
-            Event.willGainBlock(UpdateBodyEvent.init(targetActorUuid: source.uuid, sourceUuid: cardUuid, amount: 5))
+            Event.willGainBlock(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: cardUuid, amount: 5))
         ])
     }
     
@@ -83,7 +83,7 @@ class CardHealthPotion: CardStrategy {
     func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         battleState.eventHandler.push(events: [
             Event.expendCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
-            Event.willGainHp(UpdateBodyEvent.init(targetActorUuid: source.uuid, sourceUuid: cardUuid, amount: 10)),
+            Event.willGainHp(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: cardUuid, amount: 10)),
         ])
     }
     

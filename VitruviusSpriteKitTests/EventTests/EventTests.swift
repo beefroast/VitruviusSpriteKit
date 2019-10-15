@@ -77,7 +77,7 @@ class EventTests: XCTestCase {
     func testGainBlock() {
 
         self.addEventAndRunUntilDone(event: Event.willGainBlock(
-            UpdateBodyEvent.init(
+            UpdateAmountEvent.init(
                 targetActorUuid: self.battleState.player.uuid,
                 sourceUuid: UUID(),
                 amount: 10
@@ -92,7 +92,7 @@ class EventTests: XCTestCase {
 
          // Gain 10 block...
          self.addEventAndRunUntilDone(event: Event.willGainBlock(
-             UpdateBodyEvent.init(
+             UpdateAmountEvent.init(
                  targetActorUuid: self.battleState.player.uuid,
                  sourceUuid: UUID(),
                  amount: 10
@@ -101,7 +101,7 @@ class EventTests: XCTestCase {
         
         // Now lose 6 block
         self.addEventAndRunUntilDone(event: Event.willLoseBlock(
-            UpdateBodyEvent.init(
+            UpdateAmountEvent.init(
                 targetActorUuid: self.battleState.player.uuid,
                 sourceUuid: UUID(),
                 amount: 6
@@ -117,7 +117,7 @@ class EventTests: XCTestCase {
         
         // Lose 6 hp
         self.addEventAndRunUntilDone(event: Event.willLoseHp(
-            UpdateBodyEvent.init(
+            UpdateAmountEvent.init(
                 targetActorUuid: self.battleState.player.uuid,
                 sourceUuid: UUID(),
                 amount: 6
@@ -133,7 +133,7 @@ class EventTests: XCTestCase {
         
         // Lose 8 hp
         self.addEventAndRunUntilDone(event: Event.willLoseHp(
-            UpdateBodyEvent.init(
+            UpdateAmountEvent.init(
                 targetActorUuid: self.battleState.player.uuid,
                 sourceUuid: UUID(),
                 amount: 8
@@ -142,7 +142,7 @@ class EventTests: XCTestCase {
         
         // Gain 5 hp
         self.addEventAndRunUntilDone(event: Event.willGainHp(
-            UpdateBodyEvent.init(
+            UpdateAmountEvent.init(
                 targetActorUuid: self.battleState.player.uuid,
                 sourceUuid: UUID(),
                 amount: 5

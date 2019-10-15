@@ -95,7 +95,7 @@ class CardPierce: CardStrategy {
         
         return battleState.eventHandler.push(events: [
             discardEvent,
-            Event.willLoseHp(UpdateBodyEvent.init(targetActorUuid: drainTarget.uuid, sourceUuid: cardUuid, amount: 18))
+            Event.willLoseHp(UpdateAmountEvent.init(targetActorUuid: drainTarget.uuid, sourceUuid: cardUuid, amount: 18))
         ])
     }
     

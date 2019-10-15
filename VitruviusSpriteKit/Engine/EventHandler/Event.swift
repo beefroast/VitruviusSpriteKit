@@ -31,15 +31,15 @@ enum Event: Codable {
     case expendCard(CardEvent)
     case shuffleDiscardIntoDrawPile(ActorEvent)
         
-    case willLoseHp(UpdateBodyEvent)
-    case willLoseBlock(UpdateBodyEvent)
-    case didLoseHp(UpdateBodyEvent)
-    case didLoseBlock(UpdateBodyEvent)
+    case willLoseHp(UpdateAmountEvent)
+    case willLoseBlock(UpdateAmountEvent)
+    case didLoseHp(UpdateAmountEvent)
+    case didLoseBlock(UpdateAmountEvent)
     
-    case willGainHp(UpdateBodyEvent)
-    case willGainBlock(UpdateBodyEvent)
-    case didGainHp(UpdateBodyEvent)
-    case didGainBlock(UpdateBodyEvent)
+    case willGainHp(UpdateAmountEvent)
+    case willGainBlock(UpdateAmountEvent)
+    case didGainHp(UpdateAmountEvent)
+    case didGainBlock(UpdateAmountEvent)
     
     case playCard(PlayCardEvent)
     case attack(AttackEvent)
@@ -125,35 +125,35 @@ enum Event: Codable {
             self = .shuffleDiscardIntoDrawPile(data)
             
         case "willLoseHp":
-            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            let data = try values.decode(UpdateAmountEvent.self, forKey: .data)
             self = .willLoseHp(data)
             
         case "willLoseBlock":
-            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            let data = try values.decode(UpdateAmountEvent.self, forKey: .data)
             self = .willLoseBlock(data)
             
         case "didLoseHp":
-            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            let data = try values.decode(UpdateAmountEvent.self, forKey: .data)
             self = .didLoseHp(data)
             
         case "didLoseBlock":
-            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            let data = try values.decode(UpdateAmountEvent.self, forKey: .data)
             self = .didLoseBlock(data)
             
         case "willGainHp":
-            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            let data = try values.decode(UpdateAmountEvent.self, forKey: .data)
             self = .willGainHp(data)
             
         case "willGainBlock":
-            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            let data = try values.decode(UpdateAmountEvent.self, forKey: .data)
             self = .willGainBlock(data)
             
         case "didGainHp":
-            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            let data = try values.decode(UpdateAmountEvent.self, forKey: .data)
             self = .didGainHp(data)
             
         case "didGainBlock":
-            let data = try values.decode(UpdateBodyEvent.self, forKey: .data)
+            let data = try values.decode(UpdateAmountEvent.self, forKey: .data)
             self = .didGainBlock(data)
             
         case "playCard":
@@ -354,7 +354,7 @@ class AttackEvent: Codable {
     }
 }
 
-class UpdateBodyEvent: Codable {
+class UpdateAmountEvent: Codable {
     
     var targetActorUuid: UUID
     let sourceUuid: UUID
@@ -366,8 +366,8 @@ class UpdateBodyEvent: Codable {
         self.amount = amount
     }
     
-    func with(amount: Int) -> UpdateBodyEvent {
-        return UpdateBodyEvent(
+    func with(amount: Int) -> UpdateAmountEvent {
+        return UpdateAmountEvent(
             targetActorUuid: self.targetActorUuid,
             sourceUuid: self.sourceUuid,
             amount: amount
