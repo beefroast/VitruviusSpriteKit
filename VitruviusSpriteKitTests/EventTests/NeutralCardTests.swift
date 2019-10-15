@@ -58,7 +58,8 @@ class NeutralCardTests: XCTestCase {
                 effectList: [
                     EventPrinterEffect().withWrapper(uuid: UUID())
                 ]
-            )
+            ),
+            rng: RandomNumberGenerator(count: 0, seed: 0)
         )
     }
     

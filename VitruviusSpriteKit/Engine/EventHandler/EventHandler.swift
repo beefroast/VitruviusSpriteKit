@@ -238,7 +238,7 @@ class EventHandler: Codable {
             }
             
             // Draw a card
-            guard let card = actor.cardZones.drawPile.drawRandom() else {
+            guard let card = actor.cardZones.drawPile.drawRandom(rng: battleState.rng) else {
                 return false
             }
             

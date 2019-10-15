@@ -88,7 +88,8 @@ class GameViewController: UIViewController {
                 effectList: [
                     EventPrinterEffect.init().withWrapper(uuid: UUID())
                 ]
-            )
+            ),
+            rng: RandomNumberGenerator(count: 0, seed: 0)
         )
                 
         battleState.eventHandler.push(event:

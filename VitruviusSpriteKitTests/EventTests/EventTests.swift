@@ -52,7 +52,8 @@ class EventTests: XCTestCase {
                 effectList: [
                     EventPrinterEffect.init().withWrapper(uuid: UUID())
                 ]
-            )
+            ),
+            rng: RandomNumberGenerator(count: 0, seed: 0)
         )
     }
 

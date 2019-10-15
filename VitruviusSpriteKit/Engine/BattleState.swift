@@ -22,12 +22,14 @@ class BattleState: Codable {
     var allies: [Actor]
     var enemies: [Enemy]
     var eventHandler: EventHandler
+    let rng: RandomNumberGenerator
     
-    init(player: Player, allies: [Actor], enemies: [Enemy], eventHandler: EventHandler) {
+    init(player: Player, allies: [Actor], enemies: [Enemy], eventHandler: EventHandler, rng: RandomNumberGenerator) {
         self.player = player
         self.allies = allies
         self.enemies = enemies
         self.eventHandler = eventHandler
+        self.rng = rng
     }
     
     func getAllActors(faction: Faction) -> [Actor] {

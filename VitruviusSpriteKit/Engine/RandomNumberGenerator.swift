@@ -50,6 +50,9 @@ class RandomNumberGenerator: Codable {
         return n % exclusiveUpperBound
     }
     
+    func nextInt(exclusiveUpperBound: Int) -> Int {
+        return Int(self.nextInt(exclusiveUpperBound: UInt64(exclusiveUpperBound)))
+    }
     
     
     
