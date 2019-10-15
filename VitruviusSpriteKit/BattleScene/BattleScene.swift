@@ -453,6 +453,10 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                 // Destroying doesn't block
                 self.battleState.popNext()
                 
+                case .playCard(_):
+                    self.handNode.setCardsInteraction(enabled: false)
+                    self.battleState.popNext()
+                
                case .onBattleBegan: fallthrough
                case .addEffect(_): fallthrough
                case .removeEffect(_): fallthrough
@@ -463,7 +467,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                case .willLoseBlock(_): fallthrough
                case .willGainHp(_): fallthrough
                case .willGainBlock(_): fallthrough
-               case .playCard(_): fallthrough
                case .onBattleLost: self.battleState.popNext()
                 
             }
