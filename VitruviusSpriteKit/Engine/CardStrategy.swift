@@ -92,7 +92,12 @@ class Card: Codable {
         
         switch number {
         case 1: self.card = CardStrike()
+        case 2: self.card = CardMistForm()
+        case 3: self.card = CardPierce()
+        case 4: self.card = CardDrain()
         case 5: self.card = CardDefend()
+        case 6: self.card = CardRecall()
+        case 7: self.card = CardFireball()
         default:
             throw NSError.init(domain: "CardDeserializeError", code: 0, userInfo: nil)
         
