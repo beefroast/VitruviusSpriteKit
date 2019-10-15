@@ -18,7 +18,7 @@ class NeutralCardTests: XCTestCase {
         
         // Put setup code here. This method is called before the invocation of each test method in the class.
         
-        let player = Actor(
+        let player = Player(
             uuid: UUID(),
             name: "Player",
             faction: .player,
@@ -31,33 +31,34 @@ class NeutralCardTests: XCTestCase {
                 hand: Hand.init(),
                 drawPile: DrawPile.init(cards: []),
                 discard: DiscardPile.init()
-            )
+            ),
+            currentMana: 3,
+            maxMana: 3
         )
-        
+                
         let enemy = Enemy(
             uuid: UUID(),
-            name: "Enemy",
-            faction: .player,
-            body: Body.init(
-                block: 0,
-                hp: 10,
-                maxHp: 10
-            ),
-            cardZones: CardZones.init(
-                hand: Hand.init(),
-                drawPile: DrawPile.init(cards: []),
-                discard: DiscardPile.init()
-            ),
-            preBattleCards: []
+            name: "Goomba",
+            faction: .enemies,
+            body: Body(block: 0, hp: 10, maxHp: 10),
+            cardZones: CardZones(
+               hand: Hand.newEmpty(),
+               drawPile: DrawPile.newEmpty(),
+                discard: DiscardPile()
+            )
         )
-        
+                
         self.battleState = BattleState(
             player: player,
             allies: [],
             enemies: [enemy],
-            eventHandler: EventHandler.init(eventStack: StackQueue<Event>(), effectList: [
-                EventPrinterEffect().withWrapper(uuid: UUID())
-            ])
+            eventHandler: EventHandler.init(
+                uuid: UUID(),
+                eventStack: StackQueue<Event>(),
+                effectList: [
+                    EventPrinterEffect().withWrapper(uuid: UUID())
+                ]
+            )
         )
     }
     
@@ -87,6 +88,7 @@ class NeutralCardTests: XCTestCase {
         let c = CardStrike()
         
         c.resolve(
+            cardUuid: UUID(),
             source: self.battleState.player,
             battleState: self.battleState,
             target: self.battleState.enemies.first

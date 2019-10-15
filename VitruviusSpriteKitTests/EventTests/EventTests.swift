@@ -20,20 +20,14 @@ class EventTests: XCTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         
         
-        let player = Actor(
+        let player = Player.init(
             uuid: UUID(),
-            name: "Player",
+            name: "Test Player",
             faction: .player,
-            body: Body.init(
-                block: 0,
-                hp: 10,
-                maxHp: 10
-            ),
-            cardZones: CardZones.init(
-                hand: Hand.init(),
-                drawPile: DrawPile.init(cards: []),
-                discard: DiscardPile.init()
-            )
+            body: Body.init(block: 0, hp: 10, maxHp: 10),
+            cardZones: CardZones.newEmpty(),
+            currentMana: 3,
+            maxMana: 3
         )
         
         let enemy = Enemy(
@@ -45,21 +39,20 @@ class EventTests: XCTestCase {
                 hp: 10,
                 maxHp: 10
             ),
-            cardZones: CardZones.init(
-                hand: Hand.init(),
-                drawPile: DrawPile.init(cards: []),
-                discard: DiscardPile.init()
-            ),
-            preBattleCards: []
+            cardZones: CardZones.newEmpty()
         )
         
         self.battleState = BattleState(
             player: player,
             allies: [],
             enemies: [enemy],
-            eventHandler: EventHandler.init(eventStack: StackQueue<Event>(), effectList: [
-                EventPrinterEffect.init().withWrapper(uuid: UUID())
-            ])
+            eventHandler: EventHandler.init(
+                uuid: UUID(),
+                eventStack: StackQueue<Event>(),
+                effectList: [
+                    EventPrinterEffect.init().withWrapper(uuid: UUID())
+                ]
+            )
         )
     }
 

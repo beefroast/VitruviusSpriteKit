@@ -39,6 +39,14 @@ class CardZones: Codable {
         
         discard.push(elt: card)
     }
+    
+    static func newEmpty() -> CardZones {
+        return CardZones(
+            hand: Hand.newEmpty(),
+            drawPile: DrawPile.newEmpty(),
+            discard: DiscardPile.init()
+        )
+    }
 }
 
 class Hand: Codable {
