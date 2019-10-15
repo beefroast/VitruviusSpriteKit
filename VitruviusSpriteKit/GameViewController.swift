@@ -114,6 +114,8 @@ class GameViewController: UIViewController {
         view.showsDrawCount = true
         view.presentScene(scene)
 
+
+
         
     }
 
