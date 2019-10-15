@@ -9,7 +9,7 @@
 import Foundation
 
 
-class CardRecall : ICard {
+class CardRecall : CardStrategy {
     
     let cardNumber: Int = 6
     
@@ -30,7 +30,7 @@ class CardRecall : ICard {
     func onDiscarded(source: Actor, battleState: BattleState) {}
 }
 
-class CardFireball: ICard {
+class CardFireball: CardStrategy {
     
     let cardNumber: Int = 7
     

@@ -20,7 +20,7 @@ class CardNode: SKSpriteNode {
 
     
     weak var delegate: CardNodeTouchDelegate? = nil
-    var card: ICard!
+    var card: Card!
     
     var title: SKLabelNode? = nil
     var cost: SKLabelNode? = nil
@@ -37,7 +37,7 @@ class CardNode: SKSpriteNode {
         self.image = self.childNode(withName: "image") as? SKSpriteNode
     }
     
-    func setupWith(card: ICard, delegate: CardNodeTouchDelegate? = nil) -> CardNode {
+    func setupWith(card: Card, delegate: CardNodeTouchDelegate? = nil) -> CardNode {
         
         let node = self
         node.card = card
@@ -52,7 +52,7 @@ class CardNode: SKSpriteNode {
         let textureProvider = CardNodeImageProvider()
         
 
-        node.image?.texture = textureProvider.textureFor(card: card)
+        node.image?.texture = textureProvider.textureFor(card: card.card)
         
         node.removeFromParent()
         node.delegate = delegate

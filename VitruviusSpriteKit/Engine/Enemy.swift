@@ -12,13 +12,6 @@ import Foundation
 
 class Enemy: Actor {
 
-    let preBattleCards: [ICard]
-
-    init(uuid: UUID, name: String, faction: Faction, body: Body, cardZones: CardZones, preBattleCards: [ICard]) {
-        self.preBattleCards = preBattleCards
-        super.init(uuid: uuid, name: name, faction: faction, body: body, cardZones: cardZones)
-    }
-
     func onBattleBegin(state: BattleState) -> Void {
         // TODO: Push all the prebattle card effects on the stack...
         // This gives the enemy a chance to pre-buff before a battle, gaining
@@ -39,6 +32,25 @@ class Enemy: Actor {
             )
         )
     }
+    
+//    private enum CodingKeys: String, CodingKey {
+//        case currentMana
+//        case maxMana
+//    }
+//
+//    required init(from decoder: Decoder) throws {
+//        let values = try decoder.container(keyedBy: CodingKeys.self)
+//        self.currentMana = try values.decode(Int.self, forKey: .currentMana)
+//        self.maxMana = try values.decode(Int.self, forKey: .maxMana)
+//        try super.init(from: decoder)
+//    }
+//
+//    override func encode(to encoder: Encoder) throws {
+//        try super.encode(to: encoder)
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        try container.encode(self.currentMana, forKey: .currentMana)
+//        try container.encode(self.maxMana, forKey: .maxMana)
+//    }
 }
 
 class EnemyTurnEffect: HandleEffectStrategy {

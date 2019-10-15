@@ -108,15 +108,16 @@ protocol EventHandlerDelegate: AnyObject {
 }
 
 
-class EventHandler {
+class EventHandler: Codable {
     
     weak var delegate: EventHandlerDelegate? = nil
     
-    let handlerUuid: UUID = UUID()
+    let uuid: UUID
     var eventStack: StackQueue<Event>
     private var effectList: [Effect]
     
-    init(eventStack: StackQueue<Event>, effectList: [Effect]) {
+    init(uuid: UUID, eventStack: StackQueue<Event>, effectList: [Effect]) {
+        self.uuid = uuid
         self.eventStack = eventStack
         self.effectList = effectList
     }
@@ -200,7 +201,7 @@ class EventHandler {
             self.push(event:
                 Event.willLoseBlock(UpdateBodyEvent.init(
                     targetActorUuid: e.actorUuid,
-                    sourceUuid: handlerUuid,
+                    sourceUuid: uuid,
                     amount: actor.body.block)))
         
         case .onTurnEnded(let e):
@@ -453,6 +454,30 @@ class EventHandler {
         return false
         
     }
+    
+    
+    // MARK: - Codable Implementation
+    
+    private enum CodingKeys: String, CodingKey {
+        case uuid
+        case eventStack
+        case effectList
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.uuid = try values.decode(UUID.self, forKey: .uuid)
+        self.eventStack = try values.decode(StackQueue<Event>.self, forKey: .eventStack)
+        self.effectList = try values.decode([Effect].self, forKey: .effectList)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.uuid, forKey: .uuid)
+        try container.encode(self.eventStack, forKey: .eventStack)
+        try container.encode(self.effectList, forKey: .effectList)
+    }
+    
 }
 
 
@@ -516,6 +541,8 @@ class DiscardThenDrawAtEndOfTurnEffect: HandleEffectStrategy {
         try container.encode(self.ownerUuid, forKey: .ownerUuid)
         try container.encode(self.cardsDrawn, forKey: .cardsDrawn)
     }
+    
+
     
 }
 

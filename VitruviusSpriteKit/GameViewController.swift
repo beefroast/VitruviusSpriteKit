@@ -24,28 +24,34 @@ class GameViewController: UIViewController {
         
         // Make a test battle state
         
-        let player = Actor(
+        
+        
+        let player = Player(
             uuid: UUID(),
             name: "Player",
             faction: .player,
             body: Body(block: 0, hp: 72, maxHp: 72),
             cardZones: CardZones(
-                hand: Hand.init(),
+                hand: Hand.newEmpty(),
                 drawPile: DrawPile.init(cards: [
-                    CardStrike(),
-                    CardStrike(),
-                    CardStrike(),
-                    CardStrike(),
-                    CardDefend(),
-                    CardDefend(),
-                    CardDefend(),
-                    CardDefend(),
-                    CardFireball(),
-                    CardRecall(),
+                    CardStrike().instance(),
+                    CardStrike().instance(),
+                    CardStrike().instance(),
+                    CardStrike().instance(),
+                    CardDefend().instance(),
+                    CardDefend().instance(),
+                    CardDefend().instance(),
+                    CardDefend().instance(),
+                    CardFireball().instance(),
+                    CardRecall().instance(),
                     
                 ]),
                 discard: DiscardPile()
-        ))
+            ),
+            currentMana: 3,
+            maxMana: 3
+        )
+        
         
         let goomba = TestEnemy(
              uuid: UUID(),
@@ -53,11 +59,10 @@ class GameViewController: UIViewController {
              faction: .enemies,
              body: Body(block: 0, hp: 40, maxHp: 40),
              cardZones: CardZones(
-                 hand: Hand(),
-                 drawPile: DrawPile(cards: []),
+                hand: Hand.newEmpty(),
+                drawPile: DrawPile.newEmpty(),
                  discard: DiscardPile()
-             ),
-             preBattleCards: []
+             )
          )
          
          
@@ -67,11 +72,10 @@ class GameViewController: UIViewController {
              faction: .enemies,
              body: Body(block: 0, hp: 40, maxHp: 40),
              cardZones: CardZones(
-                 hand: Hand(),
-                 drawPile: DrawPile(cards: []),
+                hand: Hand.newEmpty(),
+                 drawPile: DrawPile.newEmpty(),
                  discard: DiscardPile()
-             ),
-             preBattleCards: []
+             )
          )
         
         let battleState = BattleState.init(
@@ -79,6 +83,7 @@ class GameViewController: UIViewController {
             allies: [],
             enemies: [goomba, koopa],
             eventHandler: EventHandler(
+                uuid: UUID(),
                 eventStack: StackQueue<Event>(),
                 effectList: [
                     EventPrinterEffect.init().withWrapper(uuid: UUID())
@@ -99,6 +104,11 @@ class GameViewController: UIViewController {
         let scene = SKScene(fileNamed: "BattleScene") as! BattleScene
         scene.scaleMode = .aspectFit
         scene.setBattleState(battleState: battleState)
+        
+        
+        let x = try! JSONEncoder.init().encode(battleState)
+        let s = String(data: x, encoding: .utf8)!
+        print(s)
         
         // Present the scene
         view.ignoresSiblingOrder = false

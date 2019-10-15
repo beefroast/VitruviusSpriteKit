@@ -8,8 +8,8 @@
 
 import Foundation
 
-
-class Actor: IDamagable, ICardPlayer {
+// TODO: Need to be able to serialize actors
+class Actor: IDamagable, ICardPlayer, Codable {
     
     let uuid: UUID
     let name: String
@@ -38,14 +38,31 @@ class Player: Actor {
         super.init(uuid: uuid, name: name, faction: faction, body: body, cardZones: cardZones)
     }
     
+    private enum CodingKeys: String, CodingKey {
+        case currentMana
+        case maxMana
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.currentMana = try values.decode(Int.self, forKey: .currentMana)
+        self.maxMana = try values.decode(Int.self, forKey: .maxMana)
+        try super.init(from: decoder)
+    }
 
+    override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.currentMana, forKey: .currentMana)
+        try container.encode(self.maxMana, forKey: .maxMana)
+    }
 }
 
 // This needs to be serializable
 class PlayerData {
     
     let uuid: UUID
-    let decklist: [ICard]   // Cards need to be duplictable
+    let decklist: [Card]   // Cards need to be duplictable
     let currentXp: Int
     let currentGold: Int
     let currentHp: Int
@@ -54,7 +71,7 @@ class PlayerData {
     
     init(
         uuid: UUID,
-        decklist: [ICard],
+        decklist: [Card],
         currentXp: Int,
         currentGold: Int,
         currentHp: Int,
@@ -89,16 +106,16 @@ class PlayerData {
         return PlayerData(
             uuid: UUID(),
             decklist: [
-                CardStrike(),
-                CardStrike(),
-                CardStrike(),
-                CardStrike(),
-                CardDefend(),
-                CardDefend(),
-                CardDefend(),
-                CardDefend(),
-                CardDefend(),
-                CardDrain(),
+                CardStrike().instance(),
+                CardStrike().instance(),
+                CardStrike().instance(),
+                CardStrike().instance(),
+                CardDefend().instance(),
+                CardDefend().instance(),
+                CardDefend().instance(),
+                CardDefend().instance(),
+                CardDefend().instance(),
+                CardDrain().instance(),
             ],
             currentXp: 0,
             currentGold: 100,

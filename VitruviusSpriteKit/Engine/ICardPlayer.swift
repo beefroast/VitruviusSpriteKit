@@ -13,7 +13,7 @@ protocol ICardPlayer {
     var cardZones: CardZones { get set }
 }
 
-class CardZones {
+class CardZones: Codable {
     
     let hand: Hand
     let drawPile: DrawPile
@@ -41,37 +41,72 @@ class CardZones {
     }
 }
 
-class Hand {
+class Hand: Codable {
     
-    var cards: [ICard]
+    var cards: [Card]
     
-    init(cards: [ICard] = []) {
+    init(cards: [Card] = []) {
         self.cards = cards
     }
     
-    func cardWith(uuid: UUID) -> ICard? {
+    func cardWith(uuid: UUID) -> Card? {
         return cards.first { (c) -> Bool in
             c.uuid == uuid
         }
     }
-}
-
-enum CardDraw {
-    case specific(ICard)
-    case random
-}
-
-
-class DrawPile {
     
-    var randomPool: [ICard]
+    static func newEmpty() -> Hand {
+        return Hand()
+    }
+}
+
+enum CardDraw: Codable {
+    
+    case specific(Card)
+    case random
+    
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case card
+    }
+    
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try values.decode(String.self, forKey: .type)
+        
+        switch type {
+        case "specific":
+            let card = try values.decode(Card.self, forKey: .card)
+            self = .specific(card)
+        default:
+            self = .random
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .random:
+            try container.encode("random", forKey: .type)
+        case .specific(let c):
+            try container.encode("specific", forKey: .type)
+            try container.encode(c, forKey: .card)
+        }
+    }
+    
+}
+
+
+class DrawPile: Codable {
+    
+    var randomPool: [Card]
     var draws: [CardDraw]
     
     var count: Int {
         get { return draws.count }
     }
     
-    init(cards: [ICard]) {
+    init(cards: [Card]) {
         self.randomPool = cards
         self.draws = self.randomPool.map({ _ in return .random })
     }
@@ -80,12 +115,12 @@ class DrawPile {
         return draws.count > 0
     }
     
-    func shuffleIn(cards: [ICard]) {
+    func shuffleIn(cards: [Card]) {
         self.randomPool += cards
         self.draws = self.randomPool.map({ _ in return .random })
     }
     
-    func drawRandom() -> ICard? {
+    func drawRandom() -> Card? {
         
         let draw = self.draws.remove(at: 0)
         
@@ -100,10 +135,13 @@ class DrawPile {
         }
     }
 
+    static func newEmpty() -> DrawPile {
+        return DrawPile(cards: [])
+    }
 
 }
 
-class DiscardPile : Stack<ICard> {
+class DiscardPile : StackQueue<Card> {
     
     
 }

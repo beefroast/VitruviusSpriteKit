@@ -22,19 +22,36 @@ class EffectSerializationTests: XCTestCase {
 
     func testSerialization() {
         
-        let x = CardMistForm.MistFormEffect.init(ownerUuid: UUID()).withWrapper(uuid: UUID())
-        
-        let dat = try! JSONEncoder().encode(x)
-        let s = String(data: dat, encoding: .utf8)
-        
-        print(s)
-        
-        // TODO: Test decoding
-        
-        let dingus = try! JSONDecoder().decode(Effect.self, from: dat)
-        
-        
-        print("yay")
+        do {
+            
+            // Make an array of effects
+            let effects = [
+                CardDrain.DrainEffect.init(ownerUuid: UUID(), sourceUuid: UUID()).withWrapper(uuid: UUID()),
+                EnemyTurnEffect.init(enemyUuid: UUID(), name: "TestName", events: [
+                    Event.attack(AttackEvent.init(sourceUuid: UUID(), sourceOwner: UUID(), targets: [UUID()], amount: 42))
+                ]).withWrapper(uuid: UUID()),
+                DiscardThenDrawAtEndOfTurnEffect.init(ownerUuid: UUID(), cardsDrawn: 7).withWrapper(uuid: UUID()),
+                EventPrinterEffect().withWrapper(uuid: UUID()),
+                CardMistForm.MistFormEffect.init(ownerUuid: UUID()).withWrapper(uuid: UUID())
+            ]
+            
+            let data0 = try JSONEncoder().encode(effects)
+            let string0 = String(data: data0, encoding: .utf8)!
+            
+            print(string0)
+            
+            let effectsDuplication = try JSONDecoder().decode([Effect].self, from: data0)
+            
+            // Re-serialize this array
+            let data1 = try JSONEncoder().encode(effectsDuplication)
+            let string1 = String(data: data1, encoding: .utf8)!
+            
+            // Compare these strings
+            XCTAssertEqual(string0, string1)
+            
+        } catch (let error) {
+            XCTFail(error.localizedDescription)
+        }
         
     }
 

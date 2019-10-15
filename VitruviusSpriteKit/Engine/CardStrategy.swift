@@ -37,7 +37,7 @@ protocol ICardTemplate {
 
 
 
-protocol ICard {
+protocol CardStrategy {
     
     var cardNumber: Int { get }
     var uuid: UUID { get }
@@ -51,15 +51,39 @@ protocol ICard {
     func onDiscarded(source: Actor, battleState: BattleState) -> Void
 }
 
+extension CardStrategy {
+    func instance(uuid: UUID = UUID()) -> Card {
+        return Card(uuid: uuid, card: self)
+    }
+}
+
 
 class Card: Codable {
     
     let uuid: UUID
-    let card: ICard
+    let card: CardStrategy
     
-    init(uuid: UUID, card: ICard) {
+    var cardNumber: Int { get { self.card.cardNumber }}
+    var name: String { get { self.card.name }}
+    var requiresSingleTarget: Bool { get { self.card.requiresSingleTarget }}
+    var cost: Int { get { self.card.cost }}
+    var cardText: String { get { self.card.cardText }}
+    
+    init(uuid: UUID, card: CardStrategy) {
         self.uuid = uuid
         self.card = card
+    }
+    
+    func resolve(source: Actor, battleState: BattleState, target: Actor?) -> Void {
+        self.card.resolve(source: source, battleState: battleState, target: target)
+    }
+    
+    func onDrawn(source: Actor, battleState: BattleState) -> Void {
+        self.card.onDrawn(source: source, battleState: battleState)
+    }
+    
+    func onDiscarded(source: Actor, battleState: BattleState) -> Void {
+        self.card.onDiscarded(source: source, battleState: battleState)
     }
     
     enum CodingKeys: String, CodingKey {

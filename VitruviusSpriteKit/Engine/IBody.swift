@@ -12,7 +12,7 @@ protocol IDamagable {
     var body: Body { get set }
 }
 
-class Body {
+class Body: Codable {
     
     var block: Int
     var hp: Int

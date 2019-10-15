@@ -16,14 +16,14 @@ enum Faction: Int, Codable {
     case enemies
 }
 
-class BattleState {
+class BattleState: Codable {
     
-    var player: Actor
+    var player: Player
     var allies: [Actor]
     var enemies: [Enemy]
     var eventHandler: EventHandler
     
-    init(player: Actor, allies: [Actor], enemies: [Enemy], eventHandler: EventHandler) {
+    init(player: Player, allies: [Actor], enemies: [Enemy], eventHandler: EventHandler) {
         self.player = player
         self.allies = allies
         self.enemies = enemies

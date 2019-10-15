@@ -9,7 +9,7 @@
 import Foundation
 
 
-class CardDrain: ICard {
+class CardDrain: CardStrategy {
 
     let cardNumber: Int = 4
     

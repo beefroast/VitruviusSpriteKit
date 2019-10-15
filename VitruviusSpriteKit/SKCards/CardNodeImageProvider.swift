@@ -11,7 +11,7 @@ import SpriteKit
 
 class CardNodeImageProvider {
     
-    func textureFor(card: ICard) -> SKTexture {
+    func textureFor(card: CardStrategy) -> SKTexture {
         
         switch card.cardNumber {
             

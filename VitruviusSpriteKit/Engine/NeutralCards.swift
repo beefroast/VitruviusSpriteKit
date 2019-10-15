@@ -9,7 +9,7 @@
 import Foundation
 
 
-class CardStrike: ICard, Codable {
+class CardStrike: CardStrategy, Codable {
 
     let cardNumber: Int = 1
     let uuid: UUID = UUID()
@@ -51,7 +51,7 @@ class CardStrike: ICard, Codable {
 
 
 
-class CardDefend: ICard {
+class CardDefend: CardStrategy {
     
     let cardNumber: Int = 5
     
