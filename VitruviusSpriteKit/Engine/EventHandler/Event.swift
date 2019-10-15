@@ -84,14 +84,12 @@ enum Event: Codable {
             self = .onTurnEnded(data)
             
         case "addEffect":
-            break
-//            let data = try values.decode(CardEvent.self, forKey: .data)
-//            self = .addEffect(data)
+            let data = try values.decode(Effect.self, forKey: .data)
+            self = .addEffect(data)
             
         case "removeEffect":
-            break
-//            let data = try values.decode(CardEvent.self, forKey: .data)
-//            self = .removeEffect(data)
+            let data = try values.decode(Effect.self, forKey: .data)
+            self = .removeEffect(data)
             
         case "willDrawCards":
             let data = try values.decode(DrawCardsEvent.self, forKey: .data)
@@ -200,13 +198,13 @@ enum Event: Codable {
             try container.encode("onTurnEnded", forKey:. type)
             try container.encode(e, forKey: .data)
             
-        case .addEffect(let e): break
-//            try container.encode("addEffect", forKey:. type)
-//            try container.encode(e, forKey: .data)
+        case .addEffect(let e):
+            try container.encode("addEffect", forKey:. type)
+            try container.encode(e, forKey: .data)
             
-        case .removeEffect(let e): break
-//            try container.encode("removeEffect", forKey:. type)
-//            try container.encode(e, forKey: .data)
+        case .removeEffect(let e):
+            try container.encode("removeEffect", forKey:. type)
+            try container.encode(e, forKey: .data)
             
         case .willDrawCards(let e):
             try container.encode("willDrawCards", forKey:. type)

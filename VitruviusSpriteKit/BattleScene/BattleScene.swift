@@ -261,11 +261,9 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                    self.handNode.setCardsInteraction(enabled: true)
                    self.endTurnButton.isUserInteractionEnabled = true
                 
-                    
-//                    let x = try! JSONEncoder.init().encode(battleState)
-//                    let s = String(data: x, encoding: .utf8)!
-//                    print(s)
-                
+                    let x = try! JSONEncoder.init().encode(battleState)
+                    let s = String(data: x, encoding: .utf8)!
+                    print(s)
                    
                case .didLoseHp(let e):
                    
