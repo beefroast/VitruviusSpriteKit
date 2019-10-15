@@ -73,7 +73,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
         // Let's add some actors
         let playArea = PlayAreaNode()
         self.addChild(playArea)
-        playArea.position = CGPoint.zero
+        playArea.position = CGPoint(x: 0, y: 80)
 
         
         let playerActorNode = ActorNode.newInstance(actor: self.battleState.player)
