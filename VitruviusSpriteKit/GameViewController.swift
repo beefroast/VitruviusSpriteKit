@@ -44,7 +44,7 @@ class GameViewController: UIViewController {
                     CardDefend().instance(),
                     CardFireball().instance(),
                     CardRecall().instance(),
-                    
+                    CardHealthPotion().instance()
                 ]),
                 discard: DiscardPile()
             ),

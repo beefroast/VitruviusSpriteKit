@@ -169,7 +169,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                    
                case .discardCard(let e):
     
-                   
                    // Find the card
                    guard let cardNode = self.getFirstRecursive(fn: { (node) -> Bool in
                        (node as? CardNode)?.card.uuid == e.cardUuid
@@ -380,12 +379,74 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                    self.isUserInteractionEnabled = false
                    self.run(SKAction.fadeOut(withDuration: 1.0))
                 
-                   
-               default:
-                   self.battleState.popNext()
-                   
-               
-               }
+               case .destroyCard(let e):
+                
+                // Find the card
+                guard let cardNode = self.getFirstRecursive(fn: { (node) -> Bool in
+                    (node as? CardNode)?.card.uuid == e.cardUuid
+                }) else {
+                    self.battleState.popNext()
+                    return
+                }
+                
+                // Remove from the hand
+                self.handNode.removeCardAndAnimateIntoPosition(cardNode: cardNode as! CardNode)
+                
+                // Animate it disappearing
+                let discardAction = SKAction.group([
+                    SKAction.fadeAlpha(to: 0.0, duration: 0.2),
+                    SKAction.scale(by: 0.0, duration: 0.2)
+                ])
+                
+                cardNode.run(discardAction) {
+                    self.cardNodePool.returnToPool(cardNode: cardNode as! CardNode)
+                }
+
+                
+                // Destroying doesn't block
+                self.battleState.popNext()
+                
+               case .expendCard(let e):
+                
+                // Find the card
+                guard let cardNode = self.getFirstRecursive(fn: { (node) -> Bool in
+                    (node as? CardNode)?.card.uuid == e.cardUuid
+                }) else {
+                    self.battleState.popNext()
+                    return
+                }
+                
+                // Remove from the hand
+                self.handNode.removeCardAndAnimateIntoPosition(cardNode: cardNode as! CardNode)
+                
+                // Animate it disappearing
+                let discardAction = SKAction.group([
+                    SKAction.fadeAlpha(to: 0.0, duration: 0.2),
+                    SKAction.scale(by: 0.0, duration: 0.2)
+                ])
+                
+                cardNode.run(discardAction) {
+                    self.cardNodePool.returnToPool(cardNode: cardNode as! CardNode)
+                }
+
+                
+                // Destroying doesn't block
+                self.battleState.popNext()
+                
+               case .onBattleBegan: fallthrough
+               case .addEffect(_): fallthrough
+               case .removeEffect(_): fallthrough
+               case .willDrawCards(_): fallthrough
+               case .drawCard(_): fallthrough
+               case .discardHand(_): fallthrough
+               case .willLoseHp(_): fallthrough
+               case .willLoseBlock(_): fallthrough
+               case .willGainHp(_): fallthrough
+               case .willGainBlock(_): fallthrough
+               case .playCard(_): fallthrough
+               case .onBattleLost: self.battleState.popNext()
+                
+            }
            }
            
            return
