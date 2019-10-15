@@ -35,6 +35,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
     var playArea: PlayAreaNode!
     var discardNode: SKNode!
     var drawNode: SKNode!
+    var manaNode: SKNode!
     var endTurnButton: EndTurnButton!
     var cardNodePool: CardNodePool!
     var arrow: ArrowNode!
@@ -54,6 +55,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
         // Get the draw and discard nodes
         self.drawNode = self.childNode(withName: "deckNode")
         self.discardNode = self.childNode(withName: "discardNode")
+        self.manaNode = self.childNode(withName: "manaNode")
         self.endTurnButton = self.childNode(withName: "endTurn") as? EndTurnButton
         self.endTurnButton.isUserInteractionEnabled = true
         self.endTurnButton.delegate = self
@@ -149,6 +151,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
 
                    // Make the card
                    let cardNode = self.cardNodePool.getFromPool()
+                   cardNode.isUserInteractionEnabled = false
                    cardNode.setupWith(card: card, delegate: self)
                    self.drawNode.addChild(cardNode)
                    
@@ -259,10 +262,15 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                    self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
                    self.handNode.setCardsInteraction(enabled: true)
                    self.endTurnButton.isUserInteractionEnabled = true
-                
-                    let x = try! JSONEncoder.init().encode(battleState)
-                    let s = String(data: x, encoding: .utf8)!
-                    print(s)
+                    
+                   // Enable/disable each card depending on if we can afford it or not...
+                   self.handNode.cards.forEach { (cardNode) in
+                    if cardNode.card.cost > battleState.player.currentMana {
+                        cardNode.isUserInteractionEnabled = false
+                    } else {
+                        cardNode.isUserInteractionEnabled = true
+                    }
+                   }
                    
                case .didLoseHp(let e):
                    
@@ -340,10 +348,16 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                    self.battleState.popNext()
                 
                case .willLoseMana(let e):
-                break
+                if let label = self.manaNode.childNode(withName: "count") as? SKLabelNode {
+                    label.text = "\(self.battleState.player.currentMana)"
+                }
+                self.battleState.popNext()
                 
                case .willGainMana(let e):
-                break
+                if let label = self.manaNode.childNode(withName: "count") as? SKLabelNode {
+                    label.text = "\(self.battleState.player.currentMana)"
+                }
+                self.battleState.popNext()
                    
                case .attack(let e):
                    guard let ownerActor = state.actorWith(uuid: e.sourceOwner) else {

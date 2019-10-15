@@ -421,6 +421,20 @@ class EventHandler: Codable {
                 break
             }
             
+            // Pay the mana cost...
+            self.push(
+                event: Event.willLoseMana(
+                    UpdateAmountEvent.init(
+                        targetActorUuid: e.actorUuid,
+                        sourceUuid: card.uuid,
+                        amount: card.cost
+                    )
+                )
+            )
+
+            
+            // Resolve the card...
+            
             card.resolve(
                 source: actor,
                 battleState: battleState,
@@ -541,7 +555,8 @@ class DiscardThenDrawAtEndOfTurnEffect: HandleEffectStrategy {
             
             state.eventHandler.push(events: [
                 Event.discardHand(ActorEvent.init(actorUuid: e.actorUuid)),
-                Event.willDrawCards(DrawCardsEvent.init(actorUuid: e.actorUuid, amount: 5))
+                Event.willDrawCards(DrawCardsEvent.init(actorUuid: e.actorUuid, amount: 5)),
+                Event.willGainMana(UpdateAmountEvent.init(targetActorUuid: e.actorUuid, sourceUuid: UUID(), amount: 3))
             ])
             
         default:
@@ -571,10 +586,8 @@ class DiscardThenDrawAtEndOfTurnEffect: HandleEffectStrategy {
         try container.encode(self.ownerUuid, forKey: .ownerUuid)
         try container.encode(self.cardsDrawn, forKey: .cardsDrawn)
     }
-    
-
-    
 }
+
 
 
 class EventPrinterEffect: HandleEffectStrategy {

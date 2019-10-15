@@ -26,6 +26,17 @@ class CardNode: SKSpriteNode {
     var cost: SKLabelNode? = nil
     var text: SKLabelNode? = nil
     var image: SKSpriteNode? = nil
+    var highlight: SKSpriteNode? = nil
+    
+    override var isUserInteractionEnabled: Bool {
+        get {
+            return super.isUserInteractionEnabled
+        }
+        set (x) {
+            super.isUserInteractionEnabled = x
+            self.highlight?.isHidden = !self.isUserInteractionEnabled
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -35,6 +46,7 @@ class CardNode: SKSpriteNode {
         self.cost = self.childNode(withName: "cost") as? SKLabelNode
         self.text = self.childNode(withName: "text") as? SKLabelNode
         self.image = self.childNode(withName: "image") as? SKSpriteNode
+        self.highlight = self.childNode(withName: "highlight") as? SKSpriteNode
     }
     
     func setupWith(card: Card, delegate: CardNodeTouchDelegate? = nil) -> CardNode {
