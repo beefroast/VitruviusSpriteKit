@@ -338,6 +338,12 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                        actorNode.setBlock(amount: actor.body.block)
                    }
                    self.battleState.popNext()
+                
+               case .willLoseMana(let e):
+                break
+                
+               case .willGainMana(let e):
+                break
                    
                case .attack(let e):
                    guard let ownerActor = state.actorWith(uuid: e.sourceOwner) else {

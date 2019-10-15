@@ -41,6 +41,9 @@ enum Event: Codable {
     case didGainHp(UpdateAmountEvent)
     case didGainBlock(UpdateAmountEvent)
     
+    case willGainMana(UpdateAmountEvent)
+    case willLoseMana(UpdateAmountEvent)
+    
     case playCard(PlayCardEvent)
     case attack(AttackEvent)
     
@@ -273,6 +276,14 @@ enum Event: Codable {
             
         case .didGainBlock(let e):
             try container.encode("didGainBlock", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .willGainMana(let e):
+            try container.encode("willGainMana", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .willLoseMana(let e):
+            try container.encode("willLoseMana", forKey: .type)
             try container.encode(e, forKey: .data)
             
         case .playCard(let e):

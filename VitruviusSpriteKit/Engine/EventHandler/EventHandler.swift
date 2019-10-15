@@ -395,6 +395,18 @@ class EventHandler: Codable {
         case .didGainBlock(let e):
             break
             
+        case .willGainMana(let e):
+            guard let actor = battleState.actorWith(uuid: e.targetActorUuid) as? Player else {
+                return false
+            }
+            actor.currentMana += e.amount
+            
+        case .willLoseMana(let e):
+            guard let actor = battleState.actorWith(uuid: e.targetActorUuid) as? Player else {
+                return false
+            }
+            actor.currentMana = max(actor.currentMana - e.amount, 0)
+            
         case .playCard(let e):
             
             guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
@@ -674,6 +686,14 @@ class EventPrinterEffect: HandleEffectStrategy {
         case .didGainBlock(let e):
             let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
             print("\(nameOrUuid) gained \(e.amount) block.")
+            
+        case .willLoseMana(let e):
+            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
+            print("\(nameOrUuid) lost \(e.amount) mana.")
+            
+        case .willGainMana(let e):
+            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
+            print("\(nameOrUuid) gained \(e.amount) mana.")
             
         case .playCard(let e):
             let actor = state.actorWith(uuid: e.actorUuid)
