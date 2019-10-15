@@ -13,16 +13,15 @@ class CardMistForm: CardStrategy {
     
     let cardNumber: Int = 2
     
-    var uuid: UUID = UUID()
     var name: String = "Mist Form"
     var cardText: String { get { return "Until you next turn, attacks against you are reduced to 0." }}
     var requiresSingleTarget: Bool = false
     var cost: Int = 1
     
-    func resolve(source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         
         battleState.eventHandler.push(events: [
-            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid)),
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
             Event.addEffect(
                 MistFormEffect.init(ownerUuid: source.uuid).withWrapper(uuid: UUID())
             )
@@ -80,15 +79,14 @@ class CardPierce: CardStrategy {
     
     let cardNumber: Int = 3
     
-    var uuid: UUID = UUID()
     var name: String = "Pierce"
     var cardText: String { get { return "Target loses 18 hp." }}
     var requiresSingleTarget: Bool = true
     var cost: Int = 2
     
-    func resolve(source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         
-        let discardEvent = Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid))
+        let discardEvent = Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid))
         
         guard let drainTarget = target else {
             battleState.eventHandler.push(events: [discardEvent])
@@ -97,7 +95,7 @@ class CardPierce: CardStrategy {
         
         return battleState.eventHandler.push(events: [
             discardEvent,
-            Event.willLoseHp(UpdateBodyEvent.init(targetActorUuid: drainTarget.uuid, sourceUuid: self.uuid, amount: 18))
+            Event.willLoseHp(UpdateBodyEvent.init(targetActorUuid: drainTarget.uuid, sourceUuid: cardUuid, amount: 18))
         ])
     }
     

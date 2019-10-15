@@ -21,32 +21,18 @@ enum CardAttributes {
     case summons
 }
 
-protocol ICardTemplate {
-    
-    var number: Int { get }
-    var name: String { get }
-    var requiresSingleTarget: Bool { get }
-    var cost: Int { get }
-    var cardText: String { get }
-    
-    func resolve(source: Actor, battleState: BattleState, target: Actor?) -> Void
-    func onDrawn(source: Actor, battleState: BattleState) -> Void
-    func onDiscarded(source: Actor, battleState: BattleState) -> Void
-    
-}
 
 
 
 protocol CardStrategy {
     
     var cardNumber: Int { get }
-    var uuid: UUID { get }
     var name: String { get }
     var requiresSingleTarget: Bool { get }
     var cost: Int { get set }
     var cardText: String { get }
     
-    func resolve(source: Actor, battleState: BattleState, target: Actor?) -> Void
+    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) -> Void
     func onDrawn(source: Actor, battleState: BattleState) -> Void
     func onDiscarded(source: Actor, battleState: BattleState) -> Void
 }
@@ -75,7 +61,7 @@ class Card: Codable {
     }
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) -> Void {
-        self.card.resolve(source: source, battleState: battleState, target: target)
+        self.card.resolve(cardUuid: self.uuid, source: source, battleState: battleState, target: target)
     }
     
     func onDrawn(source: Actor, battleState: BattleState) -> Void {

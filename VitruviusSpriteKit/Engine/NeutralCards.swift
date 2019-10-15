@@ -12,7 +12,6 @@ import Foundation
 class CardStrike: CardStrategy, Codable {
 
     let cardNumber: Int = 1
-    let uuid: UUID = UUID()
     let name =  "Strike"
     var cardText: String { get { return "Attack for 6." }}
     let requiresSingleTarget: Bool = true
@@ -20,7 +19,7 @@ class CardStrike: CardStrategy, Codable {
     var level: Int = 0
  
     
-    func resolve(source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         
         guard let target = target else {
             return
@@ -29,10 +28,10 @@ class CardStrike: CardStrategy, Codable {
         
         battleState.eventHandler.push(events: [
         
-            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid)),
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
             Event.attack(
                  AttackEvent(
-                     sourceUuid: self.uuid,
+                     sourceUuid: cardUuid,
                      sourceOwner: source.uuid,
                      targets: [target.uuid],
                      amount: 6
@@ -55,17 +54,16 @@ class CardDefend: CardStrategy {
     
     let cardNumber: Int = 5
     
-    let uuid: UUID = UUID()
     let name =  "Defend"
     var cardText: String { get { return "Block for 5." }}
     let requiresSingleTarget: Bool = false
     var cost: Int = 1
     
-    func resolve(source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         
         battleState.eventHandler.push(events: [
-            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: self.uuid)),
-            Event.willGainBlock(UpdateBodyEvent.init(targetActorUuid: source.uuid, sourceUuid: self.uuid, amount: 5))
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
+            Event.willGainBlock(UpdateBodyEvent.init(targetActorUuid: source.uuid, sourceUuid: cardUuid, amount: 5))
         ])
     }
     

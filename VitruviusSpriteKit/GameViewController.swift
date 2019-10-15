@@ -105,10 +105,7 @@ class GameViewController: UIViewController {
         scene.scaleMode = .aspectFit
         scene.setBattleState(battleState: battleState)
         
-        
-        let x = try! JSONEncoder.init().encode(battleState)
-        let s = String(data: x, encoding: .utf8)!
-        print(s)
+
         
         // Present the scene
         view.ignoresSiblingOrder = false

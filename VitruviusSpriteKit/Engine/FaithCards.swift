@@ -13,13 +13,12 @@ class CardDrain: CardStrategy {
 
     let cardNumber: Int = 4
     
-    var uuid: UUID = UUID()
     var name: String = "Drain"
     var cardText: String { get { return "Attack for 6. Gain life equal to the hp lost this way." }}
     var requiresSingleTarget: Bool = true
     var cost: Int = 1
     
-    func resolve(source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
 
         guard let target = target?.uuid else {
             return
@@ -31,13 +30,13 @@ class CardDrain: CardStrategy {
             Event.addEffect(
                 DrainEffect.init(
                     ownerUuid: source.uuid,
-                    sourceUuid: self.uuid
+                    sourceUuid: cardUuid
                 ).withWrapper(uuid: UUID())
             ),
                 
             // Attack for 6
             Event.attack(AttackEvent.init(
-                sourceUuid: self.uuid,
+                sourceUuid: cardUuid,
                 sourceOwner: source.uuid,
                 targets: [target],
                 amount: 6
@@ -46,7 +45,7 @@ class CardDrain: CardStrategy {
             // Discard this card
             Event.discardCard(CardEvent.init(
                 actorUuid: source.uuid,
-                cardUuid: self.uuid
+                cardUuid: cardUuid
             )),
             
         ])
