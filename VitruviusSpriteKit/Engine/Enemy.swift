@@ -130,9 +130,8 @@ class EnemyTurnEffect: HandleEffectStrategy {
 class TestEnemy: Enemy {
     override func planTurn(state: BattleState) -> Event {
         
-        let rand = Int.random(in: (0...2))
-        
-        
+        let rand = state.rng.nextInt(exclusiveUpperBound: 3)
+
         switch rand {
         case 2:
             return Event.onEnemyPlannedTurn(
