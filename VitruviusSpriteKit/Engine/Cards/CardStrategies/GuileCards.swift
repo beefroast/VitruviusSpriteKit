@@ -18,6 +18,9 @@ class CardMistForm: CardStrategy {
     var requiresSingleTarget: Bool = false
     var cost: Int = 1
     
+    let rarity: CardRarity = CardRarity.uncommon
+    let attributes: CardAttributes = .buff
+    
     func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         
         battleState.eventHandler.push(events: [
@@ -83,6 +86,8 @@ class CardPierce: CardStrategy {
     var cardText: String { get { return "Target loses 18 hp." }}
     var requiresSingleTarget: Bool = true
     var cost: Int = 2
+    let rarity: CardRarity = CardRarity.uncommon
+    let attributes: CardAttributes = [.attack, .ranged]
     
     func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         

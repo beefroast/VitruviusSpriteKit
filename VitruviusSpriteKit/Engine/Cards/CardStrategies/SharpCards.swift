@@ -18,6 +18,9 @@ class CardRecall : CardStrategy {
     var requiresSingleTarget: Bool = false
     var cost: Int = 0
     
+    let rarity: CardRarity = CardRarity.uncommon
+    let attributes: CardAttributes = .spell
+    
     func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         battleState.eventHandler.push(events: [
             Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
@@ -37,6 +40,8 @@ class CardFireball: CardStrategy {
     var cardText: String { get { return "Attack each enemy for 8." }}
     var requiresSingleTarget: Bool = false
     var cost: Int = 2
+    let rarity: CardRarity = CardRarity.basic
+    let attributes: CardAttributes = [.attack, .spell]
         
     func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         

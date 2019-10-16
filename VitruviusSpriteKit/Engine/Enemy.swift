@@ -127,6 +127,32 @@ class EnemyTurnEffect: HandleEffectStrategy {
     }
 }
 
+
+
+
+protocol EnemyStrategy {
+    func getStrategyName() -> String
+    func planTurn(enemy: Enemy, state: BattleState) -> Event
+}
+
+class CrabEnemyStrategy: EnemyStrategy {
+    func getStrategyName() -> String { return "crab" }
+    func planTurn(enemy: Enemy, state: BattleState) -> Event {
+        fatalError("Crabs need to have turns.")
+    }
+}
+
+class SuccubusEnemyStrategy {
+    func getStrategyName() -> String { return "succubus" }
+    func planTurn(enemy: Enemy, state: BattleState) -> Event {
+        fatalError("Succubi need to have turns.")
+    }
+}
+
+
+
+
+
 class TestEnemy: Enemy {
     override func planTurn(state: BattleState) -> Event {
         

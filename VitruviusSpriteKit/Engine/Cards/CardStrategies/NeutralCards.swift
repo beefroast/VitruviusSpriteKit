@@ -17,7 +17,8 @@ class CardStrike: CardStrategy, Codable {
     let requiresSingleTarget: Bool = true
     var cost: Int = 1
     var level: Int = 0
- 
+    let rarity: CardRarity = CardRarity.basic
+    let attributes: CardAttributes = [.attack, .melee]
     
     func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         
@@ -58,6 +59,8 @@ class CardDefend: CardStrategy {
     var cardText: String { get { return "Block for 5." }}
     let requiresSingleTarget: Bool = false
     var cost: Int = 1
+    let rarity: CardRarity = CardRarity.basic
+    let attributes: CardAttributes = [.defence]
     
     func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         
@@ -79,6 +82,8 @@ class CardHealthPotion: CardStrategy {
     let cardText: String = "Gain 10 hp. Expend Health Potion."
     var requiresSingleTarget: Bool = false
     var cost: Int = 0
+    let rarity: CardRarity = CardRarity.basic
+    let attributes: CardAttributes = [.potion, .heal]
     
     func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
         battleState.eventHandler.push(events: [

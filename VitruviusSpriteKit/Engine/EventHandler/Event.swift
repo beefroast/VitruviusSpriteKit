@@ -9,6 +9,7 @@
 import Foundation
 
 enum Event: Codable {
+    
 
     case playerInputRequired
     

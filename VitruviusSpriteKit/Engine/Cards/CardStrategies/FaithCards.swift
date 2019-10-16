@@ -17,6 +17,8 @@ class CardDrain: CardStrategy {
     var cardText: String { get { return "Attack for 6. Gain life equal to the hp lost this way." }}
     var requiresSingleTarget: Bool = true
     var cost: Int = 1
+    let rarity: CardRarity = CardRarity.basic
+    let attributes: CardAttributes = [.attack, .spell]
     
     func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
 

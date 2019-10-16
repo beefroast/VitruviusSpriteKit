@@ -8,20 +8,22 @@
 
 import Foundation
 
-
-enum CardAttributes {
-    case attack
-    case spell
-    case melee
-    case ranged
-    case buff
-    case debuff
-    case defence
-    case heal
-    case summons
+struct CardAttributes: OptionSet, Codable {
+    let rawValue: Int
+    static let attack = CardAttributes(rawValue: 1 << 0)
+    static let spell = CardAttributes(rawValue: 1 << 1)
+    static let melee = CardAttributes(rawValue: 1 << 2)
+    static let ranged = CardAttributes(rawValue: 1 << 3)
+    static let buff = CardAttributes(rawValue: 1 << 4)
+    static let debuff = CardAttributes(rawValue: 1 << 5)
+    static let defence = CardAttributes(rawValue: 1 << 6)
+    static let heal = CardAttributes(rawValue: 1 << 7)
+    static let summons = CardAttributes(rawValue: 1 << 8)
+    static let potion = CardAttributes(rawValue: 1 << 9)
 }
 
-enum CardRarity {
+
+enum CardRarity: Int, Codable {
     case basic
     case common
     case uncommon
@@ -38,6 +40,8 @@ protocol CardStrategy {
     var requiresSingleTarget: Bool { get }
     var cost: Int { get set }
     var cardText: String { get }
+    var rarity: CardRarity { get }
+    var attributes: CardAttributes { get }
     
     func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) -> Void
     func onDrawn(source: Actor, battleState: BattleState) -> Void
