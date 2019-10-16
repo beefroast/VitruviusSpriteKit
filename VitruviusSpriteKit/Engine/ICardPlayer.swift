@@ -145,7 +145,7 @@ class DrawPile: Codable {
             
         case .random:
             guard self.randomPool.count > 0 else { return nil }
-            let i = rng.nextInt(exclusiveUpperBound: self.randomPool.count-1)
+            let i = rng.nextInt(exclusiveUpperBound: self.randomPool.count)
             return self.randomPool.remove(at: i)
         }
     }

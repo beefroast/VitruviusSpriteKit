@@ -51,6 +51,7 @@
 		6472DF0F234C3D0F009B75C0 /* BattleScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0E234C3D0F009B75C0 /* BattleScene.swift */; };
 		64FF02CB2355651D0000C93E /* BattleStateSerializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02CA2355651D0000C93E /* BattleStateSerializationTests.swift */; };
 		64FF02CD235588540000C93E /* RandomNumberGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02CC235588540000C93E /* RandomNumberGenerator.swift */; };
+		64FF02D22355A6E10000C93E /* CardOfferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02D12355A6E10000C93E /* CardOfferer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +122,7 @@
 		6472DF0E234C3D0F009B75C0 /* BattleScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleScene.swift; sourceTree = "<group>"; };
 		64FF02CA2355651D0000C93E /* BattleStateSerializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleStateSerializationTests.swift; sourceTree = "<group>"; };
 		64FF02CC235588540000C93E /* RandomNumberGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomNumberGenerator.swift; sourceTree = "<group>"; };
+		64FF02D12355A6E10000C93E /* CardOfferer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardOfferer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,19 +238,13 @@
 		6472DEE223487B97009B75C0 /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				64FF02CE2355A69F0000C93E /* Cards */,
 				6472DEF023487BAE009B75C0 /* Actor.swift */,
 				6472DEE723487BAD009B75C0 /* BattleState.swift */,
-				6472DEEB23487BAD009B75C0 /* CharmCards.swift */,
 				6472DEEC23487BAD009B75C0 /* Enemy.swift */,
 				6472DF0A234C1199009B75C0 /* EventHandler */,
-				6472DEE823487BAD009B75C0 /* FaithCards.swift */,
-				6472DEEF23487BAD009B75C0 /* GuileCards.swift */,
 				6472DEEA23487BAD009B75C0 /* IBody.swift */,
-				6472DEED23487BAD009B75C0 /* CardStrategy.swift */,
 				6472DEE423487BAD009B75C0 /* ICardPlayer.swift */,
-				6472DEE923487BAD009B75C0 /* MightCards.swift */,
-				6472DEEE23487BAD009B75C0 /* NeutralCards.swift */,
-				6472DEE523487BAD009B75C0 /* SharpCards.swift */,
 				6472DEE623487BAD009B75C0 /* Stack.swift */,
 				64FF02CC235588540000C93E /* RandomNumberGenerator.swift */,
 			);
@@ -282,6 +278,29 @@
 				6472DEB223461A7E009B75C0 /* BattleScene.sks */,
 			);
 			path = BattleScene;
+			sourceTree = "<group>";
+		};
+		64FF02CE2355A69F0000C93E /* Cards */ = {
+			isa = PBXGroup;
+			children = (
+				64FF02CF2355A6BC0000C93E /* CardStrategies */,
+				64FF02D12355A6E10000C93E /* CardOfferer.swift */,
+			);
+			path = Cards;
+			sourceTree = "<group>";
+		};
+		64FF02CF2355A6BC0000C93E /* CardStrategies */ = {
+			isa = PBXGroup;
+			children = (
+				6472DEE823487BAD009B75C0 /* FaithCards.swift */,
+				6472DEEF23487BAD009B75C0 /* GuileCards.swift */,
+				6472DEED23487BAD009B75C0 /* CardStrategy.swift */,
+				6472DEE923487BAD009B75C0 /* MightCards.swift */,
+				6472DEEE23487BAD009B75C0 /* NeutralCards.swift */,
+				6472DEE523487BAD009B75C0 /* SharpCards.swift */,
+				6472DEEB23487BAD009B75C0 /* CharmCards.swift */,
+			);
+			path = CardStrategies;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -429,6 +448,7 @@
 				6472DEB923485396009B75C0 /* PlayAreaNode.swift in Sources */,
 				643588EE2345FEEF007334D9 /* CardNode.swift in Sources */,
 				6472DEFB23487BAE009B75C0 /* CardStrategy.swift in Sources */,
+				64FF02D22355A6E10000C93E /* CardOfferer.swift in Sources */,
 				6472DEFD23487BAE009B75C0 /* GuileCards.swift in Sources */,
 				6472DEF223487BAE009B75C0 /* ICardPlayer.swift in Sources */,
 				6472DF07234ADA85009B75C0 /* ArrowNode.swift in Sources */,

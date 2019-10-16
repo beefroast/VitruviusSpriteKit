@@ -21,6 +21,13 @@ enum CardAttributes {
     case summons
 }
 
+enum CardRarity {
+    case basic
+    case common
+    case uncommon
+    case rare
+    case mythic
+}
 
 
 
