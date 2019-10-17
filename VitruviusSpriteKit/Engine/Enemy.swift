@@ -160,6 +160,20 @@ class CrabEnemyStrategy: EnemyStrategy {
             )
         )
     }
+    
+    func with(challengeRating: Int, rng: RandomNumberGenerator) -> Enemy {
+        // TODO: We can adjust the difficulty of the crab in here, giving it
+        // more health or whatever.
+        return Enemy(
+            uuid: UUID(),
+            name: "Crab",
+            faction: .enemies,
+            body: Body(block: 0, hp: 10, maxHp: 10),
+            cardZones: CardZones.newEmpty(),
+            enemyStrategy: self
+        )
+    }
+    
 }
 
 class SuccubusEnemyStrategy {
