@@ -74,34 +74,34 @@ class Card: Codable {
     
     let uuid: UUID
     var level: Int
-    let card: CardStrategy
+    let strategy: CardStrategy
     
-    var cardNumber: Int { get { self.card.cardNumber }}
-    var name: String { get { self.card.name }}
-    var requiresSingleTarget: Bool { get { self.card.requiresSingleTarget }}
-    var cost: Int { get { self.card.costFor(card: self) }}
-    var cardText: String { get { self.card.textFor(card: self) }}
+    var cardNumber: Int { get { self.strategy.cardNumber }}
+    var name: String { get { self.strategy.name }}
+    var requiresSingleTarget: Bool { get { self.strategy.requiresSingleTarget }}
+    var cost: Int { get { self.strategy.costFor(card: self) }}
+    var cardText: String { get { self.strategy.textFor(card: self) }}
     
     init(uuid: UUID, level: Int, card: CardStrategy) {
         self.uuid = uuid
         self.level = level
-        self.card = card
+        self.strategy = card
     }
     
     func getText() -> String {
-        return self.card.textFor(card: self)
+        return self.strategy.textFor(card: self)
     }
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) -> Void {
-        self.card.resolve(card: self, source: source, battleState: battleState, target: target)
+        self.strategy.resolve(card: self, source: source, battleState: battleState, target: target)
     }
     
     func onDrawn(source: Actor, battleState: BattleState) -> Void {
-        self.card.onDrawn(card: self, source: source, battleState: battleState)
+        self.strategy.onDrawn(card: self, source: source, battleState: battleState)
     }
     
     func onDiscarded(source: Actor, battleState: BattleState) -> Void {
-        self.card.onDiscarded(card: self, source: source, battleState: battleState)
+        self.strategy.onDiscarded(card: self, source: source, battleState: battleState)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -115,7 +115,7 @@ class Card: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(uuid, forKey: .uuid)
         try container.encode(level, forKey: .level)
-        try container.encode(card.cardNumber, forKey: .cardNumber)
+        try container.encode(strategy.cardNumber, forKey: .cardNumber)
     }
     
     required init(from decoder: Decoder) throws {
@@ -126,13 +126,13 @@ class Card: Codable {
         let number = try values.decode(Int.self, forKey: .cardNumber)
         
         switch number {
-        case 1: self.card = CardStrike()
-        case 2: self.card = CardMistForm()
-        case 3: self.card = CardPierce()
-        case 4: self.card = CardDrain()
-        case 5: self.card = CardDefend()
-        case 6: self.card = CardRecall()
-        case 7: self.card = CardFireball()
+        case 1: self.strategy = CSStrike()
+        case 2: self.strategy = CSMistForm()
+        case 3: self.strategy = CSPierce()
+        case 4: self.strategy = CSDrain()
+        case 5: self.strategy = CSDefend()
+        case 6: self.strategy = CSRecall()
+        case 7: self.strategy = CSFireball()
         default:
             throw NSError.init(domain: "CardDeserializeError", code: 0, userInfo: nil)
         

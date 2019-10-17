@@ -9,7 +9,7 @@
 import Foundation
 
 
-class CardDrain: CardStrategy {
+class CSDrain: CardStrategy {
 
     let cardNumber: Int = 4
     

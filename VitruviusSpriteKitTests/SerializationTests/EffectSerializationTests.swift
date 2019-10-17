@@ -26,13 +26,13 @@ class EffectSerializationTests: XCTestCase {
             
             // Make an array of effects
             let effects = [
-                CardDrain.DrainEffect.init(ownerUuid: UUID(), sourceUuid: UUID()).withWrapper(uuid: UUID()),
+                CSDrain.DrainEffect.init(ownerUuid: UUID(), sourceUuid: UUID()).withWrapper(uuid: UUID()),
                 EnemyTurnEffect.init(enemyUuid: UUID(), name: "TestName", events: [
                     Event.attack(AttackEvent.init(sourceUuid: UUID(), sourceOwner: UUID(), targets: [UUID()], amount: 42))
                 ]).withWrapper(uuid: UUID()),
                 DiscardThenDrawAtEndOfTurnEffect.init(ownerUuid: UUID(), cardsDrawn: 7).withWrapper(uuid: UUID()),
                 EventPrinterEffect().withWrapper(uuid: UUID()),
-                CardMistForm.MistFormEffect.init(ownerUuid: UUID()).withWrapper(uuid: UUID())
+                CSMistForm.MistFormEffect.init(ownerUuid: UUID()).withWrapper(uuid: UUID())
             ]
             
             let data0 = try JSONEncoder().encode(effects)

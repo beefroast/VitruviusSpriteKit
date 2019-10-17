@@ -56,7 +56,7 @@ class CardOfferer {
         if choices.count == 0 {
             // Safety strike
             // TODO: Make sure there's at least one card in each rarity with each class
-            return CardStrike().instance()
+            return CSStrike().instance()
         }
         
         // Get a random card from the choices
@@ -69,10 +69,10 @@ class CardOfferer {
     func allCardStrategies() -> [CardStrategy] {
         
         return [
-            CardStrike(),
-            CardDefend(),
-            CardHealthPotion(),
-            CardMasteryPotion(),
+            CSStrike(),
+            CSDefend(),
+            CSHealthPotion(),
+            CSMasteryPotion(),
         ]
         
     }

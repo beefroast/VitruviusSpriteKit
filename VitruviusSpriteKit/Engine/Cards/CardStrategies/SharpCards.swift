@@ -9,7 +9,7 @@
 import Foundation
 
 
-class CardRecall : CardStrategy {
+class CSRecall : CardStrategy {
     
     let cardNumber: Int = 6
     
@@ -38,7 +38,7 @@ class CardRecall : CardStrategy {
     func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
 }
 
-class CardFireball: CardStrategy {
+class CSFireball: CardStrategy {
     
     let cardNumber: Int = 7
     

@@ -35,17 +35,17 @@ class GameViewController: UIViewController {
             cardZones: CardZones(
                 hand: Hand.newEmpty(),
                 drawPile: DrawPile.init(cards: [
-                    CardStrike().instance(level: 1),
-                    CardStrike().instance(),
-                    CardStrike().instance(),
-                    CardStrike().instance(),
-                    CardDefend().instance(),
-                    CardDefend().instance(),
-                    CardDefend().instance(),
-                    CardDefend().instance(),
-                    CardFireball().instance(),
-                    CardRecall().instance(),
-                    CardMasteryPotion().instance()
+                    CSStrike().instance(level: 1),
+                    CSStrike().instance(),
+                    CSStrike().instance(),
+                    CSStrike().instance(),
+                    CSDefend().instance(),
+                    CSDefend().instance(),
+                    CSDefend().instance(),
+                    CSDefend().instance(),
+                    CSFireball().instance(),
+                    CSRecall().instance(),
+                    CSMasteryPotion().instance()
                 ]),
                 discard: DiscardPile()
             ),

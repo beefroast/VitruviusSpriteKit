@@ -23,8 +23,8 @@ class SerializationTests: XCTestCase {
     func testExample() {
         
         let cards = [
-            CardStrike().instance(),
-            CardDefend().instance()
+            CSStrike().instance(),
+            CSDefend().instance()
         ]
         
         do {
@@ -36,7 +36,7 @@ class SerializationTests: XCTestCase {
                 let a = pair.0
                 let b = pair.1
                 XCTAssertEqual(a.uuid, b.uuid)
-                XCTAssertEqual(a.card.name, b.card.name)
+                XCTAssertEqual(a.strategy.name, b.strategy.name)
             }
               
         } catch (let error) {

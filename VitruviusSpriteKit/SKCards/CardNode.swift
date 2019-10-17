@@ -64,7 +64,7 @@ class CardNode: SKSpriteNode {
         let textureProvider = CardNodeImageProvider()
         
 
-        node.image?.texture = textureProvider.textureFor(card: card.card)
+        node.image?.texture = textureProvider.textureFor(card: card.strategy)
         
         node.delegate = delegate
         return node

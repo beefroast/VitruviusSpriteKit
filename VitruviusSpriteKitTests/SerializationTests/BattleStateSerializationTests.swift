@@ -29,16 +29,16 @@ class BattleStateSerializationTests: XCTestCase {
               cardZones: CardZones(
                   hand: Hand.newEmpty(),
                   drawPile: DrawPile.init(cards: [
-                      CardStrike().instance(),
-                      CardStrike().instance(),
-                      CardStrike().instance(),
-                      CardStrike().instance(),
-                      CardDefend().instance(),
-                      CardDefend().instance(),
-                      CardDefend().instance(),
-                      CardDefend().instance(),
-                      CardFireball().instance(),
-                      CardRecall().instance(),
+                      CSStrike().instance(),
+                      CSStrike().instance(),
+                      CSStrike().instance(),
+                      CSStrike().instance(),
+                      CSDefend().instance(),
+                      CSDefend().instance(),
+                      CSDefend().instance(),
+                      CSDefend().instance(),
+                      CSFireball().instance(),
+                      CSRecall().instance(),
                       
                   ]),
                   discard: DiscardPile()

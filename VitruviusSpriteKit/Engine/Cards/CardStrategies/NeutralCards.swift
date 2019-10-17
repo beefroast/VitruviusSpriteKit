@@ -9,7 +9,7 @@
 import Foundation
 
 
-class CardStrike: CardStrategy, Codable {
+class CSStrike: CardStrategy, Codable {
 
     let cardNumber: Int = 1
     let name =  "Strike"
@@ -56,7 +56,7 @@ class CardStrike: CardStrategy, Codable {
 
 
 
-class CardDefend: CardStrategy {
+class CSDefend: CardStrategy {
     
     let cardNumber: Int = 5
     
@@ -91,7 +91,7 @@ class CardDefend: CardStrategy {
 }
 
 
-class CardHealthPotion: CardStrategy {
+class CSHealthPotion: CardStrategy {
     
     let cardNumber: Int = 8
     let name =  "Health Potion"
@@ -119,7 +119,7 @@ class CardHealthPotion: CardStrategy {
     func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
 }
 
-class CardMasteryPotion: CardStrategy {
+class CSMasteryPotion: CardStrategy {
     
     let cardNumber: Int = 9
     let name =  "Mastery Potion"

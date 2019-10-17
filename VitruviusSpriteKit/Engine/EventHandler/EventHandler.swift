@@ -77,7 +77,7 @@ class Effect: Codable {
         switch identifier {
             
         case .drain:
-            self.strategy = try values.decode(CardDrain.DrainEffect.self, forKey: .strategy)
+            self.strategy = try values.decode(CSDrain.DrainEffect.self, forKey: .strategy)
             
         case .enemyTurn:
             self.strategy = try values.decode(EnemyTurnEffect.self, forKey: .strategy)
@@ -89,7 +89,7 @@ class Effect: Codable {
             self.strategy = try values.decode(EventPrinterEffect.self, forKey: .strategy)
             
         case .mistForm:
-            self.strategy = try values.decode(CardMistForm.MistFormEffect.self, forKey: .strategy)
+            self.strategy = try values.decode(CSMistForm.MistFormEffect.self, forKey: .strategy)
 
         }
 

@@ -9,7 +9,7 @@
 import Foundation
 
 
-class CardMistForm: CardStrategy {
+class CSMistForm: CardStrategy {
     
     let cardNumber: Int = 2
     
@@ -85,7 +85,7 @@ class CardMistForm: CardStrategy {
     }
 }
 
-class CardPierce: CardStrategy {
+class CSPierce: CardStrategy {
     
     let cardNumber: Int = 3
     

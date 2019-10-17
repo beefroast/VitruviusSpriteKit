@@ -28,9 +28,9 @@ class FontHandler {
     
     func getTitleFor(card: Card) -> NSAttributedString {
         if card.level > 0 {
-            return self.getCardTitle(title: card.card.name, textColor: UIColor.red)
+            return self.getCardTitle(title: card.strategy.name, textColor: UIColor.red)
         } else {
-            return self.getCardTitle(title: card.card.name, textColor: UIColor.white)
+            return self.getCardTitle(title: card.strategy.name, textColor: UIColor.white)
         }
     }
     
