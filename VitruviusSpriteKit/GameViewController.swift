@@ -21,7 +21,6 @@ class GameViewController: UIViewController {
         
         let view = self.view as! SKView
         
-        
         let rng = RandomNumberGenerator()
         let off = CardOfferer()
         let c = off.getCardOffer(challengeRating: 0, rng: rng, classes: [.neutral, .might, .charm])

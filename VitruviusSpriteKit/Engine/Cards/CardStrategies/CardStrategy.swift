@@ -52,13 +52,13 @@ protocol CardStrategy {
     var cardNumber: Int { get }
     var name: String { get }
     var requiresSingleTarget: Bool { get }
-    var cost: Int { get set }
     var cardText: String { get }
     var rarity: CardRarity { get }
     var attributes: CardAttributes { get }
     var classes: CardClasses { get }
     
     func textFor(card: Card) -> String
+    func costFor(card: Card) -> Int
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) -> Void
     func onDrawn(card: Card, source: Actor, battleState: BattleState) -> Void
     func onDiscarded(card: Card, source: Actor, battleState: BattleState) -> Void
@@ -80,7 +80,7 @@ class Card: Codable {
     var cardNumber: Int { get { self.card.cardNumber }}
     var name: String { get { self.card.name }}
     var requiresSingleTarget: Bool { get { self.card.requiresSingleTarget }}
-    var cost: Int { get { self.card.cost }}
+    var cost: Int { get { self.card.costFor(card: self) }}
     var cardText: String { get { self.card.cardText }}
     
     init(uuid: UUID, level: Int, card: CardStrategy) {

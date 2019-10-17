@@ -16,11 +16,12 @@ class CardRecall : CardStrategy {
     var name: String = "Recall"
     var cardText: String { get { return "Draw 3 cards." }}
     var requiresSingleTarget: Bool = false
-    var cost: Int = 0
     
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = .spell
     let classes: CardClasses = .sharp
+    
+    func costFor(card: Card) -> Int { return 0 }
     
     func textFor(card: Card) -> String {
         self.cardText
@@ -44,7 +45,7 @@ class CardFireball: CardStrategy {
     var name: String = "Fireball"
     var cardText: String { get { return "Attack each enemy for 8." }}
     var requiresSingleTarget: Bool = false
-    var cost: Int = 2
+
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .spell]
     let classes: CardClasses = .sharp
@@ -52,6 +53,8 @@ class CardFireball: CardStrategy {
     func textFor(card: Card) -> String {
         self.cardText
     }
+    
+    func costFor(card: Card) -> Int { return card.level > 0 ? 1 : 2 }
         
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         

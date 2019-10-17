@@ -26,6 +26,8 @@ class CardMistForm: CardStrategy {
         self.cardText
     }
     
+    func costFor(card: Card) -> Int { return 2 }
+    
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         
         battleState.eventHandler.push(events: [
@@ -90,7 +92,6 @@ class CardPierce: CardStrategy {
     var name: String = "Pierce"
     var cardText: String { get { return "Target loses 18 hp." }}
     var requiresSingleTarget: Bool = true
-    var cost: Int = 2
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = [.attack, .ranged]
     let classes: CardClasses = .guile
@@ -98,6 +99,8 @@ class CardPierce: CardStrategy {
     func textFor(card: Card) -> String {
         self.cardText
     }
+    
+    func costFor(card: Card) -> Int { return 2 }
     
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         

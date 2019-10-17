@@ -24,6 +24,8 @@ class CardStrike: CardStrategy, Codable {
         return "Attack for \(card.level > 0 ? "9" : "6")"
     }
     
+    func costFor(card: Card) -> Int { return 1 }
+    
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         
         guard let target = target else {
@@ -62,14 +64,17 @@ class CardDefend: CardStrategy {
     let name =  "Defend"
     var cardText: String { get { return "Block for 5." }}
     let requiresSingleTarget: Bool = false
-    var cost: Int = 1
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.defence]
     let classes: CardClasses = .neutral
     
+    
+    
     func amount(card: Card) -> Int {
         return (card.level > 0 ? 8 : 5)
     }
+    
+    func costFor(card: Card) -> Int { return 1 }
     
     func textFor(card: Card) -> String {
         return "Block for \(amount(card:card))"
@@ -93,10 +98,12 @@ class CardHealthPotion: CardStrategy {
     let name =  "Health Potion"
     let cardText: String = "Gain 10 hp. Expend Health Potion."
     var requiresSingleTarget: Bool = false
-    var cost: Int = 0
+    
     let rarity: CardRarity = CardRarity.common
     let attributes: CardAttributes = [.potion, .heal]
     let classes: CardClasses = .neutral
+    
+    func costFor(card: Card) -> Int { return 0 }
     
     func textFor(card: Card) -> String {
         self.cardText
@@ -119,10 +126,13 @@ class CardMasteryPotion: CardStrategy {
     let name =  "Mastery Potion"
     let cardText: String = "Upgrade each card in your hand. Expend Mastery Potion."
     var requiresSingleTarget: Bool = false
-    var cost: Int = 0
+    
+    
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = [.potion, .buff]
     let classes: CardClasses = .neutral
+    
+    func costFor(card: Card) -> Int { return 0 }
     
     func textFor(card: Card) -> String {
         self.cardText

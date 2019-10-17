@@ -16,7 +16,6 @@ class CardDrain: CardStrategy {
     var name: String = "Drain"
     var cardText: String { get { return "Attack for 6. Gain life equal to the hp lost this way." }}
     var requiresSingleTarget: Bool = true
-    var cost: Int = 1
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .spell]
     let classes: CardClasses = .faith
@@ -24,6 +23,8 @@ class CardDrain: CardStrategy {
     func textFor(card: Card) -> String {
         self.cardText
     }
+    
+    func costFor(card: Card) -> Int { return 1 }
     
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
 
