@@ -12,45 +12,51 @@ import Foundation
 
 class Enemy: Actor {
 
+    let enemyStrategy: EnemyStrategy
+    
+    init(uuid: UUID, name: String, faction: Faction, body: Body, cardZones: CardZones, enemyStrategy: EnemyStrategy) {
+        self.enemyStrategy = enemyStrategy
+        super.init(uuid: uuid, name: name, faction: faction, body: body, cardZones: cardZones)
+    }
+    
     func onBattleBegin(state: BattleState) -> Void {
-        // TODO: Push all the prebattle card effects on the stack...
-        // This gives the enemy a chance to pre-buff before a battle, gaining
-        // armour or something like that...
+        self.enemyStrategy.onBattleBegan(enemy: self, state: state)
     }
 
     func planTurn(state: BattleState) -> Event {
-        
-        // Can't modify the effects list stack here, so we need to
-        // enqueue a plan event...
-        // This is fine because we can listen for that event anyway...
-        
-        return Event.onEnemyPlannedTurn(
-            EnemyTurnEffect(
-                enemyUuid: self.uuid,
-                name: "\(self.name)'s turn",
-                events: []
-            )
-        )
+        return self.enemyStrategy.planTurn(enemy: self, state: state)
     }
     
-//    private enum CodingKeys: String, CodingKey {
-//        case currentMana
-//        case maxMana
-//    }
-//
-//    required init(from decoder: Decoder) throws {
-//        let values = try decoder.container(keyedBy: CodingKeys.self)
-//        self.currentMana = try values.decode(Int.self, forKey: .currentMana)
-//        self.maxMana = try values.decode(Int.self, forKey: .maxMana)
-//        try super.init(from: decoder)
-//    }
-//
-//    override func encode(to encoder: Encoder) throws {
-//        try super.encode(to: encoder)
-//        var container = encoder.container(keyedBy: CodingKeys.self)
-//        try container.encode(self.currentMana, forKey: .currentMana)
-//        try container.encode(self.maxMana, forKey: .maxMana)
-//    }
+    // MARK: - Codable Implementation
+    
+    private enum CodingKeys: String, CodingKey {
+        case strategyName
+        case strategyData
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let strategyName = try values.decode(String.self, forKey: .strategyName)
+        
+        switch strategyName {
+        
+        case "crab":
+            self.enemyStrategy = try values.decode(CrabEnemyStrategy.self, forKey: .strategyData)
+        
+        default:
+            throw NSError.init(domain: "TODO Btetter error", code: 0, userInfo: nil)
+        }
+        
+        try super.init(from: decoder)
+    }
+
+    override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.enemyStrategy.getStrategyName(), forKey: .strategyName)
+        try container.encode(self.enemyStrategy, forKey: .strategyData)
+    }
+    
 }
 
 class EnemyTurnEffect: HandleEffectStrategy {
@@ -130,15 +136,29 @@ class EnemyTurnEffect: HandleEffectStrategy {
 
 
 
-protocol EnemyStrategy {
-    func getStrategyName() -> String
-    func planTurn(enemy: Enemy, state: BattleState) -> Event
+class EnemyStrategy: Codable {
+    func getStrategyName() -> String { return "" }
+    func planTurn(enemy: Enemy, state: BattleState) -> Event { fatalError("Must be overriden") }
+    func onBattleBegan(enemy: Enemy, state: BattleState) -> Void {}
 }
 
 class CrabEnemyStrategy: EnemyStrategy {
-    func getStrategyName() -> String { return "crab" }
-    func planTurn(enemy: Enemy, state: BattleState) -> Event {
-        fatalError("Crabs need to have turns.")
+    override func getStrategyName() -> String { return "crab" }
+    override func planTurn(enemy: Enemy, state: BattleState) -> Event {
+        return Event.onEnemyPlannedTurn(
+            EnemyTurnEffect.init(
+                enemyUuid: enemy.uuid,
+                name: "\(enemy.name)'s turn",
+                events: [
+                    Event.attack(AttackEvent.init(
+                        sourceUuid: enemy.uuid,
+                        sourceOwner: enemy.uuid,
+                        targets: [state.getAllActors(faction: .player).first?.uuid].compactMap({ return $0 }),
+                        amount: 6
+                    ))
+                ]
+            )
+        )
     }
 }
 
@@ -147,61 +167,12 @@ class SuccubusEnemyStrategy {
     func planTurn(enemy: Enemy, state: BattleState) -> Event {
         fatalError("Succubi need to have turns.")
     }
-}
-
-
-
-
-
-class TestEnemy: Enemy {
-    override func planTurn(state: BattleState) -> Event {
-        
-        let rand = state.rng.nextInt(exclusiveUpperBound: 3)
-
-        switch rand {
-        case 2:
-            return Event.onEnemyPlannedTurn(
-                EnemyTurnEffect.init(
-                    enemyUuid: self.uuid,
-                    name: "\(self.name)'s turn",
-                    events: [
-                        Event.attack(
-                            AttackEvent.init(
-                                sourceUuid: self.uuid,
-                                sourceOwner: self.uuid,
-                                targets: [state.getAllActors(faction: .player).first?.uuid].compactMap({ return $0 }),
-                                amount: 18
-                            )
-                        )
-                    ])
-            )
-        default:
-            return Event.onEnemyPlannedTurn(
-                EnemyTurnEffect.init(
-                    enemyUuid: self.uuid,
-                    name: "\(self.name)'s turn",
-                    events: [
-                        Event.attack(
-                            AttackEvent.init(
-                                sourceUuid: self.uuid,
-                                sourceOwner: self.uuid,
-                                targets: [state.getAllActors(faction: .player).first?.uuid].compactMap({ return $0 }),
-                                amount: 12
-                            )
-                        ),
-                        Event.willGainBlock(
-                            UpdateAmountEvent.init(
-                                targetActorUuid: self.uuid,
-                                sourceUuid: self.uuid,
-                                amount: 6
-                            )
-                        )
-                    ])
-            )
-        }
-        
-        
+    func onBattleBegan(enemy: Enemy, state: BattleState)  {
         
     }
 }
+
+
+
+
 

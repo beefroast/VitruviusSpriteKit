@@ -39,7 +39,8 @@ class EventTests: XCTestCase {
                 hp: 10,
                 maxHp: 10
             ),
-            cardZones: CardZones.newEmpty()
+            cardZones: CardZones.newEmpty(),
+            enemyStrategy: CrabEnemyStrategy()
         )
         
         self.battleState = BattleState(

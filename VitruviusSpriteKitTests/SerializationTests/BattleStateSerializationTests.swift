@@ -48,7 +48,7 @@ class BattleStateSerializationTests: XCTestCase {
           )
           
           
-          let goomba = TestEnemy(
+          let goomba = Enemy(
                uuid: UUID(),
                name: "Goomba",
                faction: .enemies,
@@ -57,11 +57,12 @@ class BattleStateSerializationTests: XCTestCase {
                   hand: Hand.newEmpty(),
                   drawPile: DrawPile.newEmpty(),
                    discard: DiscardPile()
-               )
+               ),
+               enemyStrategy: CrabEnemyStrategy()
            )
            
            
-           let koopa = TestEnemy(
+           let koopa = Enemy(
                uuid: UUID(),
                name: "Koopa",
                faction: .enemies,
@@ -70,7 +71,8 @@ class BattleStateSerializationTests: XCTestCase {
                   hand: Hand.newEmpty(),
                    drawPile: DrawPile.newEmpty(),
                    discard: DiscardPile()
-               )
+               ),
+               enemyStrategy: CrabEnemyStrategy()
            )
           
           let battleState = BattleState.init(

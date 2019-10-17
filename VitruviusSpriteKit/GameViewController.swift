@@ -74,7 +74,9 @@ class GameViewController: UIViewController {
         )
         
         
-        let goomba = TestEnemy(
+        
+        
+        let goomba = Enemy(
              uuid: UUID(),
              name: "Goomba",
              faction: .enemies,
@@ -83,11 +85,12 @@ class GameViewController: UIViewController {
                 hand: Hand.newEmpty(),
                 drawPile: DrawPile.newEmpty(),
                  discard: DiscardPile()
-             )
+             ),
+             enemyStrategy: CrabEnemyStrategy()
          )
          
          
-         let koopa = TestEnemy(
+         let koopa = Enemy(
              uuid: UUID(),
              name: "Koopa",
              faction: .enemies,
@@ -96,7 +99,8 @@ class GameViewController: UIViewController {
                 hand: Hand.newEmpty(),
                  drawPile: DrawPile.newEmpty(),
                  discard: DiscardPile()
-             )
+             ),
+             enemyStrategy: CrabEnemyStrategy()
          )
         
         let battleState = BattleState.init(

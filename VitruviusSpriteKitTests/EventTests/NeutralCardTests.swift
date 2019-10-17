@@ -45,7 +45,8 @@ class NeutralCardTests: XCTestCase {
                hand: Hand.newEmpty(),
                drawPile: DrawPile.newEmpty(),
                 discard: DiscardPile()
-            )
+            ),
+            enemyStrategy: CrabEnemyStrategy()
         )
                 
         self.battleState = BattleState(
