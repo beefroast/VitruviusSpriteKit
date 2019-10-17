@@ -15,7 +15,6 @@ class CardStrike: CardStrategy, Codable {
     let name =  "Strike"
     var cardText: String { get { return "Attack for 6." }}
     let requiresSingleTarget: Bool = true
-    var cost: Int = 1
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .melee]
     let classes: CardClasses = .neutral
@@ -122,7 +121,7 @@ class CardHealthPotion: CardStrategy {
 
 class CardMasteryPotion: CardStrategy {
     
-    let cardNumber: Int = 8
+    let cardNumber: Int = 9
     let name =  "Mastery Potion"
     let cardText: String = "Upgrade each card in your hand. Expend Mastery Potion."
     var requiresSingleTarget: Bool = false

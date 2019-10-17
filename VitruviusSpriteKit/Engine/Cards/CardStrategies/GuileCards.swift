@@ -16,7 +16,7 @@ class CardMistForm: CardStrategy {
     var name: String = "Mist Form"
     var cardText: String { get { return "Until you next turn, attacks against you are reduced to 0." }}
     var requiresSingleTarget: Bool = false
-    var cost: Int = 1
+    
     
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = .buff

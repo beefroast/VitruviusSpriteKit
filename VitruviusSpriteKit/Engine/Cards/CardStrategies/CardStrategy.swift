@@ -52,7 +52,6 @@ protocol CardStrategy {
     var cardNumber: Int { get }
     var name: String { get }
     var requiresSingleTarget: Bool { get }
-    var cardText: String { get }
     var rarity: CardRarity { get }
     var attributes: CardAttributes { get }
     var classes: CardClasses { get }
@@ -81,7 +80,7 @@ class Card: Codable {
     var name: String { get { self.card.name }}
     var requiresSingleTarget: Bool { get { self.card.requiresSingleTarget }}
     var cost: Int { get { self.card.costFor(card: self) }}
-    var cardText: String { get { self.card.cardText }}
+    var cardText: String { get { self.card.textFor(card: self) }}
     
     init(uuid: UUID, level: Int, card: CardStrategy) {
         self.uuid = uuid
