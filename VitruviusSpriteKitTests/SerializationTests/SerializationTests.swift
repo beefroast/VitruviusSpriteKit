@@ -23,8 +23,8 @@ class SerializationTests: XCTestCase {
     func testExample() {
         
         let cards = [
-            Card(uuid: UUID(), card: CardStrike()),
-            Card(uuid: UUID(), card: CardDefend())
+            CardStrike().instance(),
+            CardDefend().instance()
         ]
         
         do {

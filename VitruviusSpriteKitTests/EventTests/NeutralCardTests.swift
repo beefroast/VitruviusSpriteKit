@@ -87,14 +87,14 @@ class NeutralCardTests: XCTestCase {
         // Push the player input event so that we stop once we've applied everything
         self.battleState.eventHandler.push(event: Event.playerInputRequired)
         
-        let c = CardStrike()
+        let c = CardStrike().instance()
         
         c.resolve(
-            cardUuid: UUID(),
             source: self.battleState.player,
             battleState: self.battleState,
             target: self.battleState.enemies.first
         )
+        
         
         // Pop the stack until we need player input again
         self.battleState.eventHandler.flushEvents(battleState: self.battleState)
