@@ -21,18 +21,18 @@ class CardMistForm: CardStrategy {
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = .buff
     
-    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         
         battleState.eventHandler.push(events: [
-            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
             Event.addEffect(
                 MistFormEffect.init(ownerUuid: source.uuid).withWrapper(uuid: UUID())
             )
         ])
     }
     
-    func onDrawn(source: Actor, battleState: BattleState) {}
-    func onDiscarded(source: Actor, battleState: BattleState) {}
+    func onDrawn(card: Card, source: Actor, battleState: BattleState) {}
+    func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
     
     class MistFormEffect: HandleEffectStrategy {
         
@@ -89,9 +89,9 @@ class CardPierce: CardStrategy {
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = [.attack, .ranged]
     
-    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         
-        let discardEvent = Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid))
+        let discardEvent = Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid))
         
         guard let drainTarget = target else {
             battleState.eventHandler.push(events: [discardEvent])
@@ -100,10 +100,10 @@ class CardPierce: CardStrategy {
         
         return battleState.eventHandler.push(events: [
             discardEvent,
-            Event.willLoseHp(UpdateAmountEvent.init(targetActorUuid: drainTarget.uuid, sourceUuid: cardUuid, amount: 18))
+            Event.willLoseHp(UpdateAmountEvent.init(targetActorUuid: drainTarget.uuid, sourceUuid: card.uuid, amount: 18))
         ])
     }
     
-    func onDrawn(source: Actor, battleState: BattleState) {}
-    func onDiscarded(source: Actor, battleState: BattleState) {}
+    func onDrawn(card: Card, source: Actor, battleState: BattleState) {}
+    func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
 }

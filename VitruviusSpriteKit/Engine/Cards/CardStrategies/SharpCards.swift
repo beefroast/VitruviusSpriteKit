@@ -21,15 +21,15 @@ class CardRecall : CardStrategy {
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = .spell
     
-    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         battleState.eventHandler.push(events: [
-            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
             Event.willDrawCards(DrawCardsEvent.init(actorUuid: source.uuid, amount: 3))
         ])
     }
     
-    func onDrawn(source: Actor, battleState: BattleState) {}
-    func onDiscarded(source: Actor, battleState: BattleState) {}
+    func onDrawn(card: Card, source: Actor, battleState: BattleState) {}
+    func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
 }
 
 class CardFireball: CardStrategy {
@@ -43,18 +43,18 @@ class CardFireball: CardStrategy {
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .spell]
         
-    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         
         let targets = battleState.getAllOpponentActors(faction: source.faction).map({ $0.uuid })
         
         battleState.eventHandler.push(events: [
-            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
-            Event.attack(AttackEvent.init(sourceUuid: cardUuid, sourceOwner: source.uuid, targets: targets, amount: 8))
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
+            Event.attack(AttackEvent.init(sourceUuid: card.uuid, sourceOwner: source.uuid, targets: targets, amount: 8))
         ])
 
     }
     
-    func onDrawn(source: Actor, battleState: BattleState) {}
-    func onDiscarded(source: Actor, battleState: BattleState) {}
+    func onDrawn(card: Card, source: Actor, battleState: BattleState) {}
+    func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
     
 }

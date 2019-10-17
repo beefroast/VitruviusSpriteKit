@@ -20,7 +20,7 @@ class CardStrike: CardStrategy, Codable {
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .melee]
     
-    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         
         guard let target = target else {
             return
@@ -29,10 +29,10 @@ class CardStrike: CardStrategy, Codable {
         
         battleState.eventHandler.push(events: [
         
-            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
             Event.attack(
                  AttackEvent(
-                     sourceUuid: cardUuid,
+                    sourceUuid: card.uuid,
                      sourceOwner: source.uuid,
                      targets: [target.uuid],
                      amount: 6
@@ -45,8 +45,8 @@ class CardStrike: CardStrategy, Codable {
  
     }
     
-    func onDrawn(source: Actor, battleState: BattleState) {}
-    func onDiscarded(source: Actor, battleState: BattleState) {}
+    func onDrawn(card: Card, source: Actor, battleState: BattleState) {}
+    func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
 }
 
 
@@ -62,16 +62,16 @@ class CardDefend: CardStrategy {
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.defence]
     
-    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         
         battleState.eventHandler.push(events: [
-            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
-            Event.willGainBlock(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: cardUuid, amount: 5))
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
+            Event.willGainBlock(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: card.uuid, amount: 5))
         ])
     }
     
-    func onDrawn(source: Actor, battleState: BattleState) {}
-    func onDiscarded(source: Actor, battleState: BattleState) {}
+    func onDrawn(card: Card, source: Actor, battleState: BattleState) {}
+    func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
 }
 
 
@@ -85,13 +85,13 @@ class CardHealthPotion: CardStrategy {
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.potion, .heal]
     
-    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         battleState.eventHandler.push(events: [
-            Event.expendCard(CardEvent.init(actorUuid: source.uuid, cardUuid: cardUuid)),
-            Event.willGainHp(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: cardUuid, amount: 10)),
+            Event.expendCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
+            Event.willGainHp(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: card.uuid, amount: 10)),
         ])
     }
     
-    func onDrawn(source: Actor, battleState: BattleState) {}
-    func onDiscarded(source: Actor, battleState: BattleState) {}
+    func onDrawn(card: Card, source: Actor, battleState: BattleState) {}
+    func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
 }

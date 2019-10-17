@@ -20,7 +20,7 @@ class CardDrain: CardStrategy {
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .spell]
     
-    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
 
         guard let target = target?.uuid else {
             return
@@ -32,13 +32,13 @@ class CardDrain: CardStrategy {
             Event.addEffect(
                 DrainEffect.init(
                     ownerUuid: source.uuid,
-                    sourceUuid: cardUuid
+                    sourceUuid: card.uuid
                 ).withWrapper(uuid: UUID())
             ),
                 
             // Attack for 6
             Event.attack(AttackEvent.init(
-                sourceUuid: cardUuid,
+                sourceUuid: card.uuid,
                 sourceOwner: source.uuid,
                 targets: [target],
                 amount: 6
@@ -47,17 +47,17 @@ class CardDrain: CardStrategy {
             // Discard this card
             Event.discardCard(CardEvent.init(
                 actorUuid: source.uuid,
-                cardUuid: cardUuid
+                cardUuid: card.uuid
             )),
             
         ])
         
     }
 
-    func onDrawn(source: Actor, battleState: BattleState) {
+    func onDrawn(card: Card, source: Actor, battleState: BattleState) {
     }
     
-    func onDiscarded(source: Actor, battleState: BattleState) {
+    func onDiscarded(card: Card, source: Actor, battleState: BattleState) {
     }
     
     class DrainEffect: HandleEffectStrategy {

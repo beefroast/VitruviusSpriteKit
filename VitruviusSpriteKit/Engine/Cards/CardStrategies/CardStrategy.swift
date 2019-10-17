@@ -43,14 +43,14 @@ protocol CardStrategy {
     var rarity: CardRarity { get }
     var attributes: CardAttributes { get }
     
-    func resolve(cardUuid: UUID, source: Actor, battleState: BattleState, target: Actor?) -> Void
-    func onDrawn(source: Actor, battleState: BattleState) -> Void
-    func onDiscarded(source: Actor, battleState: BattleState) -> Void
+    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) -> Void
+    func onDrawn(card: Card, source: Actor, battleState: BattleState) -> Void
+    func onDiscarded(card: Card, source: Actor, battleState: BattleState) -> Void
 }
 
 extension CardStrategy {
-    func instance(uuid: UUID = UUID()) -> Card {
-        return Card(uuid: uuid, card: self)
+    func instance(level: Int = 0, uuid: UUID = UUID()) -> Card {
+        return Card(uuid: uuid, level: level, card: self)
     }
 }
 
@@ -58,6 +58,7 @@ extension CardStrategy {
 class Card: Codable {
     
     let uuid: UUID
+    var level: Int
     let card: CardStrategy
     
     var cardNumber: Int { get { self.card.cardNumber }}
@@ -66,25 +67,27 @@ class Card: Codable {
     var cost: Int { get { self.card.cost }}
     var cardText: String { get { self.card.cardText }}
     
-    init(uuid: UUID, card: CardStrategy) {
+    init(uuid: UUID, level: Int, card: CardStrategy) {
         self.uuid = uuid
+        self.level = level
         self.card = card
     }
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) -> Void {
-        self.card.resolve(cardUuid: self.uuid, source: source, battleState: battleState, target: target)
+        self.card.resolve(card: self, source: source, battleState: battleState, target: target)
     }
     
     func onDrawn(source: Actor, battleState: BattleState) -> Void {
-        self.card.onDrawn(source: source, battleState: battleState)
+        self.card.onDrawn(card: self, source: source, battleState: battleState)
     }
     
     func onDiscarded(source: Actor, battleState: BattleState) -> Void {
-        self.card.onDiscarded(source: source, battleState: battleState)
+        self.card.onDiscarded(card: self, source: source, battleState: battleState)
     }
     
     enum CodingKeys: String, CodingKey {
         case uuid
+        case level
         case cardNumber
     }
     
@@ -92,6 +95,7 @@ class Card: Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(uuid, forKey: .uuid)
+        try container.encode(level, forKey: .level)
         try container.encode(card.cardNumber, forKey: .cardNumber)
     }
     
@@ -99,6 +103,7 @@ class Card: Codable {
         
         let values = try decoder.container(keyedBy: CodingKeys.self)
         uuid = try values.decode(UUID.self, forKey: .uuid)
+        level = try values.decode(Int.self, forKey: .level)
         let number = try values.decode(Int.self, forKey: .cardNumber)
         
         switch number {
