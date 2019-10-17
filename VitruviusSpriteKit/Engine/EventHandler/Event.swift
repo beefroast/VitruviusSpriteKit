@@ -50,7 +50,6 @@ enum Event: Codable {
     case attack(AttackEvent)
     
     
-    
     case onEnemyDefeated(ActorEvent)
     
     case onBattleWon

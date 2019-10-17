@@ -106,8 +106,8 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
         // Now pop the first event of the stack
         battleState.popNext()
         
-
         self.offerCards()
+
     }
     
     var lastTime: TimeInterval = 0
@@ -146,9 +146,14 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
     // MARK: - ChooseRewardNodeDelegate Implementation
     
     func chooseReward(node: ChooseRewardNode, chose: CardNode) {
-        self.addChildPreserveTransform(child: chose)
+        
+        self.handNode.addCardAndAnimationIntoPosiiton(cardNode: chose)
+        self.battleState.player.cardZones.hand.cards.append(chose.card)
+        
         node.run(SKAction.fadeAlpha(to: 0.0, duration: 0.2)) {
             node.removeFromParent()
+            chose.delegate = self
+            self.handNode.setCardsInteraction(enabled: true)
         }
     }
     
@@ -429,13 +434,9 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                    }
                    
                case .onBattleWon:
-                   let label = SKLabelNode(text: "YOU WIN")
-                   label.fontSize = 60
-                   self.addChild(label)
                    
-                   // Fade out everything
-                   self.isUserInteractionEnabled = false
-                   self.run(SKAction.fadeOut(withDuration: 1.0))
+                self.handNode.setCardsInteraction(enabled: false)
+                self.offerCards()
                 
                case .destroyCard(let e):
                 
@@ -521,6 +522,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                case .willGainHp(_): fallthrough
                case .willGainBlock(_): fallthrough
                case .onBattleLost: self.battleState.popNext()
+
                 
             }
            }

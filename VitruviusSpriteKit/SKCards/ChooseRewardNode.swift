@@ -22,6 +22,7 @@ class ChooseRewardNode: SKNode, CardNodeTouchDelegate {
         let cardNodes = cards.map { (c) -> CardNode in
             let node = cardNodePool.getFromPool()
             self.addChildPreserveTransform(child: node)
+            node.resetTransforms()
             return node.setupWith(card: c)
         }
         

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SpriteKit
 
 
 class CardNodePool {
@@ -29,4 +30,14 @@ class CardNodePool {
     }
     
     
+}
+
+extension SKNode {
+    func resetTransforms() {
+        self.zPosition = 0
+        self.xScale = 1
+        self.yScale = 1
+        self.zRotation = 0
+        self.alpha = 1
+    }
 }
