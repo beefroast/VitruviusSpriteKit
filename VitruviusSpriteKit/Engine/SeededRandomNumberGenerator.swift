@@ -9,7 +9,7 @@
 import Foundation
 import GameKit
 
-class RandomNumberGenerator: Codable {
+class SeededRandomNumberGenerator: RandomNumberGenerator, Codable {
     
     var count: UInt64
     var seed: UInt64
@@ -24,7 +24,8 @@ class RandomNumberGenerator: Codable {
         self.seed = UInt64.init(Date().timeIntervalSince1970)
     }
     
-    func nextInt() -> UInt64 {
+
+    func next() -> UInt64 {
         
         // Get a twister seed, ignoring overflow and just wrapping
         let twisterSeed = count &+ seed
@@ -46,7 +47,7 @@ class RandomNumberGenerator: Codable {
     }
     
     func nextInt(exclusiveUpperBound: UInt64) -> UInt64 {
-        let n = self.nextInt()
+        let n = self.next()
         return n % exclusiveUpperBound
     }
     

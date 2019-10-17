@@ -21,9 +21,6 @@ class GameViewController: UIViewController {
         
         let view = self.view as! SKView
         
-        let rng = RandomNumberGenerator()
-        let off = CardOfferer()
-        let c = off.getCardOffer(challengeRating: 0, rng: rng, classes: [.neutral, .might, .charm])
         
         
         
@@ -94,7 +91,7 @@ class GameViewController: UIViewController {
                     EventPrinterEffect.init().withWrapper(uuid: UUID())
                 ]
             ),
-            rng: RandomNumberGenerator(count: 0, seed: 0)
+            rng: SeededRandomNumberGenerator(count: 0, seed: 0)
         )
                 
         battleState.eventHandler.push(event:
@@ -167,6 +164,14 @@ extension SKNode {
         return scene.convert(self.position, from: parent)
     }
     
+    func getGlobalZPosition() -> CGFloat {
+        return self.zPosition + (self.parent?.getGlobalZPosition() ?? 0.0)
+    }
+    
+    func setGlobalZPosition(z: CGFloat) -> Void {
+        self.zPosition = z - (self.parent?.getGlobalZPosition() ?? 0.0)
+    }
+    
     func getGlobalRotation() -> CGFloat {
         return self.zRotation + (self.parent?.getGlobalRotation() ?? 0.0)
     }
@@ -207,6 +212,7 @@ extension SKNode {
         let globalRotation = child.getGlobalRotation()
         let globalXScale = child.getGlobalXScale()
         let globalYScale = child.getGlobalYScale()
+        let globalZ = child.getGlobalZPosition()
         
         child.removeFromParent()
         self.addChild(child)
@@ -217,6 +223,7 @@ extension SKNode {
         child.setGlobalRotation(z: globalRotation)
         child.setGlobalXScale(x: globalXScale)
         child.setGlobalYScale(y: globalYScale)
+        child.setGlobalZPosition(z: globalZ)
     }
 
     

@@ -69,6 +69,7 @@ class PlayerData {
     let maxHp: Int
     let name: String
     
+    
     init(
         uuid: UUID,
         decklist: [Card],

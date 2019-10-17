@@ -86,7 +86,7 @@ class BattleStateSerializationTests: XCTestCase {
                       EventPrinterEffect.init().withWrapper(uuid: UUID())
                   ]
               ),
-              rng: RandomNumberGenerator(count: 0, seed: 0)
+              rng: SeededRandomNumberGenerator(count: 0, seed: 0)
           )
                   
           battleState.eventHandler.push(event:

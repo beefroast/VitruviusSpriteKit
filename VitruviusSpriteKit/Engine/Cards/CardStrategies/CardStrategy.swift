@@ -9,7 +9,9 @@
 import Foundation
 
 struct CardClasses: OptionSet, Codable {
+    
     let rawValue: Int
+    
     static let neutral = CardClasses(rawValue: 1 << 0)
     static let charm = CardClasses(rawValue: 1 << 1)
     static let guile = CardClasses(rawValue: 1 << 2)
@@ -17,6 +19,27 @@ struct CardClasses: OptionSet, Codable {
     static let faith = CardClasses(rawValue: 1 << 4)
     static let sharp = CardClasses(rawValue: 1 << 5)
 }
+
+enum CharacterClass: Int, Codable {
+    
+    case swashbucker    = 6
+    case barbarian      = 10
+    case priest         = 18
+    case wizard         = 34
+    case scoundrel      = 12
+    case monk           = 20
+    case thief          = 36
+    case paladin        = 24
+    case spellsword     = 40
+    case sage           = 48
+    
+    func allowedCardClasses() -> CardClasses {
+        return CardClasses.init(rawValue: self.rawValue + 1)
+    }
+}
+
+
+
 
 struct CardAttributes: OptionSet, Codable {
     let rawValue: Int
@@ -102,6 +125,10 @@ class Card: Codable {
     
     func onDiscarded(source: Actor, battleState: BattleState) -> Void {
         self.strategy.onDiscarded(card: self, source: source, battleState: battleState)
+    }
+    
+    func duplicate(uuid: UUID = UUID()) -> Card {
+        return Card(uuid: uuid, level: self.level, card: self.strategy)
     }
     
     enum CodingKeys: String, CodingKey {

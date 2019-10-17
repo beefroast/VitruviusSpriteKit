@@ -16,7 +16,7 @@ class CardOfferer {
     var rareChance: Int = 0
     var uncommonChance: Int = 20
     
-    func randomlyGetRarity(challengeRating: Int, rng: RandomNumberGenerator) -> CardRarity {
+    func randomlyGetRarity(challengeRating: Int, rng: SeededRandomNumberGenerator) -> CardRarity {
         
         // Get a random number between 0 and 99, modify it with the
         // challenge rating
@@ -35,7 +35,7 @@ class CardOfferer {
         }
     }
     
-    func getRarityAndAdjustWeights(challengeRating: Int, rng: RandomNumberGenerator) -> CardRarity {
+    func getRarityAndAdjustWeights(challengeRating: Int, rng: SeededRandomNumberGenerator) -> CardRarity {
         let rarity = self.randomlyGetRarity(challengeRating: challengeRating, rng: rng)
         self.mythicChance = (rarity == .mythic) ? -10 : self.mythicChance + 1
         self.rareChance = (rarity == .rare) ? 0 : self.rareChance + 1
@@ -44,7 +44,7 @@ class CardOfferer {
     }
 
     
-    func getCardOffer(challengeRating: Int, rng: RandomNumberGenerator, classes: CardClasses) -> Card {
+    func getCardOffer(challengeRating: Int, rng: SeededRandomNumberGenerator, classes: CardClasses) -> Card {
         
         // Get a card rarity
         let rarity = self.getRarityAndAdjustWeights(challengeRating: challengeRating, rng: rng)
@@ -66,6 +66,20 @@ class CardOfferer {
         return cardStrategy.instance()
     }
     
+    func getCards(rng: inout SeededRandomNumberGenerator, classes: CardClasses, attributes: CardAttributes, amount: Int) -> [Card] {
+        
+        var choices = allCardStrategies().filter { (cs) -> Bool in
+            return cs.classes.isSubset(of: classes)
+                && cs.attributes.isSuperset(of: attributes)
+        }
+        
+        choices.shuffle(using: &rng)
+        
+        let slice = choices.prefix(amount).map({ $0.instance() })
+        
+        return Array(slice)
+    }
+    
     func allCardStrategies() -> [CardStrategy] {
         
         return [
@@ -73,6 +87,7 @@ class CardOfferer {
             CSDefend(),
             CSHealthPotion(),
             CSMasteryPotion(),
+            CSBlockPotion(),
         ]
         
     }
@@ -84,7 +99,7 @@ class CardOfferer {
 
 extension Array {
     
-    func randomElement(rng: RandomNumberGenerator) -> Element {
+    func randomElement(rng: SeededRandomNumberGenerator) -> Element {
         return self[rng.nextInt(exclusiveUpperBound: self.count)]
     }
 }

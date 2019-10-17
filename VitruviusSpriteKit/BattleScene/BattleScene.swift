@@ -14,7 +14,7 @@ protocol BattleSceneDelegate: AnyObject {
     func onBattleLost(sender: BattleScene)
 }
 
-class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventHandlerDelegate {
+class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventHandlerDelegate, ChooseRewardNodeDelegate {
 
     
 
@@ -105,6 +105,9 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
         
         // Now pop the first event of the stack
         battleState.popNext()
+        
+
+        self.offerCards()
     }
     
     var lastTime: TimeInterval = 0
@@ -113,6 +116,40 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
         let deltaTime = currentTime - lastTime
         self.arrow.updateWithTimeInterval(timeInterval: deltaTime)
         self.lastTime = currentTime
+    }
+    
+    
+    func offerCards() {
+        
+        let cardOfferer = CardOfferer()
+        
+        let offeredCards = cardOfferer.getCards(
+            rng: &battleState.rng,
+            classes: .neutral,
+            attributes: .potion,
+            amount: 3
+        )
+        
+        self.showCardSelection(cards: offeredCards)
+    }
+    
+    func showCardSelection(cards: [Card]) -> Void {
+        let node = ChooseRewardNode()
+        self.addChild(node)
+        node.alpha = 0.0
+        node.setupWith(cards: cards, cardNodePool: self.cardNodePool)
+        node.run(SKAction.fadeAlpha(to: 1.0, duration: 0.2))
+        node.zPosition = 100
+        node.delegate = self
+    }
+    
+    // MARK: - ChooseRewardNodeDelegate Implementation
+    
+    func chooseReward(node: ChooseRewardNode, chose: CardNode) {
+        self.addChildPreserveTransform(child: chose)
+        node.run(SKAction.fadeAlpha(to: 0.0, duration: 0.2)) {
+            node.removeFromParent()
+        }
     }
     
     

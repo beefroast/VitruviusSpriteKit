@@ -161,7 +161,7 @@ class CrabEnemyStrategy: EnemyStrategy {
         )
     }
     
-    func with(challengeRating: Int, rng: RandomNumberGenerator) -> Enemy {
+    func with(challengeRating: Int, rng: SeededRandomNumberGenerator) -> Enemy {
         // TODO: We can adjust the difficulty of the crab in here, giving it
         // more health or whatever.
         return Enemy(

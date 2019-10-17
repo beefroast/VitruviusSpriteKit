@@ -156,3 +156,37 @@ class CSMasteryPotion: CardStrategy {
     func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
     
 }
+
+class CSBlockPotion: CardStrategy {
+    
+    let cardNumber: Int = 11
+    let name =  "Block Potion"
+    var requiresSingleTarget: Bool = false
+    
+    let rarity: CardRarity = CardRarity.common
+    let attributes: CardAttributes = [.potion, .defence]
+    let classes: CardClasses = .neutral
+    
+    func blockGained(card: Card) -> Int {
+        return card.level > 0 ? 15 : 10
+    }
+    
+    func costFor(card: Card) -> Int { return 0 }
+    
+    func textFor(card: Card) -> String {
+        return "Gain \(self.blockGained(card: card))/ block."
+    }
+    
+    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
+                
+        let block = self.blockGained(card: card)
+        
+        battleState.eventHandler.push(events: [
+            Event.expendCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
+            Event.willGainBlock(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: card.uuid, amount: block))
+        ])
+    }
+    
+    func onDrawn(card: Card, source: Actor, battleState: BattleState) {}
+    func onDiscarded(card: Card, source: Actor, battleState: BattleState) {}
+}
