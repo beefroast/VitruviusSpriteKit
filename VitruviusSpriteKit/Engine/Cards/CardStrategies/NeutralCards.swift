@@ -94,7 +94,7 @@ class CardHealthPotion: CardStrategy {
     let cardText: String = "Gain 10 hp. Expend Health Potion."
     var requiresSingleTarget: Bool = false
     var cost: Int = 0
-    let rarity: CardRarity = CardRarity.basic
+    let rarity: CardRarity = CardRarity.common
     let attributes: CardAttributes = [.potion, .heal]
     let classes: CardClasses = .neutral
     
@@ -120,7 +120,7 @@ class CardMasteryPotion: CardStrategy {
     let cardText: String = "Upgrade each card in your hand. Expend Mastery Potion."
     var requiresSingleTarget: Bool = false
     var cost: Int = 0
-    let rarity: CardRarity = CardRarity.basic
+    let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = [.potion, .buff]
     let classes: CardClasses = .neutral
     

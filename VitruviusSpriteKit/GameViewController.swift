@@ -22,29 +22,10 @@ class GameViewController: UIViewController {
         let view = self.view as! SKView
         
         
-        // Get some random rarities
-//        case basic
-//        case common
-//        case uncommon
-//        case rare
-//        case mythic
+        let rng = RandomNumberGenerator()
+        let off = CardOfferer()
+        let c = off.getCardOffer(challengeRating: 0, rng: rng, classes: [.neutral, .might, .charm])
         
-//        var rarityToCount: [CardRarity: Int] = [
-//            .mythic: 0,
-//            .rare: 0,
-//            .uncommon: 0,
-//            .common: 0
-//        ]
-//
-//        let off = CardOfferer()
-//        let rng = RandomNumberGenerator()
-//        for i in (1...100) {
-//            let r = off.getRarityAndAdjustWeights(challengeRating: i, rng: rng)
-//            print(r)
-//            rarityToCount[r]! += 1
-//        }
-//
-//        print(rarityToCount)
         
         
         let player = Player(

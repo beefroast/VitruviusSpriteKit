@@ -42,15 +42,49 @@ class CardOfferer {
         self.uncommonChance = (rarity == .uncommon) ? 20 : self.uncommonChance + 1
         return rarity
     }
+
     
-//    func getCardOfferFor(challengeRating: Int, rng: RandomNumberGenerator) -> Card {
-//
-//        switch self.getRarityAndAdjustWeights(challengeRating: challengeRating, rng: rng) {
-//            case
-//        }
-//
-//
-//
-//    }
+    func getCardOffer(challengeRating: Int, rng: RandomNumberGenerator, classes: CardClasses) -> Card {
+        
+        // Get a card rarity
+        let rarity = self.getRarityAndAdjustWeights(challengeRating: challengeRating, rng: rng)
+        
+        let choices = allCardStrategies().filter { (cs) -> Bool in
+            cs.rarity == rarity && cs.classes.isSubset(of: classes)
+        }
+        
+        if choices.count == 0 {
+            // Safety strike
+            // TODO: Make sure there's at least one card in each rarity with each class
+            return CardStrike().instance()
+        }
+        
+        // Get a random card from the choices
+        let cardStrategy = choices.randomElement(rng: rng)
+        
+        // TODO: Might want to be able to get upgraded cards at some point
+        return cardStrategy.instance()
+    }
     
+    func allCardStrategies() -> [CardStrategy] {
+        
+        return [
+            CardStrike(),
+            CardDefend(),
+            CardHealthPotion(),
+            CardMasteryPotion(),
+        ]
+        
+    }
+    
+    
+    
+    
+}
+
+extension Array {
+    
+    func randomElement(rng: RandomNumberGenerator) -> Element {
+        return self[rng.nextInt(exclusiveUpperBound: self.count)]
+    }
 }
