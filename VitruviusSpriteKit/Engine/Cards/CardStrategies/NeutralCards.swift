@@ -18,6 +18,7 @@ class CardStrike: CardStrategy, Codable {
     var cost: Int = 1
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .melee]
+    let classes: CardClasses = .neutral
     
     func textFor(card: Card) -> String {
         return "Attack for \(card.level > 0 ? "9" : "6")"
@@ -64,6 +65,7 @@ class CardDefend: CardStrategy {
     var cost: Int = 1
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.defence]
+    let classes: CardClasses = .neutral
     
     func amount(card: Card) -> Int {
         return (card.level > 0 ? 8 : 5)
@@ -94,6 +96,7 @@ class CardHealthPotion: CardStrategy {
     var cost: Int = 0
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.potion, .heal]
+    let classes: CardClasses = .neutral
     
     func textFor(card: Card) -> String {
         self.cardText
@@ -119,6 +122,7 @@ class CardMasteryPotion: CardStrategy {
     var cost: Int = 0
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.potion, .buff]
+    let classes: CardClasses = .neutral
     
     func textFor(card: Card) -> String {
         self.cardText

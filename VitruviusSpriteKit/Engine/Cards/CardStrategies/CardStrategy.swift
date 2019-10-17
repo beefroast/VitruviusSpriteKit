@@ -8,6 +8,16 @@
 
 import Foundation
 
+struct CardClasses: OptionSet, Codable {
+    let rawValue: Int
+    static let neutral = CardClasses(rawValue: 1 << 0)
+    static let charm = CardClasses(rawValue: 1 << 1)
+    static let guile = CardClasses(rawValue: 1 << 2)
+    static let might = CardClasses(rawValue: 1 << 3)
+    static let faith = CardClasses(rawValue: 1 << 4)
+    static let sharp = CardClasses(rawValue: 1 << 5)
+}
+
 struct CardAttributes: OptionSet, Codable {
     let rawValue: Int
     static let attack = CardAttributes(rawValue: 1 << 0)
@@ -46,6 +56,7 @@ protocol CardStrategy {
     var cardText: String { get }
     var rarity: CardRarity { get }
     var attributes: CardAttributes { get }
+    var classes: CardClasses { get }
     
     func textFor(card: Card) -> String
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) -> Void

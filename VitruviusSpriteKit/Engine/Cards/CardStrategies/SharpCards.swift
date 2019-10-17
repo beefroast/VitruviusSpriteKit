@@ -20,6 +20,7 @@ class CardRecall : CardStrategy {
     
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = .spell
+    let classes: CardClasses = .sharp
     
     func textFor(card: Card) -> String {
         self.cardText
@@ -46,6 +47,7 @@ class CardFireball: CardStrategy {
     var cost: Int = 2
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .spell]
+    let classes: CardClasses = .sharp
     
     func textFor(card: Card) -> String {
         self.cardText

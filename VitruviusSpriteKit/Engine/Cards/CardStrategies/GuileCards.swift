@@ -20,6 +20,7 @@ class CardMistForm: CardStrategy {
     
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = .buff
+    let classes: CardClasses = .guile
     
     func textFor(card: Card) -> String {
         self.cardText
@@ -92,6 +93,7 @@ class CardPierce: CardStrategy {
     var cost: Int = 2
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = [.attack, .ranged]
+    let classes: CardClasses = .guile
     
     func textFor(card: Card) -> String {
         self.cardText

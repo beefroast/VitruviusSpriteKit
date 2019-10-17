@@ -19,6 +19,7 @@ class CardDrain: CardStrategy {
     var cost: Int = 1
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .spell]
+    let classes: CardClasses = .faith
     
     func textFor(card: Card) -> String {
         self.cardText
