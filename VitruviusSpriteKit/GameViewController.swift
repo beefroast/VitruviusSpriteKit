@@ -55,7 +55,7 @@ class GameViewController: UIViewController {
             cardZones: CardZones(
                 hand: Hand.newEmpty(),
                 drawPile: DrawPile.init(cards: [
-                    CardStrike().instance(),
+                    CardStrike().instance(level: 1),
                     CardStrike().instance(),
                     CardStrike().instance(),
                     CardStrike().instance(),
@@ -65,7 +65,7 @@ class GameViewController: UIViewController {
                     CardDefend().instance(),
                     CardFireball().instance(),
                     CardRecall().instance(),
-                    CardHealthPotion().instance()
+                    CardMasteryPotion().instance()
                 ]),
                 discard: DiscardPile()
             ),

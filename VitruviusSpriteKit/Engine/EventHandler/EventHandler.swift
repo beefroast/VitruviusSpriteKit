@@ -275,6 +275,16 @@ class EventHandler: Codable {
             
             actor.cardZones.remove(cardUuid: e.cardUuid)
             
+        case .upgradeCard(let e):
+            
+            // TODO: This only upgrades a card in someone's hand, we should make this more general
+            guard let card = battleState.actorWith(uuid: e.actorUuid)?.cardZones.hand.cardWith(uuid: e.cardUuid) else {
+                return false
+            }
+            
+            // TODO: In the future we might want more than one upgrade
+            card.level = 1
+            
         case .discardHand(let e):
             
             guard let actor = battleState.actorWith(uuid: e.actorUuid) else {
@@ -663,6 +673,12 @@ class EventPrinterEffect: HandleEffectStrategy {
             let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
             let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
             print("\(nameOrUuid) expended \(cardName).")
+            
+        case .upgradeCard(let e):
+            let actor = state.actorWith(uuid: e.actorUuid)
+            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
+            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
+            print("\(nameOrUuid) upgraded \(cardName).")
             
         case .shuffleDiscardIntoDrawPile(let e):
             let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString

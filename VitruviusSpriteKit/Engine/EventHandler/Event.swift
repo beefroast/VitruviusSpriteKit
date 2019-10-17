@@ -30,6 +30,7 @@ enum Event: Codable {
     case discardHand(ActorEvent)
     case destroyCard(CardEvent)
     case expendCard(CardEvent)
+    case upgradeCard(CardEvent)
     case shuffleDiscardIntoDrawPile(ActorEvent)
         
     case willLoseHp(UpdateAmountEvent)
@@ -47,6 +48,8 @@ enum Event: Codable {
     
     case playCard(PlayCardEvent)
     case attack(AttackEvent)
+    
+    
     
     case onEnemyDefeated(ActorEvent)
     
@@ -123,6 +126,10 @@ enum Event: Codable {
         case "expendCard":
             let data = try values.decode(CardEvent.self, forKey: .data)
             self = .expendCard(data)
+            
+        case "upgradeCard":
+            let data = try values.decode(CardEvent.self, forKey: .data)
+            self = .upgradeCard(data)
             
         case "shuffleDiscardIntoDrawPile":
             let data = try values.decode(ActorEvent.self, forKey: .data)
@@ -241,6 +248,10 @@ enum Event: Codable {
             
         case .expendCard(let e):
             try container.encode("expendCard", forKey: .type)
+            try container.encode(e, forKey: .data)
+            
+        case .upgradeCard(let e):
+            try container.encode("upgradeCard", forKey: .type)
             try container.encode(e, forKey: .data)
             
         case .shuffleDiscardIntoDrawPile(let e):

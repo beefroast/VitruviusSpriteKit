@@ -26,20 +26,32 @@ class FontHandler {
         
     }
     
-    func getCardTitle(title: String) -> NSAttributedString {
+    func getTitleFor(card: Card) -> NSAttributedString {
+        if card.level > 0 {
+            return self.getCardTitle(title: card.card.name, textColor: UIColor.red)
+        } else {
+            return self.getCardTitle(title: card.card.name, textColor: UIColor.white)
+        }
+    }
+    
+    func getCardTitle(title: String, textColor: UIColor = UIColor.white) -> NSAttributedString {
         
         
         let attributes: [NSAttributedString.Key : Any] = [
             .strokeWidth: -6.0,
              .strokeColor: UIColor.black,
-             .foregroundColor: UIColor.white,
+             .foregroundColor: textColor,
              .font: UIFont(name: "Avenir-Black", size: 48)
          ]
 
          return NSAttributedString(string: "\(title)", attributes: attributes)
     }
     
-    func getCardText(text: String) -> NSAttributedString {
+    func getCardBody(card: Card) -> NSAttributedString {
+        return self.getCardText(text: card.getText())
+    }
+    
+    private func getCardText(text: String) -> NSAttributedString {
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = NSTextAlignment.center

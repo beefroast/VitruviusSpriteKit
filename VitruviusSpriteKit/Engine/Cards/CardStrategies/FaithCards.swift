@@ -20,6 +20,10 @@ class CardDrain: CardStrategy {
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .spell]
     
+    func textFor(card: Card) -> String {
+        self.cardText
+    }
+    
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
 
         guard let target = target?.uuid else {

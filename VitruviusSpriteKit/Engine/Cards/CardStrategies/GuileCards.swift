@@ -21,6 +21,10 @@ class CardMistForm: CardStrategy {
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = .buff
     
+    func textFor(card: Card) -> String {
+        self.cardText
+    }
+    
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         
         battleState.eventHandler.push(events: [
@@ -88,6 +92,10 @@ class CardPierce: CardStrategy {
     var cost: Int = 2
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = [.attack, .ranged]
+    
+    func textFor(card: Card) -> String {
+        self.cardText
+    }
     
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         

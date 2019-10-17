@@ -56,9 +56,9 @@ class CardNode: SKSpriteNode {
         
         let textProvider = FontHandler()
         
-        node.title?.attributedText = textProvider.getCardTitle(title: card.name)
+        node.title?.attributedText = textProvider.getTitleFor(card: card)
         node.cost?.text = "\(card.cost)"
-        node.text?.attributedText = textProvider.getCardText(text: card.cardText)
+        node.text?.attributedText = textProvider.getCardBody(card: card)
         
         // TODO: Need images for card UUIDs
         let textureProvider = CardNodeImageProvider()
@@ -66,7 +66,6 @@ class CardNode: SKSpriteNode {
 
         node.image?.texture = textureProvider.textureFor(card: card.card)
         
-        node.removeFromParent()
         node.delegate = delegate
         return node
     }

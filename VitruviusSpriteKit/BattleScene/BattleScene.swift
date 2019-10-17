@@ -153,6 +153,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                    let cardNode = self.cardNodePool.getFromPool()
                    cardNode.isUserInteractionEnabled = false
                    cardNode.setupWith(card: card, delegate: self)
+                   cardNode.removeFromParent()
                    self.drawNode.addChild(cardNode)
                    
                    cardNode.setScale(0.2)
@@ -451,6 +452,21 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
 
                 
                 // Destroying doesn't block
+                self.battleState.popNext()
+                
+               case .upgradeCard(let e):
+                
+                // Make sure the card has the upgraded text (TODO: Add a visual effect for an upgrade)
+                
+                // Find the card and node
+                guard let card = battleState.actorWith(uuid: e.actorUuid)?.cardZones.hand.cardWith(uuid: e.cardUuid),
+                    let cardNode = self.getFirstRecursive(fn: { (node) -> Bool in (node as? CardNode)?.card.uuid == e.cardUuid }) as? CardNode else {
+                        self.battleState.popNext()
+                        return
+                }
+                
+                cardNode.setupWith(card: card, delegate: self)
+                
                 self.battleState.popNext()
                 
                 case .playCard(_):

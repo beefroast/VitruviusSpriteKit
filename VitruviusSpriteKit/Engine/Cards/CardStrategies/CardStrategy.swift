@@ -20,7 +20,11 @@ struct CardAttributes: OptionSet, Codable {
     static let heal = CardAttributes(rawValue: 1 << 7)
     static let summons = CardAttributes(rawValue: 1 << 8)
     static let potion = CardAttributes(rawValue: 1 << 9)
+    static let status = CardAttributes(rawValue: 1 << 10)
+    static let curse = CardAttributes(rawValue: 1 << 11)
 }
+
+
 
 
 enum CardRarity: Int, Codable {
@@ -43,6 +47,7 @@ protocol CardStrategy {
     var rarity: CardRarity { get }
     var attributes: CardAttributes { get }
     
+    func textFor(card: Card) -> String
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) -> Void
     func onDrawn(card: Card, source: Actor, battleState: BattleState) -> Void
     func onDiscarded(card: Card, source: Actor, battleState: BattleState) -> Void
@@ -71,6 +76,10 @@ class Card: Codable {
         self.uuid = uuid
         self.level = level
         self.card = card
+    }
+    
+    func getText() -> String {
+        return self.card.textFor(card: self)
     }
     
     func resolve(source: Actor, battleState: BattleState, target: Actor?) -> Void {

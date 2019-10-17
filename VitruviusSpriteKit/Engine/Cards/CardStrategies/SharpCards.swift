@@ -21,6 +21,10 @@ class CardRecall : CardStrategy {
     let rarity: CardRarity = CardRarity.uncommon
     let attributes: CardAttributes = .spell
     
+    func textFor(card: Card) -> String {
+        self.cardText
+    }
+    
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         battleState.eventHandler.push(events: [
             Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
@@ -42,6 +46,10 @@ class CardFireball: CardStrategy {
     var cost: Int = 2
     let rarity: CardRarity = CardRarity.basic
     let attributes: CardAttributes = [.attack, .spell]
+    
+    func textFor(card: Card) -> String {
+        self.cardText
+    }
         
     func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
         
