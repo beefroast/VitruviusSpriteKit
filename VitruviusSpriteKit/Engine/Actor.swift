@@ -68,6 +68,7 @@ class PlayerData {
     let currentHp: Int
     let maxHp: Int
     let name: String
+    let characterClass: CharacterClass
     
     
     init(
@@ -77,7 +78,8 @@ class PlayerData {
         currentGold: Int,
         currentHp: Int,
         maxHp: Int,
-        name: String) {
+        name: String,
+        characterClass: CharacterClass) {
         
         self.uuid = uuid
         self.decklist = decklist
@@ -86,6 +88,7 @@ class PlayerData {
         self.currentHp = currentHp
         self.maxHp = maxHp
         self.name = name
+        self.characterClass = characterClass
     }
     
     func newActor() -> Player {
@@ -103,28 +106,49 @@ class PlayerData {
         )
     }
     
-    func paladinStarter(name: String) -> PlayerData {
-        return PlayerData(
+    func newPlayerFor(name: String, characterClass: CharacterClass) -> PlayerData {
+        return PlayerData.init(
             uuid: UUID(),
-            decklist: [
-                CSStrike().instance(),
-                CSStrike().instance(),
-                CSStrike().instance(),
-                CSStrike().instance(),
-                CSDefend().instance(),
-                CSDefend().instance(),
-                CSDefend().instance(),
-                CSDefend().instance(),
-                CSDefend().instance(),
-                CSDrain().instance(),
-            ],
+            decklist: starterDeckFor(characterClass: characterClass),
             currentXp: 0,
             currentGold: 100,
             currentHp: 70,
             maxHp: 70,
-            name: name
+            name: name,
+            characterClass: characterClass
         )
     }
+    
+    func starterDeckFor(characterClass: CharacterClass) -> [Card] {
+    
+        var starterDeck = [
+            CSStrike().instance(),
+            CSStrike().instance(),
+            CSStrike().instance(),
+            CSStrike().instance(),
+            CSDefend().instance(),
+            CSDefend().instance(),
+            CSDefend().instance(),
+            CSDefend().instance(),
+        ]
+        
+        switch characterClass {
+        
+        case .wizard:
+            starterDeck.append(contentsOf: [
+                CSFireball().instance(),
+                CSRecall().instance()
+            ])
+            
+        default:
+            // TODO: Starter decks for each class
+            break
+        }
+        
+        return starterDeck
+    }
+    
+    
     
 }
 
