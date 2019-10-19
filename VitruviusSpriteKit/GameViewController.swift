@@ -77,7 +77,7 @@ class GameViewController: UIViewController {
                  drawPile: DrawPile.newEmpty(),
                  discard: DiscardPile()
              ),
-             enemyStrategy: CrabEnemyStrategy()
+             enemyStrategy: SuccubusEnemyStrategy()
          )
         
         let battleState = BattleState.init(

@@ -153,3 +153,7 @@ class PlayerData {
 }
 
 
+// Flow of game
+
+// Be offered a set of encounters
+// Choose an encounter

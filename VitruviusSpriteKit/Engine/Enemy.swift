@@ -27,6 +27,24 @@ class Enemy: Actor {
         return self.enemyStrategy.planTurn(enemy: self, state: state)
     }
     
+    // Convenience methods
+    func planAttack(state: BattleState, amount: Int) -> Event {
+        return Event.onEnemyPlannedTurn(
+            EnemyTurnEffect.init(
+                enemyUuid: self.uuid,
+                name: "\(self.name)'s turn",
+                events: [
+                    Event.attack(AttackEvent.init(
+                        sourceUuid: self.uuid,
+                        sourceOwner: self.uuid,
+                        targets: [state.getAllActors(faction: .player).first?.uuid].compactMap({ return $0 }),
+                        amount: amount
+                    ))
+                ]
+            )
+        )
+    }
+    
     // MARK: - Codable Implementation
     
     private enum CodingKeys: String, CodingKey {
@@ -173,15 +191,14 @@ class CrabEnemyStrategy: EnemyStrategy {
             enemyStrategy: self
         )
     }
-    
 }
 
-class SuccubusEnemyStrategy {
-    func getStrategyName() -> String { return "succubus" }
-    func planTurn(enemy: Enemy, state: BattleState) -> Event {
-        fatalError("Succubi need to have turns.")
+class SuccubusEnemyStrategy: EnemyStrategy {
+    override func getStrategyName() -> String { return "succubus" }
+    override func planTurn(enemy: Enemy, state: BattleState) -> Event {
+        return enemy.planAttack(state: state, amount: 10)
     }
-    func onBattleBegan(enemy: Enemy, state: BattleState)  {
+    override func onBattleBegan(enemy: Enemy, state: BattleState)  {
         
     }
 }
