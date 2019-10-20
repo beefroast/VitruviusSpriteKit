@@ -177,6 +177,13 @@ class EventHandler: Codable {
             // The player draws their hand
             self.eventStack.enqueue(elt: Event.willDrawCards(DrawCardsEvent.init(actorUuid: battleState.player.uuid, amount: 5)))
             
+            // The enemies draw their hand
+            // TODO: This number of cards drawn shouldn't be specified here
+            battleState.enemies.forEach { (enemy) in
+                self.eventStack.enqueue(elt: Event.willDrawCards(DrawCardsEvent.init(actorUuid: enemy.uuid, amount: 2)))
+            }
+            
+            
             // The enemy plans their turns
             let enemyPlansEvents = battleState.enemies.map({ $0.planTurn(state: battleState) })
             self.enqueue(events: enemyPlansEvents)

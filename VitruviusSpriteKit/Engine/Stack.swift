@@ -101,6 +101,18 @@ class Stack<T> {
     }
 }
 
+class StackQueuePrinter<T>: StackQueue<T> where T: Codable {
+    
+    override func enqueue(elt: T) -> Void {
+        print("Enqueuing \(String(describing: elt))")
+        super.enqueue(elt: elt)
+    }
+    
+    override func push(elt: T) -> Void {
+        print("Pushing \(String(describing: elt))")
+        super.push(elt: elt)
+    }
+}
 
 class StackQueue<T>: Codable where T: Codable {
     

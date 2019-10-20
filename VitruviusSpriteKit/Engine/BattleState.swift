@@ -32,6 +32,10 @@ class BattleState: Codable {
         self.rng = rng
     }
     
+    func getAllActors() -> [Actor] {
+        return [player] + allies + enemies
+    }
+    
     func getAllActors(faction: Faction) -> [Actor] {
         switch faction {
         case .player: return [player]

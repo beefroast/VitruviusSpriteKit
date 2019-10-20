@@ -195,8 +195,36 @@ class CrabEnemyStrategy: EnemyStrategy {
 
 class SuccubusEnemyStrategy: EnemyStrategy {
     override func getStrategyName() -> String { return "succubus" }
+    
+    
     override func planTurn(enemy: Enemy, state: BattleState) -> Event {
-        return enemy.planAttack(state: state, amount: 10)
+        
+        
+        return Event.onEnemyPlannedTurn(
+            EnemyTurnEffect.init(
+                enemyUuid: enemy.uuid,
+                name: enemy.name,
+                events: enemy.cardZones.hand.cards.map({ (card) -> Event in
+                    
+                    guard card.strategy.requiresSingleTarget else {
+                        return Event.playCard(PlayCardEvent.init(actorUuid: enemy.uuid, cardUuid: card.uuid, target: nil))
+                    }
+                    
+                    if card.strategy.attributes.contains(.attack)
+                        || card.strategy.attributes.contains(.curse)
+                        || card.strategy.attributes.contains(.debuff) {
+                        
+                        // Target an enemy
+                        let enemyTarget = state.getAllOpponentActors(faction: .enemies).randomElement(rng: state.rng)
+                        return Event.playCard(PlayCardEvent.init(actorUuid: enemy.uuid, cardUuid: card.uuid, target: enemyTarget.uuid))
+                    
+                    } else {
+                        let friendlyTarget = state.enemies.randomElement(rng: state.rng)
+                        return Event.playCard(PlayCardEvent.init(actorUuid: enemy.uuid, cardUuid: card.uuid, target: friendlyTarget.uuid))
+                    }
+                })
+            )
+        )
     }
     override func onBattleBegan(enemy: Enemy, state: BattleState)  {
         

@@ -74,7 +74,10 @@ class GameViewController: UIViewController {
              body: Body(block: 0, hp: 40, maxHp: 40),
              cardZones: CardZones(
                 hand: Hand.newEmpty(),
-                 drawPile: DrawPile.newEmpty(),
+                drawPile: DrawPile.init(cards: [
+                    CSStrike().instance(),
+                    CSDefend().instance()
+                ]),
                  discard: DiscardPile()
              ),
              enemyStrategy: SuccubusEnemyStrategy()
@@ -86,7 +89,7 @@ class GameViewController: UIViewController {
             enemies: [goomba, koopa],
             eventHandler: EventHandler(
                 uuid: UUID(),
-                eventStack: StackQueue<Event>(),
+                eventStack: StackQueuePrinter<Event>(),
                 effectList: [
                     EventPrinterEffect.init().withWrapper(uuid: UUID())
                 ]
@@ -94,13 +97,12 @@ class GameViewController: UIViewController {
             rng: SeededRandomNumberGenerator(count: 0, seed: 0)
         )
                 
-        battleState.eventHandler.push(event:
-            Event.addEffect(
-                DiscardThenDrawAtEndOfTurnEffect(
-                    ownerUuid: player.uuid, cardsDrawn: 5
-                ).withWrapper(uuid: UUID())
-            )
-        )
+        
+        battleState.eventHandler.push(events: [
+            Event.addEffect(DiscardThenDrawAtEndOfTurnEffect(ownerUuid: player.uuid, cardsDrawn: 5).withWrapper(uuid: UUID())),
+            Event.addEffect(DiscardThenDrawAtEndOfTurnEffect(ownerUuid: goomba.uuid, cardsDrawn: 0).withWrapper(uuid: UUID())),
+            Event.addEffect(DiscardThenDrawAtEndOfTurnEffect(ownerUuid: koopa.uuid, cardsDrawn: 1).withWrapper(uuid: UUID()))
+        ])
 
  
         // Load the battle scene
