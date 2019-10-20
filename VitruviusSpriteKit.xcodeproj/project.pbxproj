@@ -52,6 +52,8 @@
 		64B9AF052358641D00610AD2 /* ChooseRewardNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF042358641D00610AD2 /* ChooseRewardNode.swift */; };
 		64B9AF07235A7A7500610AD2 /* Knapsack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF06235A7A7500610AD2 /* Knapsack.swift */; };
 		64B9AF0B235A8B3D00610AD2 /* KnapsackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF0A235A8B3D00610AD2 /* KnapsackTests.swift */; };
+		64B9AF0E235C211900610AD2 /* TownScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 64B9AF0D235C211900610AD2 /* TownScene.sks */; };
+		64B9AF10235C212F00610AD2 /* TownScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF0F235C212F00610AD2 /* TownScene.swift */; };
 		64FF02CB2355651D0000C93E /* BattleStateSerializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02CA2355651D0000C93E /* BattleStateSerializationTests.swift */; };
 		64FF02CD235588540000C93E /* SeededRandomNumberGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02CC235588540000C93E /* SeededRandomNumberGenerator.swift */; };
 		64FF02D22355A6E10000C93E /* CardOfferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02D12355A6E10000C93E /* CardOfferer.swift */; };
@@ -126,6 +128,8 @@
 		64B9AF042358641D00610AD2 /* ChooseRewardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseRewardNode.swift; sourceTree = "<group>"; };
 		64B9AF06235A7A7500610AD2 /* Knapsack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Knapsack.swift; sourceTree = "<group>"; };
 		64B9AF0A235A8B3D00610AD2 /* KnapsackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnapsackTests.swift; sourceTree = "<group>"; };
+		64B9AF0D235C211900610AD2 /* TownScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TownScene.sks; sourceTree = "<group>"; };
+		64B9AF0F235C212F00610AD2 /* TownScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TownScene.swift; sourceTree = "<group>"; };
 		64FF02CA2355651D0000C93E /* BattleStateSerializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleStateSerializationTests.swift; sourceTree = "<group>"; };
 		64FF02CC235588540000C93E /* SeededRandomNumberGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeededRandomNumberGenerator.swift; sourceTree = "<group>"; };
 		64FF02D12355A6E10000C93E /* CardOfferer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardOfferer.swift; sourceTree = "<group>"; };
@@ -199,6 +203,8 @@
 		643588B62345FD8F007334D9 /* VitruviusSpriteKit */ = {
 			isa = PBXGroup;
 			children = (
+				64B9AF11235C295900610AD2 /* DialogScene */,
+				64B9AF0C235C20F800610AD2 /* TownScene */,
 				6472DF0D234C3B4F009B75C0 /* BattleScene */,
 				6472DF012349D893009B75C0 /* SKCards */,
 				6472DEE223487B97009B75C0 /* Engine */,
@@ -287,6 +293,22 @@
 				6472DEB223461A7E009B75C0 /* BattleScene.sks */,
 			);
 			path = BattleScene;
+			sourceTree = "<group>";
+		};
+		64B9AF0C235C20F800610AD2 /* TownScene */ = {
+			isa = PBXGroup;
+			children = (
+				64B9AF0D235C211900610AD2 /* TownScene.sks */,
+				64B9AF0F235C212F00610AD2 /* TownScene.swift */,
+			);
+			path = TownScene;
+			sourceTree = "<group>";
+		};
+		64B9AF11235C295900610AD2 /* DialogScene */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = DialogScene;
 			sourceTree = "<group>";
 		};
 		64FF02CE2355A69F0000C93E /* Cards */ = {
@@ -422,6 +444,7 @@
 				6472DEBB23485553009B75C0 /* ActorArea.sks in Resources */,
 				6472DEBD2348558A009B75C0 /* ActorScene.sks in Resources */,
 				6472DEB52347072F009B75C0 /* CardSceneWood.sks in Resources */,
+				64B9AF0E235C211900610AD2 /* TownScene.sks in Resources */,
 				643588C82345FD92007334D9 /* LaunchScreen.storyboard in Resources */,
 				643588BC2345FD8F007334D9 /* Actions.sks in Resources */,
 			);
@@ -448,6 +471,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64B9AF10235C212F00610AD2 /* TownScene.swift in Sources */,
 				6472DEF623487BAE009B75C0 /* FaithCards.swift in Sources */,
 				6472DEB7234727F7009B75C0 /* HandNode.swift in Sources */,
 				6472DEF123487BAE009B75C0 /* EventHandler.swift in Sources */,
