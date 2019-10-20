@@ -149,14 +149,14 @@ class GameViewController: UIViewController {
 
 extension SKNode {
     
-    func getFirstRecursive(fn: (SKNode) -> Bool) -> SKNode? {
+    func getFirstChildRecursive(fn: (SKNode) -> Bool) -> SKNode? {
         
         if fn(self) {
             return self
         
         } else {
             for c in self.children {
-                if let found =  c.getFirstRecursive(fn: fn) {
+                if let found =  c.getFirstChildRecursive(fn: fn) {
                     return found
                 }
             }

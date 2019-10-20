@@ -40,7 +40,7 @@ class PlayAreaNode: SKNode {
     }
     
     func actorNode(withUuid uuid: UUID) -> ActorNode? {
-        return self.getFirstRecursive { (node) -> Bool in
+        return self.getFirstChildRecursive { (node) -> Bool in
             (node as? ActorNode)?.actorUuid == uuid
         } as? ActorNode
     }

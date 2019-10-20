@@ -216,7 +216,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                case .discardCard(let e):
     
                    // Find the card
-                   guard let cardNode = self.getFirstRecursive(fn: { (node) -> Bool in
+                   guard let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in
                        (node as? CardNode)?.card.uuid == e.cardUuid
                    }) else {
                        self.battleState.popNext()
@@ -441,7 +441,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                case .destroyCard(let e):
                 
                 // Find the card
-                guard let cardNode = self.getFirstRecursive(fn: { (node) -> Bool in
+                guard let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in
                     (node as? CardNode)?.card.uuid == e.cardUuid
                 }) else {
                     self.battleState.popNext()
@@ -468,7 +468,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                case .expendCard(let e):
                 
                 // Find the card
-                guard let cardNode = self.getFirstRecursive(fn: { (node) -> Bool in
+                guard let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in
                     (node as? CardNode)?.card.uuid == e.cardUuid
                 }) else {
                     self.battleState.popNext()
@@ -498,7 +498,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                 
                 // Find the card and node
                 guard let card = battleState.actorWith(uuid: e.actorUuid)?.cardZones.hand.cardWith(uuid: e.cardUuid),
-                    let cardNode = self.getFirstRecursive(fn: { (node) -> Bool in (node as? CardNode)?.card.uuid == e.cardUuid }) as? CardNode else {
+                    let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in (node as? CardNode)?.card.uuid == e.cardUuid }) as? CardNode else {
                         self.battleState.popNext()
                         return
                 }
