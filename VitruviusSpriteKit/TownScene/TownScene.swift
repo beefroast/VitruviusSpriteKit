@@ -27,15 +27,17 @@ class Building: Codable {
 }
 
 
-
+protocol TownSceneDelegate: AnyObject {
+    func town(scene: TownScene, selectedBuildBuilding: Any?)
+}
 
 
 class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate {
 
     var gameState: GameState
-    
     var playerBedroom: BuildingNode?
     var dialogBox: DialogBoxNode?
+    weak var townSceneDelegate: TownSceneDelegate? = nil
     
     required init?(coder aDecoder: NSCoder) {
         
@@ -61,9 +63,11 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate {
     // MARK: - BuildingNodeDelegate Implementation
     
     func onPressed(sender: BuildingNode) {
-        self.dialogBox?.run(SKAction.fadeIn(withDuration: 0.2), completion: {
-            self.dialogBox?.isUserInteractionEnabled = true
-        })
+        self.townSceneDelegate?.town(scene: self, selectedBuildBuilding: sender)
+        
+//        self.dialogBox?.run(SKAction.fadeIn(withDuration: 0.2), completion: {
+//            self.dialogBox?.isUserInteractionEnabled = true
+//        })
     }
     
     // MARK: - DialogBoxNodeDelegate Implementation

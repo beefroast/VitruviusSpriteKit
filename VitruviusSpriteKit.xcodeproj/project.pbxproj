@@ -54,6 +54,7 @@
 		64B9AF0B235A8B3D00610AD2 /* KnapsackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF0A235A8B3D00610AD2 /* KnapsackTests.swift */; };
 		64B9AF0E235C211900610AD2 /* TownScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 64B9AF0D235C211900610AD2 /* TownScene.sks */; };
 		64B9AF10235C212F00610AD2 /* TownScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF0F235C212F00610AD2 /* TownScene.swift */; };
+		64B9AF15235C7AC800610AD2 /* SelectBuildingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF14235C7AC800610AD2 /* SelectBuildingViewController.swift */; };
 		64FF02CB2355651D0000C93E /* BattleStateSerializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02CA2355651D0000C93E /* BattleStateSerializationTests.swift */; };
 		64FF02CD235588540000C93E /* SeededRandomNumberGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02CC235588540000C93E /* SeededRandomNumberGenerator.swift */; };
 		64FF02D22355A6E10000C93E /* CardOfferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02D12355A6E10000C93E /* CardOfferer.swift */; };
@@ -130,6 +131,7 @@
 		64B9AF0A235A8B3D00610AD2 /* KnapsackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnapsackTests.swift; sourceTree = "<group>"; };
 		64B9AF0D235C211900610AD2 /* TownScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TownScene.sks; sourceTree = "<group>"; };
 		64B9AF0F235C212F00610AD2 /* TownScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TownScene.swift; sourceTree = "<group>"; };
+		64B9AF14235C7AC800610AD2 /* SelectBuildingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectBuildingViewController.swift; sourceTree = "<group>"; };
 		64FF02CA2355651D0000C93E /* BattleStateSerializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleStateSerializationTests.swift; sourceTree = "<group>"; };
 		64FF02CC235588540000C93E /* SeededRandomNumberGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeededRandomNumberGenerator.swift; sourceTree = "<group>"; };
 		64FF02D12355A6E10000C93E /* CardOfferer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardOfferer.swift; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 			children = (
 				64B9AF0D235C211900610AD2 /* TownScene.sks */,
 				64B9AF0F235C212F00610AD2 /* TownScene.swift */,
+				64B9AF14235C7AC800610AD2 /* SelectBuildingViewController.swift */,
 			);
 			path = TownScene;
 			sourceTree = "<group>";
@@ -479,6 +482,7 @@
 				6472DF002348ADAC009B75C0 /* EndTurnButton.swift in Sources */,
 				6472DEFA23487BAE009B75C0 /* Enemy.swift in Sources */,
 				6472DEB923485396009B75C0 /* PlayAreaNode.swift in Sources */,
+				64B9AF15235C7AC800610AD2 /* SelectBuildingViewController.swift in Sources */,
 				643588EE2345FEEF007334D9 /* CardNode.swift in Sources */,
 				6472DEFB23487BAE009B75C0 /* CardStrategy.swift in Sources */,
 				64FF02D22355A6E10000C93E /* CardOfferer.swift in Sources */,

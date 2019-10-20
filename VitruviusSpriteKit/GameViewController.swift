@@ -13,7 +13,7 @@ import GameplayKit
 
 // TODO: Move this into a scene
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingViewControllerDelegate {
 
 
     override func viewDidLoad() {
@@ -25,6 +25,7 @@ class GameViewController: UIViewController {
 //        let scene = getBattleScene()
         let scene = SKScene(fileNamed: "TownScene") as! TownScene
         scene.scaleMode = .aspectFit
+        scene.townSceneDelegate = self
         
         // Present the scene
         view.ignoresSiblingOrder = false
@@ -142,8 +143,35 @@ class GameViewController: UIViewController {
         return true
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let vc = segue.destination as? SelectBuildingViewController {
+            vc.delegate = self
+            vc.buildingTypes = [
+                BuildingType.init(
+                    name: "Forge",
+                    cost: 50,
+                    description: "Can be used to upgrade cards",
+                    daysToBuild: 5
+                )
+            ]
+        }
+    }
+    
+    // MARK: - SelectBuildingViewControllerDelegate Implementation
+    
+    func selectBuilding(vc: SelectBuildingViewController, selectedBuilding: BuildingType) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func selectBuilding(vc: SelectBuildingViewController, cancelled: Any?) {
+        
+    }
 
-
+    // MARK: - TownSceneDelegate Implementation
+    
+    func town(scene: TownScene, selectedBuildBuilding: Any?) {
+        self.performSegue(withIdentifier: "build", sender: selectedBuildBuilding)
+    }
 }
 
 

@@ -1,24 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Game View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="GameViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BV1-FR-VrT" customClass="GameViewController" customModule="VitruviusSpriteKit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="3se-qz-xqx" customClass="SKView">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="4qk-I5-YsI"/>
                     </view>
+                    <connections>
+                        <segue destination="02G-AU-d6k" kind="presentation" identifier="build" id="KAX-CT-TeX"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="139" y="72"/>
+        </scene>
+        <!--Select Building View Controller-->
+        <scene sceneID="WAe-H0-q1k">
+            <objects>
+                <viewController id="02G-AU-d6k" customClass="SelectBuildingViewController" customModule="VitruviusSpriteKit" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="dHs-E1-0r3" customClass="SKView">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5cK-aG-69N">
+                                <rect key="frame" x="0.0" y="44" width="414" height="764"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="3ks-s0-CZP">
+                                    <size key="itemSize" width="206" height="193"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="Khs-89-94q" customClass="SelectBuildingCollectionViewCell" customModule="VitruviusSpriteKit" customModuleProvider="target">
+                                        <rect key="frame" x="104" y="0.0" width="206" height="193"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Chc-7x-brE">
+                                            <rect key="frame" x="0.0" y="0.0" width="206" height="193"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Building Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EaJ-H4-WmI">
+                                                    <rect key="frame" x="20" y="20" width="166" height="24"/>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description of what the building does goes here." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qGZ-q7-VSM">
+                                                    <rect key="frame" x="20" y="103" width="166" height="70"/>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="COST: 30gp" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D2E-Oi-fWJ">
+                                                    <rect key="frame" x="20" y="54" width="166" height="23.5"/>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="qGZ-q7-VSM" secondAttribute="bottom" constant="20" id="48U-Rb-nq7"/>
+                                                <constraint firstItem="qGZ-q7-VSM" firstAttribute="top" relation="greaterThanOrEqual" secondItem="D2E-Oi-fWJ" secondAttribute="bottom" constant="10" id="Lsu-Kk-LJE"/>
+                                                <constraint firstItem="D2E-Oi-fWJ" firstAttribute="top" secondItem="EaJ-H4-WmI" secondAttribute="bottom" constant="10" id="Piw-Hq-sGt"/>
+                                                <constraint firstAttribute="trailing" secondItem="EaJ-H4-WmI" secondAttribute="trailing" constant="20" id="RGZ-d7-rzc"/>
+                                                <constraint firstItem="qGZ-q7-VSM" firstAttribute="leading" secondItem="Chc-7x-brE" secondAttribute="leading" constant="20" id="TYM-Bm-pic"/>
+                                                <constraint firstAttribute="trailing" secondItem="qGZ-q7-VSM" secondAttribute="trailing" constant="20" id="cil-AE-Ngw"/>
+                                                <constraint firstItem="EaJ-H4-WmI" firstAttribute="top" secondItem="Chc-7x-brE" secondAttribute="top" constant="20" id="dBb-CC-Bsv"/>
+                                                <constraint firstItem="D2E-Oi-fWJ" firstAttribute="leading" secondItem="Chc-7x-brE" secondAttribute="leading" constant="20" id="td2-e2-TEa"/>
+                                                <constraint firstItem="EaJ-H4-WmI" firstAttribute="leading" secondItem="Chc-7x-brE" secondAttribute="leading" constant="20" id="xWc-df-v5w"/>
+                                                <constraint firstAttribute="trailing" secondItem="D2E-Oi-fWJ" secondAttribute="trailing" constant="20" id="yvc-af-XTY"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <size key="customSize" width="206" height="193"/>
+                                        <connections>
+                                            <outlet property="lblCost" destination="D2E-Oi-fWJ" id="YPx-Zc-YuA"/>
+                                            <outlet property="lblDescription" destination="qGZ-q7-VSM" id="Feo-wo-fjf"/>
+                                            <outlet property="lblName" destination="EaJ-H4-WmI" id="vyf-52-hvS"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="02G-AU-d6k" id="EJo-0R-Drz"/>
+                                    <outlet property="delegate" destination="02G-AU-d6k" id="16l-rx-54P"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="5cK-aG-69N" secondAttribute="bottom" constant="34" id="1iU-V3-Uje"/>
+                            <constraint firstItem="5cK-aG-69N" firstAttribute="top" secondItem="dHs-E1-0r3" secondAttribute="top" constant="44" id="3bS-06-0cx"/>
+                            <constraint firstItem="5cK-aG-69N" firstAttribute="leading" secondItem="dHs-E1-0r3" secondAttribute="leading" id="Mgi-zb-Taa"/>
+                            <constraint firstAttribute="trailing" secondItem="5cK-aG-69N" secondAttribute="trailing" id="MqP-jq-Vcd"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="bAB-Sl-wd8"/>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="5cK-aG-69N" id="s7h-bX-Jec"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l9F-Sp-5MA" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="910" y="72"/>
         </scene>
     </scenes>
 </document>
