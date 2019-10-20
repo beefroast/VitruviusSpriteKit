@@ -10,13 +10,41 @@ import UIKit
 import SpriteKit
 
 
+class GameState: Codable {
+    var playerData: PlayerData
+    var buildings: [Building]
+    var daysUntilNextBoss: Int
+    
+    init(playerData: PlayerData, buildings: [Building], daysUntilNextBoss: Int) {
+        self.playerData = playerData
+        self.buildings = buildings
+        self.daysUntilNextBoss = daysUntilNextBoss
+    }
+}
+
+class Building: Codable {
+    
+}
+
+
+
+
 
 class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate {
 
+    var gameState: GameState
+    
     var playerBedroom: BuildingNode?
     var dialogBox: DialogBoxNode?
     
     required init?(coder aDecoder: NSCoder) {
+        
+        self.gameState = GameState.init(
+            playerData: PlayerData.newPlayerFor(name: "Benji", characterClass: .wizard),
+            buildings: [],
+            daysUntilNextBoss: 30
+        )
+        
         super.init(coder: aDecoder)
         
         self.playerBedroom = self.getFirstChildRecursive(fn: { (node) -> Bool in
@@ -41,8 +69,15 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate {
     // MARK: - DialogBoxNodeDelegate Implementation
     
     func onDialogSubmitted(dialog: DialogBoxNode) {
-        dialog.run(SKAction.fadeOut(withDuration: 0.2)) {
+        
+        self.run(SKAction.fadeOut(withDuration: 0.2)) {
+            dialog.alpha = 0.0
             dialog.isUserInteractionEnabled = false
+            self.gameState.daysUntilNextBoss -= 1
+            self.gameState.playerData.currentHp = min(self.gameState.playerData.currentHp + 20, self.gameState.playerData.maxHp)
+            self.run(SKAction.fadeIn(withDuration: 0.2)) {
+                
+            }
         }
     }
     

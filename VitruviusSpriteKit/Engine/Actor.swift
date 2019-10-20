@@ -59,14 +59,14 @@ class Player: Actor {
 }
 
 // This needs to be serializable
-class PlayerData {
+class PlayerData: Codable {
     
     let uuid: UUID
     let decklist: [Card]   // Cards need to be duplictable
     let currentXp: Int
     let currentGold: Int
-    let currentHp: Int
-    let maxHp: Int
+    var currentHp: Int
+    var maxHp: Int
     let name: String
     let characterClass: CharacterClass
     
@@ -106,7 +106,7 @@ class PlayerData {
         )
     }
     
-    func newPlayerFor(name: String, characterClass: CharacterClass) -> PlayerData {
+    static func newPlayerFor(name: String, characterClass: CharacterClass) -> PlayerData {
         return PlayerData.init(
             uuid: UUID(),
             decklist: starterDeckFor(characterClass: characterClass),
@@ -119,7 +119,7 @@ class PlayerData {
         )
     }
     
-    func starterDeckFor(characterClass: CharacterClass) -> [Card] {
+    static func starterDeckFor(characterClass: CharacterClass) -> [Card] {
     
         var starterDeck = [
             CSStrike().instance(),
