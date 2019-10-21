@@ -14,7 +14,7 @@ import GameplayKit
 // TODO: Move this into a scene
 
 class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingViewControllerDelegate {
-
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -147,12 +147,8 @@ class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingVie
         if let vc = segue.destination as? SelectBuildingViewController {
             vc.delegate = self
             vc.buildingTypes = [
-                BuildingType.init(
-                    name: "Forge",
-                    cost: 50,
-                    description: "Can be used to upgrade cards",
-                    daysToBuild: 5
-                )
+                BTTavern(),
+                BTForge()
             ]
         }
     }
@@ -160,6 +156,17 @@ class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingVie
     // MARK: - SelectBuildingViewControllerDelegate Implementation
     
     func selectBuilding(vc: SelectBuildingViewController, selectedBuilding: BuildingType) {
+        
+        // Make a new building of that type
+        let building = selectedBuilding.newInstance()
+        
+        guard let townScene = (self.view as? SKView)?.scene as? TownScene else {
+            return
+        }
+        
+        townScene.addBuilding(building: building)
+        
+        
         self.dismiss(animated: true, completion: nil)
     }
     

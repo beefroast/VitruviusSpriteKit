@@ -8,23 +8,10 @@
 
 import UIKit
 
-class BuildingType {
-    let name: String
-    let cost: Int
-    let description: String
-    let daysToBuild: Int
-    
-    init(
-    name: String,
-    cost: Int,
-    description: String,
-    daysToBuild: Int) {
-        self.name = name
-        self.cost = cost
-        self.description = description
-        self.daysToBuild = daysToBuild
-    }
-}
+
+
+
+
 
 protocol SelectBuildingViewControllerDelegate: AnyObject {
     func selectBuilding(vc: SelectBuildingViewController, selectedBuilding: BuildingType)

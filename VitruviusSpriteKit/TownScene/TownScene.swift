@@ -22,10 +22,6 @@ class GameState: Codable {
     }
 }
 
-class Building: Codable {
-    
-}
-
 
 protocol TownSceneDelegate: AnyObject {
     func town(scene: TownScene, selectedBuildBuilding: Any?)
@@ -58,6 +54,17 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate {
         self.dialogBox = self.childNode(withName: "dialog") as? DialogBoxNode
         self.dialogBox?.delegate = self
         self.dialogBox?.isUserInteractionEnabled = true
+    }
+    
+    func addBuilding(building: Building) -> Void {
+        
+        self.gameState.buildings.append(building)
+        self.gameState.playerData.currentGold -= building.type.cost
+        let buildingNode = BuildingNode.newInstance(building: building, delegate: self)
+        self.addChild(buildingNode)
+        buildingNode.position = CGPoint.init(x: 200, y: 0)
+        buildingNode.size = CGSize.init(width: 100, height: 100)
+        buildingNode.isUserInteractionEnabled = true
     }
     
     // MARK: - BuildingNodeDelegate Implementation
@@ -100,9 +107,18 @@ protocol BuildingNodeDelegate: AnyObject {
 class BuildingNode: SKSpriteNode {
     
     weak var delegate: BuildingNodeDelegate? = nil
+    var building: Building? = nil
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.delegate?.onPressed(sender: self)
+    }
+    
+    static func newInstance(building: Building, delegate: BuildingNodeDelegate) -> BuildingNode {
+        // TODO: Make this so it creates everything we need to display a building
+        let node = BuildingNode(imageNamed: "Highlander's_hut")
+        node.delegate = delegate
+        node.building = building
+        return node
     }
 }
 

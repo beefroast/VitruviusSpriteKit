@@ -64,7 +64,7 @@ class PlayerData: Codable {
     let uuid: UUID
     let decklist: [Card]   // Cards need to be duplictable
     let currentXp: Int
-    let currentGold: Int
+    var currentGold: Int
     var currentHp: Int
     var maxHp: Int
     let name: String
