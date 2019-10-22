@@ -23,9 +23,12 @@ class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingVie
         
   
 //        let scene = getBattleScene()
-        let scene = SKScene(fileNamed: "TownScene") as! TownScene
+//        let scene = SKScene(fileNamed: "TownScene") as! TownScene
+//        scene.scaleMode = .aspectFit
+//        scene.townSceneDelegate = self
+        
+        let scene = SKScene(fileNamed: "TestCardViewerScene")!
         scene.scaleMode = .aspectFit
-        scene.townSceneDelegate = self
         
         // Present the scene
         view.ignoresSiblingOrder = false

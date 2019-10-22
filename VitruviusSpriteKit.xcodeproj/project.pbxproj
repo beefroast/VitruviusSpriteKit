@@ -49,6 +49,8 @@
 		6472DF09234B3F80009B75C0 /* CardNodePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF08234B3F80009B75C0 /* CardNodePool.swift */; };
 		6472DF0C234C11B6009B75C0 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0B234C11B6009B75C0 /* Event.swift */; };
 		6472DF0F234C3D0F009B75C0 /* BattleScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0E234C3D0F009B75C0 /* BattleScene.swift */; };
+		64B4546B235EBE9000D43450 /* TestCardViewerScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 64B4546A235EBE9000D43450 /* TestCardViewerScene.sks */; };
+		64B4546D235EBE9F00D43450 /* TestCardViewerScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B4546C235EBE9F00D43450 /* TestCardViewerScene.swift */; };
 		64B9AF052358641D00610AD2 /* ChooseRewardNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF042358641D00610AD2 /* ChooseRewardNode.swift */; };
 		64B9AF07235A7A7500610AD2 /* Knapsack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF06235A7A7500610AD2 /* Knapsack.swift */; };
 		64B9AF0B235A8B3D00610AD2 /* KnapsackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF0A235A8B3D00610AD2 /* KnapsackTests.swift */; };
@@ -59,6 +61,9 @@
 		64FF02CB2355651D0000C93E /* BattleStateSerializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02CA2355651D0000C93E /* BattleStateSerializationTests.swift */; };
 		64FF02CD235588540000C93E /* SeededRandomNumberGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02CC235588540000C93E /* SeededRandomNumberGenerator.swift */; };
 		64FF02D22355A6E10000C93E /* CardOfferer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FF02D12355A6E10000C93E /* CardOfferer.swift */; };
+		A6E40F088316BC7C0E00E3EE /* Pods_VitruviusSpriteKitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269D28A3B8D8578A4D2B407D /* Pods_VitruviusSpriteKitTests.framework */; };
+		B86E1ABDA379B783123B04DB /* Pods_VitruviusSpriteKitUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17C0EFD2A3C9E9903E2C3D77 /* Pods_VitruviusSpriteKitUITests.framework */; };
+		DBC68E0420A193416FB9CE9C /* Pods_VitruviusSpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3332D313E2EF0F35250995E8 /* Pods_VitruviusSpriteKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +84,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		124899FC94D7A9F3B38EF921 /* Pods-VitruviusSpriteKitUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VitruviusSpriteKitUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-VitruviusSpriteKitUITests/Pods-VitruviusSpriteKitUITests.release.xcconfig"; sourceTree = "<group>"; };
+		17C0EFD2A3C9E9903E2C3D77 /* Pods_VitruviusSpriteKitUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VitruviusSpriteKitUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		269D28A3B8D8578A4D2B407D /* Pods_VitruviusSpriteKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VitruviusSpriteKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3332D313E2EF0F35250995E8 /* Pods_VitruviusSpriteKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VitruviusSpriteKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D01DB9B098B92C76CD42283 /* Pods-VitruviusSpriteKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VitruviusSpriteKit.release.xcconfig"; path = "Pods/Target Support Files/Pods-VitruviusSpriteKit/Pods-VitruviusSpriteKit.release.xcconfig"; sourceTree = "<group>"; };
+		3FB9FC13202BBE0E4A02A5C4 /* Pods-VitruviusSpriteKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VitruviusSpriteKit.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VitruviusSpriteKit/Pods-VitruviusSpriteKit.debug.xcconfig"; sourceTree = "<group>"; };
 		64096038234D82390046E0A1 /* EventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
 		6409603A234D9E770046E0A1 /* NeutralCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeutralCardTests.swift; sourceTree = "<group>"; };
 		6409603D234DACFB0046E0A1 /* SerializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializationTests.swift; sourceTree = "<group>"; };
@@ -127,6 +138,8 @@
 		6472DF08234B3F80009B75C0 /* CardNodePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNodePool.swift; sourceTree = "<group>"; };
 		6472DF0B234C11B6009B75C0 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		6472DF0E234C3D0F009B75C0 /* BattleScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleScene.swift; sourceTree = "<group>"; };
+		64B4546A235EBE9000D43450 /* TestCardViewerScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TestCardViewerScene.sks; sourceTree = "<group>"; };
+		64B4546C235EBE9F00D43450 /* TestCardViewerScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCardViewerScene.swift; sourceTree = "<group>"; };
 		64B9AF042358641D00610AD2 /* ChooseRewardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseRewardNode.swift; sourceTree = "<group>"; };
 		64B9AF06235A7A7500610AD2 /* Knapsack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Knapsack.swift; sourceTree = "<group>"; };
 		64B9AF0A235A8B3D00610AD2 /* KnapsackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnapsackTests.swift; sourceTree = "<group>"; };
@@ -137,6 +150,9 @@
 		64FF02CA2355651D0000C93E /* BattleStateSerializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleStateSerializationTests.swift; sourceTree = "<group>"; };
 		64FF02CC235588540000C93E /* SeededRandomNumberGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeededRandomNumberGenerator.swift; sourceTree = "<group>"; };
 		64FF02D12355A6E10000C93E /* CardOfferer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardOfferer.swift; sourceTree = "<group>"; };
+		96DA3841CCD574595D78006D /* Pods-VitruviusSpriteKitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VitruviusSpriteKitTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VitruviusSpriteKitTests/Pods-VitruviusSpriteKitTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A5E969341E28F35D5775FD26 /* Pods-VitruviusSpriteKitUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VitruviusSpriteKitUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VitruviusSpriteKitUITests/Pods-VitruviusSpriteKitUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		AC5B889ED1952C6DF40599F5 /* Pods-VitruviusSpriteKitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VitruviusSpriteKitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-VitruviusSpriteKitTests/Pods-VitruviusSpriteKitTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBC68E0420A193416FB9CE9C /* Pods_VitruviusSpriteKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +168,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6E40F088316BC7C0E00E3EE /* Pods_VitruviusSpriteKitTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,12 +176,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B86E1ABDA379B783123B04DB /* Pods_VitruviusSpriteKitUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		03599941A96FCF50BB39E3B6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3FB9FC13202BBE0E4A02A5C4 /* Pods-VitruviusSpriteKit.debug.xcconfig */,
+				3D01DB9B098B92C76CD42283 /* Pods-VitruviusSpriteKit.release.xcconfig */,
+				96DA3841CCD574595D78006D /* Pods-VitruviusSpriteKitTests.debug.xcconfig */,
+				AC5B889ED1952C6DF40599F5 /* Pods-VitruviusSpriteKitTests.release.xcconfig */,
+				A5E969341E28F35D5775FD26 /* Pods-VitruviusSpriteKitUITests.debug.xcconfig */,
+				124899FC94D7A9F3B38EF921 /* Pods-VitruviusSpriteKitUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		64096037234D82200046E0A1 /* EventTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,6 +223,8 @@
 				643588D12345FD93007334D9 /* VitruviusSpriteKitTests */,
 				643588DC2345FD93007334D9 /* VitruviusSpriteKitUITests */,
 				643588B52345FD8F007334D9 /* Products */,
+				03599941A96FCF50BB39E3B6 /* Pods */,
+				FDB65BD5695810019BFBA59C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -207,6 +241,7 @@
 		643588B62345FD8F007334D9 /* VitruviusSpriteKit */ = {
 			isa = PBXGroup;
 			children = (
+				64B45469235EBE7B00D43450 /* TestCardViewerScene */,
 				64B9AF11235C295900610AD2 /* DialogScene */,
 				64B9AF0C235C20F800610AD2 /* TownScene */,
 				6472DF0D234C3B4F009B75C0 /* BattleScene */,
@@ -299,6 +334,15 @@
 			path = BattleScene;
 			sourceTree = "<group>";
 		};
+		64B45469235EBE7B00D43450 /* TestCardViewerScene */ = {
+			isa = PBXGroup;
+			children = (
+				64B4546A235EBE9000D43450 /* TestCardViewerScene.sks */,
+				64B4546C235EBE9F00D43450 /* TestCardViewerScene.swift */,
+			);
+			path = TestCardViewerScene;
+			sourceTree = "<group>";
+		};
 		64B9AF0C235C20F800610AD2 /* TownScene */ = {
 			isa = PBXGroup;
 			children = (
@@ -340,6 +384,16 @@
 			path = CardStrategies;
 			sourceTree = "<group>";
 		};
+		FDB65BD5695810019BFBA59C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3332D313E2EF0F35250995E8 /* Pods_VitruviusSpriteKit.framework */,
+				269D28A3B8D8578A4D2B407D /* Pods_VitruviusSpriteKitTests.framework */,
+				17C0EFD2A3C9E9903E2C3D77 /* Pods_VitruviusSpriteKitUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -347,9 +401,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 643588E22345FD93007334D9 /* Build configuration list for PBXNativeTarget "VitruviusSpriteKit" */;
 			buildPhases = (
+				792A8473573B27663462A730 /* [CP] Check Pods Manifest.lock */,
 				643588B02345FD8F007334D9 /* Sources */,
 				643588B12345FD8F007334D9 /* Frameworks */,
 				643588B22345FD8F007334D9 /* Resources */,
+				CAF7A556680C9F79FAED28F9 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -364,6 +420,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 643588E52345FD93007334D9 /* Build configuration list for PBXNativeTarget "VitruviusSpriteKitTests" */;
 			buildPhases = (
+				0FC90C5ADE9E44050882BB9F /* [CP] Check Pods Manifest.lock */,
 				643588CA2345FD93007334D9 /* Sources */,
 				643588CB2345FD93007334D9 /* Frameworks */,
 				643588CC2345FD93007334D9 /* Resources */,
@@ -382,6 +439,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 643588E82345FD93007334D9 /* Build configuration list for PBXNativeTarget "VitruviusSpriteKitUITests" */;
 			buildPhases = (
+				9B5E16F2AF954AD419A11DA5 /* [CP] Check Pods Manifest.lock */,
 				643588D52345FD93007334D9 /* Sources */,
 				643588D62345FD93007334D9 /* Frameworks */,
 				643588D72345FD93007334D9 /* Resources */,
@@ -450,6 +508,7 @@
 				6472DEBB23485553009B75C0 /* ActorArea.sks in Resources */,
 				6472DEBD2348558A009B75C0 /* ActorScene.sks in Resources */,
 				6472DEB52347072F009B75C0 /* CardSceneWood.sks in Resources */,
+				64B4546B235EBE9000D43450 /* TestCardViewerScene.sks in Resources */,
 				64B9AF0E235C211900610AD2 /* TownScene.sks in Resources */,
 				643588C82345FD92007334D9 /* LaunchScreen.storyboard in Resources */,
 				643588BC2345FD8F007334D9 /* Actions.sks in Resources */,
@@ -471,6 +530,97 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0FC90C5ADE9E44050882BB9F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VitruviusSpriteKitTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		792A8473573B27663462A730 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VitruviusSpriteKit-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9B5E16F2AF954AD419A11DA5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VitruviusSpriteKitUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CAF7A556680C9F79FAED28F9 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-VitruviusSpriteKit/Pods-VitruviusSpriteKit-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CollectionNode/CollectionNode.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CollectionNode.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-VitruviusSpriteKit/Pods-VitruviusSpriteKit-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		643588B02345FD8F007334D9 /* Sources */ = {
@@ -494,6 +644,7 @@
 				6472DEF223487BAE009B75C0 /* ICardPlayer.swift in Sources */,
 				64B9AF07235A7A7500610AD2 /* Knapsack.swift in Sources */,
 				6472DF07234ADA85009B75C0 /* ArrowNode.swift in Sources */,
+				64B4546D235EBE9F00D43450 /* TestCardViewerScene.swift in Sources */,
 				6472DF0C234C11B6009B75C0 /* Event.swift in Sources */,
 				6472DEBF234856E4009B75C0 /* ActorNode.swift in Sources */,
 				6472DEF523487BAE009B75C0 /* BattleState.swift in Sources */,
@@ -688,6 +839,7 @@
 		};
 		643588E32345FD93007334D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3FB9FC13202BBE0E4A02A5C4 /* Pods-VitruviusSpriteKit.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -707,6 +859,7 @@
 		};
 		643588E42345FD93007334D9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D01DB9B098B92C76CD42283 /* Pods-VitruviusSpriteKit.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -726,6 +879,7 @@
 		};
 		643588E62345FD93007334D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 96DA3841CCD574595D78006D /* Pods-VitruviusSpriteKitTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -748,6 +902,7 @@
 		};
 		643588E72345FD93007334D9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC5B889ED1952C6DF40599F5 /* Pods-VitruviusSpriteKitTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -770,6 +925,7 @@
 		};
 		643588E92345FD93007334D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A5E969341E28F35D5775FD26 /* Pods-VitruviusSpriteKitUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -790,6 +946,7 @@
 		};
 		643588EA2345FD93007334D9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 124899FC94D7A9F3B38EF921 /* Pods-VitruviusSpriteKitUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
