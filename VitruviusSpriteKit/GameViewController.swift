@@ -184,6 +184,14 @@ class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingVie
 
 extension SKNode {
     
+    func getFirstChild<Type>() -> Type? {
+        self.getFirstChildRecursive { (node) -> Bool in
+            (node as? Type) != nil
+        }.flatMap { (node) -> Type? in
+            node as? Type
+        }
+    }
+    
     func getFirstChildRecursive(fn: (SKNode) -> Bool) -> SKNode? {
         
         if fn(self) {
@@ -198,7 +206,6 @@ extension SKNode {
             return nil
         }
     }
-
     
     func getGlobalPosition() -> CGPoint {
         guard let parent = self.parent, let scene = self.scene else {

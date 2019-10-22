@@ -31,9 +31,9 @@ protocol TownSceneDelegate: AnyObject {
 class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate {
 
     var gameState: GameState
-    var playerBedroom: BuildingNode?
     var dialogBox: DialogBoxNode?
     weak var townSceneDelegate: TownSceneDelegate? = nil
+    var buildingParentNode: BuildingParentNode? = nil
     
     required init?(coder aDecoder: NSCoder) {
         
@@ -45,11 +45,13 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate {
         
         super.init(coder: aDecoder)
         
-        self.playerBedroom = self.getFirstChildRecursive(fn: { (node) -> Bool in
-            (node as? BuildingNode) != nil
-        }).flatMap({ $0 as? BuildingNode })
-        self.playerBedroom?.delegate = self
-        self.playerBedroom?.isUserInteractionEnabled = true
+        self.buildingParentNode = self.getFirstChild()
+        
+        
+        (0...10).forEach { (_) in
+            let tavern = BTTavern().newInstance()
+            self.addBuilding(building: tavern)
+        }
         
         self.dialogBox = self.childNode(withName: "dialog") as? DialogBoxNode
         self.dialogBox?.delegate = self
@@ -57,14 +59,10 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate {
     }
     
     func addBuilding(building: Building) -> Void {
-        
         self.gameState.buildings.append(building)
         self.gameState.playerData.currentGold -= building.type.cost
         let buildingNode = BuildingNode.newInstance(building: building, delegate: self)
-        self.addChild(buildingNode)
-        buildingNode.position = CGPoint.init(x: 200, y: 0)
-        buildingNode.size = CGSize.init(width: 100, height: 100)
-        buildingNode.isUserInteractionEnabled = true
+        self.buildingParentNode?.addBuilding(node: buildingNode)
     }
     
     // MARK: - BuildingNodeDelegate Implementation
@@ -116,6 +114,7 @@ class BuildingNode: SKSpriteNode {
     static func newInstance(building: Building, delegate: BuildingNodeDelegate) -> BuildingNode {
         // TODO: Make this so it creates everything we need to display a building
         let node = BuildingNode(imageNamed: "Highlander's_hut")
+        node.size = CGSize(width: 100, height: 100)
         node.delegate = delegate
         node.building = building
         return node
@@ -199,3 +198,49 @@ class ButtonNode: SKSpriteNode {
         self.delegate?.onPressed(sender: self)
     }
 }
+
+class BuildingParentNode: SKNode {
+    
+    func addBuilding(node: BuildingNode) -> Void {
+        
+        self.addChildPreserveTransform(child: node)
+        
+        node.resetTransforms()
+        
+        // Lay out the buildings
+        
+        for c in self.children.enumerated() {
+            c.element.position = CGPoint.init(x: CGFloat(0 + c.offset * 100), y: 0)
+        }
+    }
+}
+
+
+//class ScrollNode: SKSpriteNode {
+//
+//    var initialPosition: CGPoint?
+//
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        guard initialPosition == nil else {
+//            return
+//        }
+//        guard let t = touches.first else {
+//            return
+//        }
+//
+//    }
+//
+//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+//
+//        self.initialPosition
+//    }
+//
+//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//
+//
+//    }
+//
+//    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+//
+//    }
+//}
