@@ -10,12 +10,27 @@ import UIKit
 import SpriteKit
 import CollectionNode
 
+
+protocol IUpdatable {
+    func updateNode(currentTime: TimeInterval)
+}
+
+extension CollectionNode: IUpdatable {
+    func updateNode(currentTime: TimeInterval) {
+        self.update(currentTime)
+    }
+}
+
 class TestCardViewerScene: SKScene, CollectionNodeDataSource, CollectionNodeDelegate {
 
     private var collectionNode: CollectionNode!
     private var cardNodes: [CardNode]!
     
+    let bigScale: CGFloat = 1.0
+    let smallScale: CGFloat = 0.8
+    
     override func didMove(to view: SKView) {
+        
         collectionNode = CollectionNode(at: view)
         
         collectionNode.spaceBetweenItems = 40
@@ -36,9 +51,9 @@ class TestCardViewerScene: SKScene, CollectionNodeDataSource, CollectionNodeDele
         cardNodes = cards.map({ (card) -> CardNode in
             let c = CardNode.newInstance()
             c.setupWith(card: card)
-            c.size = CGSize(width: 100, height: 100)
-            c.xScale = 1.2
-            c.yScale = 1.2
+            c.size = CGSize(width: 50, height: 50)
+            c.xScale = smallScale
+            c.yScale = smallScale
             return c
         })
         
@@ -74,12 +89,12 @@ class TestCardViewerScene: SKScene, CollectionNodeDataSource, CollectionNodeDele
         guard index != lastSelectedIndex else { return }
 
         let nextNode = cardNodes[index]
-        nextNode.run(SKAction.scale(to: 1.5, duration: 0.2))
+        nextNode.run(SKAction.scale(to: bigScale, duration: 0.2))
         nextNode.zPosition = 10
 
         if let last = lastSelectedIndex {
             let last = cardNodes[last]
-            last.run(SKAction.scale(to: 1.2, duration: 0.2))
+            last.run(SKAction.scale(to: smallScale, duration: 0.2))
             last.zPosition = 0
         }
 

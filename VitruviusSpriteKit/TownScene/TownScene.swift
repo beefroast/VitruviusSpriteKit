@@ -8,9 +8,10 @@
 
 import UIKit
 import SpriteKit
-
+import CollectionNode
 
 class GameState: Codable {
+    
     var playerData: PlayerData
     var buildings: [Building]
     var daysUntilNextBoss: Int
@@ -28,8 +29,11 @@ protocol TownSceneDelegate: AnyObject {
 }
 
 
-class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate {
+class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate, CollectionNodeDataSource, CollectionNodeDelegate {
 
+    private var updatables: [IUpdatable] = []
+    private var collectionNode: CollectionNode!
+    private var buildingNodes: [BuildingNode]
     var gameState: GameState
     var dialogBox: DialogBoxNode?
     weak var townSceneDelegate: TownSceneDelegate? = nil
@@ -39,40 +43,133 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate {
         
         self.gameState = GameState.init(
             playerData: PlayerData.newPlayerFor(name: "Benji", characterClass: .wizard),
-            buildings: [],
+            buildings: [BTTavern().newInstance(), BTJoinery().newInstance()],
             daysUntilNextBoss: 30
         )
         
+        self.buildingNodes = self.gameState.buildings.map({ (building) -> BuildingNode in
+            return BuildingNode.newInstance(building: building, delegate: nil)
+        })
+        
         super.init(coder: aDecoder)
+    
         
-        self.buildingParentNode = self.getFirstChild()
-        
-        
-        (0...10).forEach { (_) in
-            let tavern = BTTavern().newInstance()
-            self.addBuilding(building: tavern)
-        }
-        
+ 
         self.dialogBox = self.childNode(withName: "dialog") as? DialogBoxNode
         self.dialogBox?.delegate = self
         self.dialogBox?.isUserInteractionEnabled = true
+        self.dialogBox?.alpha = 0.0
+        self.dialogBox?.zPosition = 200
     }
     
     func addBuilding(building: Building) -> Void {
         self.gameState.buildings.append(building)
         self.gameState.playerData.currentGold -= building.type.cost
         let buildingNode = BuildingNode.newInstance(building: building, delegate: self)
-        self.buildingParentNode?.addBuilding(node: buildingNode)
+        self.buildingNodes.append(buildingNode)
+        self.collectionNode.reloadData()
     }
+    
+    override func didMove(to view: SKView) {
+        
+        collectionNode = CollectionNode(at: view)
+        collectionNode.spaceBetweenItems = 40
+
+        collectionNode.dataSource = self
+        collectionNode.delegate = self
+
+        self.updatables.append(collectionNode)
+        
+        addChild(collectionNode)
+        
+        self.collectionNode(collectionNode, didShowItemAt: 0)
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+        self.updatables.forEach { (updatable) in
+            updatable.updateNode(currentTime: currentTime)
+        }
+    }
+    
+    func didSelectBuildingNode(buildingNode: BuildingNode) -> Void {
+        
+        if let type = buildingNode.building?.type as? BTTavern {
+            print("Selected tavern")
+            self.dialogBox?.run(SKAction.fadeIn(withDuration: 0.2), completion: {
+                self.dialogBox?.isUserInteractionEnabled = true
+            })
+        
+        } else if let type = buildingNode.building?.type as? BTJoinery {
+            self.townSceneDelegate?.town(scene: self, selectedBuildBuilding: self)
+        
+        } else if let type = buildingNode.building?.type as? BTForge {
+            // Allow the user to pick a card to upgrade
+            let cardViewerScene = TestCardViewerScene(fileNamed: "TestCardViewerScene")!
+            let view = SKView(frame: self.view!.frame)
+            view.presentScene(cardViewerScene)
+            cardViewerScene.backgroundColor = UIColor.clear
+            view.backgroundColor = UIColor.red
+            self.view?.addSubview(view)
+            scene?.scaleMode = .aspectFill
+            
+            
+        }
+    }
+    
+    // MARK: - CollectionNodeDataSource, CollectionNodeDelegate Implementation
+    
+    func numberOfItems() -> Int {
+        return self.gameState.buildings.count
+    }
+
+    func collectionNode(_ collection: CollectionNode, itemFor index: Index) -> CollectionNodeItem {
+        
+        let collectionNodeItem = CollectionNodeItem()
+        
+        let node = self.buildingNodes[index]
+        
+        node.removeFromParent()
+        collectionNodeItem.addChild(node)
+
+        return collectionNodeItem
+    }
+    
+    var lastSelectedIndex: Int? = nil
+    
+    func collectionNode(_ collectionNode: CollectionNode, didShowItemAt index: Index) {
+        
+        guard index != lastSelectedIndex else { return }
+
+        let nextNode = self.buildingNodes[index]
+        nextNode.run(SKAction.scale(to: 1.5, duration: 0.2))
+        nextNode.zPosition = 10
+
+        if let last = lastSelectedIndex {
+            let last = self.buildingNodes[last]
+            last.run(SKAction.scale(to: 1.2, duration: 0.2))
+            last.zPosition = 0
+        }
+
+        lastSelectedIndex = index
+    }
+
+    func collectionNode(_ collectionNode: CollectionNode, didSelectItem item: CollectionNodeItem, at index: Index) {
+        
+        if index == lastSelectedIndex {
+            self.didSelectBuildingNode(buildingNode: self.buildingNodes[index])
+        } else {
+            collectionNode.snap(to: index, withDuration: 0.2)
+            self.collectionNode(collectionNode, didShowItemAt: index)
+        }
+    }
+    
     
     // MARK: - BuildingNodeDelegate Implementation
     
     func onPressed(sender: BuildingNode) {
         self.townSceneDelegate?.town(scene: self, selectedBuildBuilding: sender)
         
-//        self.dialogBox?.run(SKAction.fadeIn(withDuration: 0.2), completion: {
-//            self.dialogBox?.isUserInteractionEnabled = true
-//        })
+        
     }
     
     // MARK: - DialogBoxNodeDelegate Implementation
@@ -111,7 +208,7 @@ class BuildingNode: SKSpriteNode {
         self.delegate?.onPressed(sender: self)
     }
     
-    static func newInstance(building: Building, delegate: BuildingNodeDelegate) -> BuildingNode {
+    static func newInstance(building: Building, delegate: BuildingNodeDelegate?) -> BuildingNode {
         // TODO: Make this so it creates everything we need to display a building
         let node = BuildingNode(imageNamed: "Highlander's_hut")
         node.size = CGSize(width: 100, height: 100)

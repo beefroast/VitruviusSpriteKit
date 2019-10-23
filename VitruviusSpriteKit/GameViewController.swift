@@ -15,6 +15,8 @@ import GameplayKit
 
 class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingViewControllerDelegate {
     
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,12 +25,13 @@ class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingVie
         
   
 //        let scene = getBattleScene()
-//        let scene = SKScene(fileNamed: "TownScene") as! TownScene
-//        scene.scaleMode = .aspectFit
-//        scene.townSceneDelegate = self
         
-        let scene = SKScene(fileNamed: "TestCardViewerScene")!
+        let scene = SKScene(fileNamed: "TownScene") as! TownScene
         scene.scaleMode = .aspectFit
+        scene.townSceneDelegate = self
+        
+//        let scene = SKScene(fileNamed: "TestCardViewerScene")!
+//        scene.scaleMode = .aspectFill
         
         // Present the scene
         view.ignoresSiblingOrder = false

@@ -70,6 +70,7 @@ extension BuildingType {
 }
 
 // TAVERN - Lets you undertake quests and sleep for HP.
+// JOINERY - Lets you build more buildings.
 // FORGE - Lets you upgrade cards.
 // ALCHEMIST - Lets you buy potions.
 // CHAPEL - Lets you donate cards (effectively the chapel from dominion).
@@ -82,6 +83,25 @@ class BTTavern: BuildingType {
     var name: String { get { return "Tavern" }}
     var cost: Int { get { return 0 }}
     var description: String { get { return "The tarvern allows you to undertake quests and sleep to regain hp." }}
+    var maxLevel: Int { get { return 5 }}
+    
+    func daysToUpdateFor(level: Int) -> Int {
+        switch level {
+        case 0: return 10
+        case 1: return 3
+        case 2: return 4
+        case 3: return 5
+        case 4: return 6
+        default: return 7
+        }
+    }
+}
+
+class BTJoinery: BuildingType {
+    
+    var name: String { get { return "Joinery" }}
+    var cost: Int { get { return 0 }}
+    var description: String { get { return "The joinery allows you to build new buildings" }}
     var maxLevel: Int { get { return 5 }}
     
     func daysToUpdateFor(level: Int) -> Int {
