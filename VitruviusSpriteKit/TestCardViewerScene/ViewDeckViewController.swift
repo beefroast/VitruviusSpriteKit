@@ -16,8 +16,23 @@ protocol ViewDeckViewControllerDelegate: AnyObject {
 
 class ViewDeckViewController: UIViewController, ViewDeckSceneDelegate {
 
+    var onSelectedCard: ((ViewDeckViewController, Card) -> Void)?
+    var onPressedClose: ((ViewDeckViewController) -> Void)?
+    
     weak var delegate: ViewDeckViewControllerDelegate? = nil
     @IBOutlet weak var btnClose: UIButton?
+    @IBOutlet weak var lblTitle: UILabel?
+    @IBOutlet weak var lblSubtitle: UILabel?
+    
+    // Dummy card here because CollectionNode crashes if there's
+    // nothing to display
+    var cards: [Card] = [CSStrike().instance()] {
+        didSet {
+            self.viewDeckScene?.cards = cards
+        }
+    }
+    
+    private var viewDeckScene: ViewDeckScene? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,37 +51,24 @@ class ViewDeckViewController: UIViewController, ViewDeckSceneDelegate {
         view.allowsTransparency = true
         scene.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         
-//        self.view.backgroundColor = UIColor.clear
-//        self.view.isOpaque = false
-        
-        let cards: [Card] = [
-            CSStrike().instance(level: 1, uuid: UUID()),
-            CSStrike().instance(),
-            CSStrike().instance(),
-            CSStrike().instance(),
-            CSDefend().instance(level: 1, uuid: UUID()),
-            CSDefend().instance(),
-            CSDefend().instance(),
-            CSDefend().instance(),
-            CSFireball().instance(),
-            CSRecall().instance(),
-        ]
-        
-        scene.cards = cards
+        scene.cards = self.cards
         scene.viewDeckDelegate = self
         
         view.presentScene(scene)
+        self.viewDeckScene = scene
         
     }
     
     @IBAction func onClosePressed(_ sender: Any) {
         self.delegate?.viewDeck(viewController: self, pressedClose: sender)
+        self.onPressedClose?(self)
     }
     
     // MARK: - ViewDeckSceneDelegate Implementation
     
     func viewDeck(scene: ViewDeckScene, selectedCard: Card, node: CardNode) {
         self.delegate?.viewDeck(viewController: self, selectedCard: selectedCard, node: node)
+        self.onSelectedCard?(self, selectedCard)
     }
     
     // MARK: - Static Helper Methods
@@ -75,6 +77,33 @@ class ViewDeckViewController: UIViewController, ViewDeckSceneDelegate {
         let sb = UIStoryboard.init(name: "Main", bundle: nil)
         let vc = sb.instantiateViewController(withIdentifier: "ViewDeckViewController") as! ViewDeckViewController
         vc.delegate = delegate
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .crossDissolve
+        return vc
+    }
+    
+    static var sharedInstance: ViewDeckViewController = {
+        let sb = UIStoryboard.init(name: "Main", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "ViewDeckViewController") as! ViewDeckViewController
+        let v = vc.view
+        return vc
+    }()
+    
+    static func newInstance(
+        titleText: String,
+        subtitleText: String,
+        cards: [Card],
+        onSelectedCard: @escaping (ViewDeckViewController, Card) -> Void,
+        onPressedClose: @escaping (ViewDeckViewController) -> Void) -> ViewDeckViewController {
+        
+        let vc = sharedInstance
+        vc.cards = cards
+        vc.lblTitle?.text = titleText
+        vc.lblSubtitle?.text = subtitleText
+        vc.onSelectedCard = onSelectedCard
+        vc.onPressedClose = onPressedClose
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .crossDissolve
         return vc
     }
 

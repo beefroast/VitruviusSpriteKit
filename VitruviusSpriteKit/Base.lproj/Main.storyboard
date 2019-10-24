@@ -63,16 +63,18 @@
                     </view>
                     <connections>
                         <outlet property="btnClose" destination="0ch-2R-Y1l" id="qKE-27-b3v"/>
+                        <outlet property="lblSubtitle" destination="dYK-5i-6CC" id="K4X-4F-Nbd"/>
+                        <outlet property="lblTitle" destination="GNg-yg-L7k" id="aQr-IX-hbZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fZ0-YV-0mj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-651" y="64"/>
         </scene>
-        <!--Game View Controller-->
+        <!--Town View Controller-->
         <scene sceneID="o1i-WT-DhI">
             <objects>
-                <viewController id="kXE-6G-wL1" customClass="GameViewController" customModule="VitruviusSpriteKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="kXE-6G-wL1" customClass="TownViewController" customModule="VitruviusSpriteKit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YH9-fn-YFE">
                         <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -151,6 +153,11 @@
                         <viewLayoutGuide key="safeArea" id="cy3-6E-Mfx"/>
                     </view>
                     <connections>
+                        <outlet property="lblCards" destination="KHj-V5-dE9" id="zDr-vX-yrM"/>
+                        <outlet property="lblDaysRemaining" destination="pw9-OH-iwA" id="PnJ-us-lZ6"/>
+                        <outlet property="lblGp" destination="7Ca-HK-tUS" id="QyE-G4-ipa"/>
+                        <outlet property="lblHp" destination="kgl-dp-Bca" id="Q6Q-Z0-vGL"/>
+                        <outlet property="skView" destination="cxy-do-fCQ" id="pt4-ie-JJ5"/>
                         <segue destination="02G-AU-d6k" kind="show" identifier="build" id="UcT-DI-hLo"/>
                     </connections>
                 </viewController>
