@@ -21,8 +21,9 @@ class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let view = self.view as! SKView
-        
+        let view = self.view.subviews.first { (view) -> Bool in
+            view as? SKView != nil
+        } as! SKView
   
 //        let scene = getBattleScene()
         
@@ -41,12 +42,12 @@ class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingVie
         view.presentScene(scene)
 
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            let vc = ViewDeckViewController.newInstance()
-            vc.modalPresentationStyle = .overCurrentContext
-            vc.modalTransitionStyle = .crossDissolve
-            self.present(vc, animated: true)
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+//            let vc = ViewDeckViewController.newInstance()
+//            vc.modalPresentationStyle = .overCurrentContext
+//            vc.modalTransitionStyle = .crossDissolve
+//            self.present(vc, animated: true)
+//        }
         
     }
     
