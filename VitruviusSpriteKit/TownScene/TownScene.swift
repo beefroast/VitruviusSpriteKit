@@ -104,14 +104,6 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate, Collectio
         
         } else if let type = buildingNode.building?.type as? BTForge {
             // Allow the user to pick a card to upgrade
-            let cardViewerScene = TestCardViewerScene(fileNamed: "TestCardViewerScene")!
-            let view = SKView(frame: self.view!.frame)
-            view.presentScene(cardViewerScene)
-            cardViewerScene.backgroundColor = UIColor.clear
-            view.backgroundColor = UIColor.red
-            self.view?.addSubview(view)
-            scene?.scaleMode = .aspectFill
-            
             
         }
     }

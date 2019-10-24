@@ -49,8 +49,9 @@
 		6472DF09234B3F80009B75C0 /* CardNodePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF08234B3F80009B75C0 /* CardNodePool.swift */; };
 		6472DF0C234C11B6009B75C0 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0B234C11B6009B75C0 /* Event.swift */; };
 		6472DF0F234C3D0F009B75C0 /* BattleScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0E234C3D0F009B75C0 /* BattleScene.swift */; };
-		64B4546B235EBE9000D43450 /* TestCardViewerScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 64B4546A235EBE9000D43450 /* TestCardViewerScene.sks */; };
-		64B4546D235EBE9F00D43450 /* TestCardViewerScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B4546C235EBE9F00D43450 /* TestCardViewerScene.swift */; };
+		64B4546B235EBE9000D43450 /* ViewDeckScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 64B4546A235EBE9000D43450 /* ViewDeckScene.sks */; };
+		64B4546D235EBE9F00D43450 /* ViewDeckScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B4546C235EBE9F00D43450 /* ViewDeckScene.swift */; };
+		64B4546F236158DD00D43450 /* ViewDeckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B4546E236158DD00D43450 /* ViewDeckViewController.swift */; };
 		64B9AF052358641D00610AD2 /* ChooseRewardNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF042358641D00610AD2 /* ChooseRewardNode.swift */; };
 		64B9AF07235A7A7500610AD2 /* Knapsack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF06235A7A7500610AD2 /* Knapsack.swift */; };
 		64B9AF0B235A8B3D00610AD2 /* KnapsackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B9AF0A235A8B3D00610AD2 /* KnapsackTests.swift */; };
@@ -138,8 +139,9 @@
 		6472DF08234B3F80009B75C0 /* CardNodePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNodePool.swift; sourceTree = "<group>"; };
 		6472DF0B234C11B6009B75C0 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		6472DF0E234C3D0F009B75C0 /* BattleScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleScene.swift; sourceTree = "<group>"; };
-		64B4546A235EBE9000D43450 /* TestCardViewerScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TestCardViewerScene.sks; sourceTree = "<group>"; };
-		64B4546C235EBE9F00D43450 /* TestCardViewerScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCardViewerScene.swift; sourceTree = "<group>"; };
+		64B4546A235EBE9000D43450 /* ViewDeckScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ViewDeckScene.sks; sourceTree = "<group>"; };
+		64B4546C235EBE9F00D43450 /* ViewDeckScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDeckScene.swift; sourceTree = "<group>"; };
+		64B4546E236158DD00D43450 /* ViewDeckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDeckViewController.swift; sourceTree = "<group>"; };
 		64B9AF042358641D00610AD2 /* ChooseRewardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseRewardNode.swift; sourceTree = "<group>"; };
 		64B9AF06235A7A7500610AD2 /* Knapsack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Knapsack.swift; sourceTree = "<group>"; };
 		64B9AF0A235A8B3D00610AD2 /* KnapsackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnapsackTests.swift; sourceTree = "<group>"; };
@@ -337,8 +339,9 @@
 		64B45469235EBE7B00D43450 /* TestCardViewerScene */ = {
 			isa = PBXGroup;
 			children = (
-				64B4546A235EBE9000D43450 /* TestCardViewerScene.sks */,
-				64B4546C235EBE9F00D43450 /* TestCardViewerScene.swift */,
+				64B4546E236158DD00D43450 /* ViewDeckViewController.swift */,
+				64B4546A235EBE9000D43450 /* ViewDeckScene.sks */,
+				64B4546C235EBE9F00D43450 /* ViewDeckScene.swift */,
 			);
 			path = TestCardViewerScene;
 			sourceTree = "<group>";
@@ -508,7 +511,7 @@
 				6472DEBB23485553009B75C0 /* ActorArea.sks in Resources */,
 				6472DEBD2348558A009B75C0 /* ActorScene.sks in Resources */,
 				6472DEB52347072F009B75C0 /* CardSceneWood.sks in Resources */,
-				64B4546B235EBE9000D43450 /* TestCardViewerScene.sks in Resources */,
+				64B4546B235EBE9000D43450 /* ViewDeckScene.sks in Resources */,
 				64B9AF0E235C211900610AD2 /* TownScene.sks in Resources */,
 				643588C82345FD92007334D9 /* LaunchScreen.storyboard in Resources */,
 				643588BC2345FD8F007334D9 /* Actions.sks in Resources */,
@@ -627,6 +630,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64B4546F236158DD00D43450 /* ViewDeckViewController.swift in Sources */,
 				64B9AF10235C212F00610AD2 /* TownScene.swift in Sources */,
 				6472DEF623487BAE009B75C0 /* FaithCards.swift in Sources */,
 				6472DEB7234727F7009B75C0 /* HandNode.swift in Sources */,
@@ -644,7 +648,7 @@
 				6472DEF223487BAE009B75C0 /* ICardPlayer.swift in Sources */,
 				64B9AF07235A7A7500610AD2 /* Knapsack.swift in Sources */,
 				6472DF07234ADA85009B75C0 /* ArrowNode.swift in Sources */,
-				64B4546D235EBE9F00D43450 /* TestCardViewerScene.swift in Sources */,
+				64B4546D235EBE9F00D43450 /* ViewDeckScene.swift in Sources */,
 				6472DF0C234C11B6009B75C0 /* Event.swift in Sources */,
 				6472DEBF234856E4009B75C0 /* ActorNode.swift in Sources */,
 				6472DEF523487BAE009B75C0 /* BattleState.swift in Sources */,

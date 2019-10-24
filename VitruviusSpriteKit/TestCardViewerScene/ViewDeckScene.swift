@@ -21,52 +21,58 @@ extension CollectionNode: IUpdatable {
     }
 }
 
-class TestCardViewerScene: SKScene, CollectionNodeDataSource, CollectionNodeDelegate {
+protocol ViewDeckSceneDelegate: AnyObject {
+    func viewDeck(scene: ViewDeckScene, selectedCard: Card, node: CardNode)
+}
 
-    private var collectionNode: CollectionNode!
-    private var cardNodes: [CardNode]!
+
+
+class ViewDeckScene: SKScene, CollectionNodeDataSource, CollectionNodeDelegate {
+
+    weak var viewDeckDelegate: ViewDeckSceneDelegate? = nil
+    
+    private var collectionNode: CollectionNode?
+    
+    var cards: [Card] = [] {
+        didSet {
+            self.cardNodes = cards.map({ (card) -> CardNode in
+                let c = CardNode.newInstance()
+                c.setupWith(card: card)
+                c.size = CGSize(width: 50, height: 50)
+                c.xScale = smallScale
+                c.yScale = smallScale
+                return c
+            })
+        }
+    }
+    
+    private var cardNodes: [CardNode] = [] {
+        didSet {
+            guard let collectionNode = self.collectionNode else { return }
+            collectionNode.reloadData()
+            self.collectionNode(collectionNode, didShowItemAt: 0)
+        }
+    }
     
     let bigScale: CGFloat = 1.0
     let smallScale: CGFloat = 0.8
     
     override func didMove(to view: SKView) {
         
-        collectionNode = CollectionNode(at: view)
+        view.allowsTransparency = true
+        self.backgroundColor = UIColor.clear
         
-        collectionNode.spaceBetweenItems = 40
-        
-        let cards = [
-            CSStrike().instance(level: 1, uuid: UUID()),
-            CSStrike().instance(),
-            CSStrike().instance(),
-            CSStrike().instance(),
-            CSDefend().instance(level: 1, uuid: UUID()),
-            CSDefend().instance(),
-            CSDefend().instance(),
-            CSDefend().instance(),
-            CSFireball().instance(),
-            CSRecall().instance(),
-        ]
-        
-        cardNodes = cards.map({ (card) -> CardNode in
-            let c = CardNode.newInstance()
-            c.setupWith(card: card)
-            c.size = CGSize(width: 50, height: 50)
-            c.xScale = smallScale
-            c.yScale = smallScale
-            return c
-        })
-        
-        collectionNode.dataSource = self
-        collectionNode.delegate = self
+        let node = CollectionNode(at: view)
+        collectionNode = node
+        collectionNode?.spaceBetweenItems = 40
+        collectionNode?.dataSource = self
+        collectionNode?.delegate = self
 
-        addChild(collectionNode)
-        
-        self.collectionNode(collectionNode, didShowItemAt: 0)
+        addChild(node)
     }
     
     override func update(_ currentTime: TimeInterval) {
-        collectionNode.update(currentTime)
+        collectionNode?.update(currentTime, dampingRatio: 0.001)
     }
     
     func numberOfItems() -> Int {
@@ -104,7 +110,11 @@ class TestCardViewerScene: SKScene, CollectionNodeDataSource, CollectionNodeDele
     func collectionNode(_ collectionNode: CollectionNode, didSelectItem item: CollectionNodeItem, at index: Index) {
         
         if index == lastSelectedIndex {
-            print("Selected: \(index)")
+            self.viewDeckDelegate?.viewDeck(
+                scene: self,
+                selectedCard: cards[index],
+                node: cardNodes[index]
+            )
         } else {
             collectionNode.snap(to: index, withDuration: 0.2)
             self.collectionNode(collectionNode, didShowItemAt: index)
