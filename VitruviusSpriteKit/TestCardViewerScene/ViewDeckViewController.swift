@@ -11,11 +11,13 @@ import SpriteKit
 
 protocol ViewDeckViewControllerDelegate: AnyObject {
     func viewDeck(viewController: ViewDeckViewController, selectedCard: Card, node: CardNode)
+    func viewDeck(viewController: ViewDeckViewController, pressedClose: Any?)
 }
 
 class ViewDeckViewController: UIViewController, ViewDeckSceneDelegate {
 
     weak var delegate: ViewDeckViewControllerDelegate? = nil
+    @IBOutlet weak var btnClose: UIButton?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,9 +34,10 @@ class ViewDeckViewController: UIViewController, ViewDeckSceneDelegate {
         view.showsNodeCount = true
         view.showsDrawCount = true
         view.allowsTransparency = true
+        scene.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         
-        self.view.backgroundColor = UIColor.clear
-        self.view.isOpaque = false
+//        self.view.backgroundColor = UIColor.clear
+//        self.view.isOpaque = false
         
         let cards: [Card] = [
             CSStrike().instance(level: 1, uuid: UUID()),
@@ -56,7 +59,10 @@ class ViewDeckViewController: UIViewController, ViewDeckSceneDelegate {
         
     }
     
-
+    @IBAction func onClosePressed(_ sender: Any) {
+        self.delegate?.viewDeck(viewController: self, pressedClose: sender)
+    }
+    
     // MARK: - ViewDeckSceneDelegate Implementation
     
     func viewDeck(scene: ViewDeckScene, selectedCard: Card, node: CardNode) {

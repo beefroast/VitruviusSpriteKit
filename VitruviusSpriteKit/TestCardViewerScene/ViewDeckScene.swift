@@ -60,7 +60,6 @@ class ViewDeckScene: SKScene, CollectionNodeDataSource, CollectionNodeDelegate {
     override func didMove(to view: SKView) {
         
         view.allowsTransparency = true
-        self.backgroundColor = UIColor.clear
         
         let node = CollectionNode(at: view)
         collectionNode = node

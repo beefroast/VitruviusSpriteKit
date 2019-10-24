@@ -44,8 +44,8 @@ class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingVie
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             let vc = ViewDeckViewController.newInstance()
             vc.modalPresentationStyle = .overCurrentContext
-            vc.view.isOpaque = false
-            self.present(vc, animated: true, completion: nil)
+            vc.modalTransitionStyle = .crossDissolve
+            self.present(vc, animated: true)
         }
         
     }
