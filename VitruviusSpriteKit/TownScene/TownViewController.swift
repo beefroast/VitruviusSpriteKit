@@ -9,9 +9,10 @@
 import UIKit
 import SpriteKit
 
-class TownViewController: UIViewController {
+class TownViewController: UIViewController, TavernViewControllerDelegate {
 
     var playerData: PlayerData!
+    var townScene: TownScene!
     
     @IBOutlet weak var lblHp: UILabel!
     @IBOutlet weak var lblGp: UILabel!
@@ -31,7 +32,8 @@ class TownViewController: UIViewController {
         
         let scene = SKScene(fileNamed: "TownScene") as! TownScene
         scene.scaleMode = .aspectFill
-//        scene.townSceneDelegate = self
+        scene.viewController = self
+        self.townScene = scene
                 
         // Present the scene
         skView.ignoresSiblingOrder = false
@@ -46,7 +48,41 @@ class TownViewController: UIViewController {
         self.lblHp.text = "\(data.currentHp)/\(data.maxHp)hp"
         self.lblGp.text = "\(data.currentGold)gp"
         self.lblCards.text = "\(data.decklist.count)"
-        self.lblDaysRemaining.text = "\(data.daysUntilNextBoss) until \(data.nextBoss) arrives."
+        self.lblDaysRemaining.text = "\(data.daysUntilNextBoss) days until \(data.nextBoss) arrives."
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let vc = segue.destination as? TavernViewController {
+            vc.delegate = self
+            
+        } else if let vc = segue.destination as? BattleViewController {
+            vc.battleState = sender as! BattleState
+        }
+    }
+    
+    // MARK: - TavernViewControllerDelegate Implementation
+    
+    func tavern(viewController: TavernViewController, selectedMission: Mission) {
+        
+        self.dismiss(animated: true) {
+            let battleState = selectedMission.getBattleState(gameState: self.townScene.gameState)
+            self.performSegue(withIdentifier: "battle", sender: battleState)
+        }
+    }
+    
+    func tavern(viewController: TavernViewController, selectedRest: Any?) {
+        self.dismiss(animated: true, completion: nil)
+        
+        self.playerData.currentHp = min(self.playerData.currentHp + 20, self.playerData.maxHp)
+        self.playerData.daysUntilNextBoss = self.playerData.daysUntilNextBoss - 1
+        self.setupWith(data: self.playerData)
+        
+        self.townScene.tavern(viewController: viewController, selectedRest: selectedRest)
+    }
+    
+    func tavern(viewController: TavernViewController, cancelled: Any?) {
+        self.dismiss(animated: true, completion: nil)
+        self.townScene.tavern(viewController: viewController, cancelled: cancelled)
     }
     
     // MARK: - Actions

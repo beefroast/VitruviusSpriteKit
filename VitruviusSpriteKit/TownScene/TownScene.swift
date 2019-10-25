@@ -29,8 +29,10 @@ protocol TownSceneDelegate: AnyObject {
 }
 
 
-class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate, CollectionNodeDataSource, CollectionNodeDelegate {
+class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate, CollectionNodeDataSource, CollectionNodeDelegate, TavernViewControllerDelegate {
 
+    weak var viewController: UIViewController? = nil
+    
     private var updatables: [IUpdatable] = []
     private var collectionNode: CollectionNode!
     private var buildingNodes: [BuildingNode]
@@ -94,10 +96,7 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate, Collectio
     func didSelectBuildingNode(buildingNode: BuildingNode) -> Void {
         
         if let type = buildingNode.building?.type as? BTTavern {
-            print("Selected tavern")
-            self.dialogBox?.run(SKAction.fadeIn(withDuration: 0.2), completion: {
-                self.dialogBox?.isUserInteractionEnabled = true
-            })
+            self.viewController?.performSegue(withIdentifier: "tavern", sender: self)
         
         } else if let type = buildingNode.building?.type as? BTJoinery {
             self.townSceneDelegate?.town(scene: self, selectedBuildBuilding: self)
@@ -183,6 +182,20 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate, Collectio
         dialog.run(SKAction.fadeOut(withDuration: 0.2)) {
             dialog.isUserInteractionEnabled = false
         }
+    }
+    
+    // MARK: - TavernViewControllerDelegate Implementation
+    
+    func tavern(viewController: TavernViewController, cancelled: Any?) {
+//        self.viewController?.dismiss(animated: true, completion: nil)
+    }
+    
+    func tavern(viewController: TavernViewController, selectedRest: Any?) {
+//        self.viewController?.dismiss(animated: true, completion: nil)
+    }
+    
+    func tavern(viewController: TavernViewController, selectedMission: Mission) {
+//        self.viewController?.dismiss(animated: true, completion: nil)
     }
     
 }

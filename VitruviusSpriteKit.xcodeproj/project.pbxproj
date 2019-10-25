@@ -11,6 +11,8 @@
 		6409603B234D9E770046E0A1 /* NeutralCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6409603A234D9E770046E0A1 /* NeutralCardTests.swift */; };
 		6409603E234DACFB0046E0A1 /* SerializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6409603D234DACFB0046E0A1 /* SerializationTests.swift */; };
 		64096040234DC9040046E0A1 /* EventSerializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6409603F234DC9040046E0A1 /* EventSerializationTests.swift */; };
+		641836252362A87200FABF66 /* TavernViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641836242362A87200FABF66 /* TavernViewController.swift */; };
+		641836272362B28400FABF66 /* BattleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641836262362B28400FABF66 /* BattleViewController.swift */; };
 		643588B82345FD8F007334D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588B72345FD8F007334D9 /* AppDelegate.swift */; };
 		643588BC2345FD8F007334D9 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 643588BB2345FD8F007334D9 /* Actions.sks */; };
 		643588C02345FD8F007334D9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588BF2345FD8F007334D9 /* GameViewController.swift */; };
@@ -96,6 +98,8 @@
 		6409603A234D9E770046E0A1 /* NeutralCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeutralCardTests.swift; sourceTree = "<group>"; };
 		6409603D234DACFB0046E0A1 /* SerializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializationTests.swift; sourceTree = "<group>"; };
 		6409603F234DC9040046E0A1 /* EventSerializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSerializationTests.swift; sourceTree = "<group>"; };
+		641836242362A87200FABF66 /* TavernViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TavernViewController.swift; sourceTree = "<group>"; };
+		641836262362B28400FABF66 /* BattleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleViewController.swift; sourceTree = "<group>"; };
 		643588B42345FD8F007334D9 /* VitruviusSpriteKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VitruviusSpriteKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		643588B72345FD8F007334D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		643588BB2345FD8F007334D9 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
@@ -220,6 +224,14 @@
 			path = SerializationTests;
 			sourceTree = "<group>";
 		};
+		641836232362A85D00FABF66 /* TavernViewController */ = {
+			isa = PBXGroup;
+			children = (
+				641836242362A87200FABF66 /* TavernViewController.swift */,
+			);
+			path = TavernViewController;
+			sourceTree = "<group>";
+		};
 		643588AB2345FD8F007334D9 = {
 			isa = PBXGroup;
 			children = (
@@ -334,6 +346,7 @@
 			children = (
 				6472DF0E234C3D0F009B75C0 /* BattleScene.swift */,
 				6472DEB223461A7E009B75C0 /* BattleScene.sks */,
+				641836262362B28400FABF66 /* BattleViewController.swift */,
 			);
 			path = BattleScene;
 			sourceTree = "<group>";
@@ -351,6 +364,7 @@
 		64B9AF0C235C20F800610AD2 /* TownScene */ = {
 			isa = PBXGroup;
 			children = (
+				641836232362A85D00FABF66 /* TavernViewController */,
 				64B9AF0D235C211900610AD2 /* TownScene.sks */,
 				64B9AF16235D6B6C00610AD2 /* Building.swift */,
 				64B9AF0F235C212F00610AD2 /* TownScene.swift */,
@@ -643,6 +657,7 @@
 				6472DEFA23487BAE009B75C0 /* Enemy.swift in Sources */,
 				64B9AF17235D6B6C00610AD2 /* Building.swift in Sources */,
 				6472DEB923485396009B75C0 /* PlayAreaNode.swift in Sources */,
+				641836252362A87200FABF66 /* TavernViewController.swift in Sources */,
 				64B9AF15235C7AC800610AD2 /* SelectBuildingViewController.swift in Sources */,
 				643588EE2345FEEF007334D9 /* CardNode.swift in Sources */,
 				6472DEFB23487BAE009B75C0 /* CardStrategy.swift in Sources */,
@@ -665,6 +680,7 @@
 				6472DEF823487BAE009B75C0 /* IBody.swift in Sources */,
 				644450D6236172B2002567FF /* TownViewController.swift in Sources */,
 				6472DEF323487BAE009B75C0 /* SharpCards.swift in Sources */,
+				641836272362B28400FABF66 /* BattleViewController.swift in Sources */,
 				64B9AF052358641D00610AD2 /* ChooseRewardNode.swift in Sources */,
 				6472DF09234B3F80009B75C0 /* CardNodePool.swift in Sources */,
 				6472DEF723487BAE009B75C0 /* MightCards.swift in Sources */,
