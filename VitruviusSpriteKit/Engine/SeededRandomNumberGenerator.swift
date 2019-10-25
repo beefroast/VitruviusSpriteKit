@@ -59,3 +59,54 @@ class SeededRandomNumberGenerator: RandomNumberGenerator, Codable {
     
     
 }
+
+class RandomnessSource: Codable {
+    
+    let drawRng: LinearCongruentialGenerator
+    let enemyRng: LinearCongruentialGenerator
+    let rewardRng: LinearCongruentialGenerator
+    let missionRng: LinearCongruentialGenerator
+    
+    init(s: UInt32) {
+        
+        let rng = LinearCongruentialGenerator(s: s)
+        
+        self.drawRng = LinearCongruentialGenerator.init(s: rng.next32())
+        self.enemyRng = LinearCongruentialGenerator.init(s: rng.next32())
+        self.rewardRng = LinearCongruentialGenerator.init(s: rng.next32())
+        self.missionRng = LinearCongruentialGenerator.init(s: rng.next32())
+        
+    }
+    
+}
+
+class LinearCongruentialGenerator: Codable, RandomNumberGenerator {
+    
+    let a: UInt32 = 1664525
+    let c: UInt32 = 1013904223
+    var s: UInt32
+    
+    init(s: UInt32) {
+        self.s = s
+    }
+    
+    func next32() -> UInt32 {
+        self.s = (a &* s) &+ c
+        return s
+    }
+    
+    func next() -> UInt64 {
+        return UInt64(next32())
+    }
+    
+    func nextInt(exclusiveUpperBound: UInt64) -> UInt64 {
+        let x = next()
+        return x % exclusiveUpperBound
+    }
+    
+    func nextInt(exclusiveUpperBound: Int) -> Int {
+        let x = Int(next32())
+        return x % exclusiveUpperBound
+    }
+    
+}

@@ -9,12 +9,6 @@
 import Foundation
 
 
-enum Faction: Int, Codable {
-    case player
-    case allies
-    case goodGuys
-    case enemies
-}
 
 class BattleState: Codable {
     
