@@ -23,6 +23,13 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let r = RandomnessSource.init(seed: "GEVDNHLZPHYGWNLWALKD")
+        let x = try! JSONEncoder().encode(r)
+        let s = String.init(data: x, encoding: .utf8)
+        print(s!)
+        
+        
+        
         self.playerData = PlayerData.newPlayerFor(name: "Benji", characterClass: .wizard)
         
         self.lblCards.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(onCardsTapped(sender:))))
