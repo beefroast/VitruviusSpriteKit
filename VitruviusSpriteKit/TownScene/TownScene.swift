@@ -12,11 +12,13 @@ import CollectionNode
 
 class GameState: Codable {
     
+    var random: RandomnessSource
     var playerData: PlayerData
     var buildings: [Building]
     var daysUntilNextBoss: Int
     
-    init(playerData: PlayerData, buildings: [Building], daysUntilNextBoss: Int) {
+    init(random: RandomnessSource, playerData: PlayerData, buildings: [Building], daysUntilNextBoss: Int) {
+        self.random = random
         self.playerData = playerData
         self.buildings = buildings
         self.daysUntilNextBoss = daysUntilNextBoss
@@ -44,6 +46,7 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate, Collectio
     required init?(coder aDecoder: NSCoder) {
         
         self.gameState = GameState.init(
+            random: RandomnessSource(seed: "Ghost of perdition"),
             playerData: PlayerData.newPlayerFor(name: "Benji", characterClass: .wizard),
             buildings: [BTTavern().newInstance(), BTJoinery().newInstance()],
             daysUntilNextBoss: 30

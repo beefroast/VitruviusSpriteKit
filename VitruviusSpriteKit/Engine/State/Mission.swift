@@ -62,7 +62,7 @@ class Mission {
                     EventPrinterEffect.init().withWrapper(uuid: UUID())
                 ]
             ),
-            rng: SeededRandomNumberGenerator(count: 0, seed: 0)
+            rng: gameState.random
         )
                 
         

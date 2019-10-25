@@ -179,7 +179,7 @@ class CrabEnemyStrategy: EnemyStrategy {
         )
     }
     
-    func with(challengeRating: Int, rng: SeededRandomNumberGenerator) -> Enemy {
+    func with(challengeRating: Int, rng: RandomIntegerGenerator) -> Enemy {
         // TODO: We can adjust the difficulty of the crab in here, giving it
         // more health or whatever.
         return Enemy(
@@ -215,11 +215,11 @@ class SuccubusEnemyStrategy: EnemyStrategy {
                         || card.strategy.attributes.contains(.debuff) {
                         
                         // Target an enemy
-                        let enemyTarget = state.getAllOpponentActors(faction: .enemies).randomElement(rng: state.rng)
+                        let enemyTarget = state.getAllOpponentActors(faction: .enemies).randomElement(rng: state.rng.enemyRng)
                         return Event.playCard(PlayCardEvent.init(actorUuid: enemy.uuid, cardUuid: card.uuid, target: enemyTarget.uuid))
                     
                     } else {
-                        let friendlyTarget = state.enemies.randomElement(rng: state.rng)
+                        let friendlyTarget = state.enemies.randomElement(rng: state.rng.enemyRng)
                         return Event.playCard(PlayCardEvent.init(actorUuid: enemy.uuid, cardUuid: card.uuid, target: friendlyTarget.uuid))
                     }
                 })

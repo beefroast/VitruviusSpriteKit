@@ -124,7 +124,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
         let cardOfferer = CardOfferer()
         
         let offeredCards = cardOfferer.getCards(
-            rng: &battleState.rng,
+            rng: battleState.rng.rewardRng,
             classes: .neutral,
             attributes: .potion,
             amount: 3

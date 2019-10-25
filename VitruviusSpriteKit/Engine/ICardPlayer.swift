@@ -134,7 +134,7 @@ class DrawPile: Codable {
         self.draws = self.randomPool.map({ _ in return .random })
     }
     
-    func drawRandom(rng: SeededRandomNumberGenerator) -> Card? {
+    func drawRandom(rng: RandomIntegerGenerator) -> Card? {
         
         let draw = self.draws.remove(at: 0)
         
