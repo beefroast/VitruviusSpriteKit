@@ -12,7 +12,6 @@ import SpriteKit
 class TownViewController: UIViewController, TavernViewControllerDelegate {
 
     var gameState: GameState!
-    var playerData: PlayerData!
     var townScene: TownScene!
     
     @IBOutlet weak var lblHp: UILabel!
@@ -24,19 +23,11 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let r = RandomnessSource.init(seed: "GEVDNHLZPHYGWNLWALKD")
-        let x = try! JSONEncoder().encode(r)
-        let s = String.init(data: x, encoding: .utf8)
-        print(s!)
-        
-        
-        
-        self.playerData = PlayerData.newPlayerFor(name: "Benji", characterClass: .wizard)
-        
+                
         self.lblCards.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(onCardsTapped(sender:))))
         self.lblCards.isUserInteractionEnabled = true
         
-        self.setupWith(data: self.playerData)
+        self.setupWith(data: self.gameState.playerData)
         
         let scene = SKScene(fileNamed: "TownScene") as! TownScene
         scene.scaleMode = .aspectFill
@@ -82,9 +73,9 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
     func tavern(viewController: TavernViewController, selectedRest: Any?) {
         self.dismiss(animated: true, completion: nil)
         
-        self.playerData.currentHp = min(self.playerData.currentHp + 20, self.playerData.maxHp)
-        self.playerData.daysUntilNextBoss = self.playerData.daysUntilNextBoss - 1
-        self.setupWith(data: self.playerData)
+        self.gameState.playerData.currentHp = min(self.gameState.playerData.currentHp + 20, self.gameState.playerData.maxHp)
+        self.gameState.playerData.daysUntilNextBoss = self.gameState.playerData.daysUntilNextBoss - 1
+        self.setupWith(data: self.gameState.playerData)
         
         self.townScene.tavern(viewController: viewController, selectedRest: selectedRest)
     }
@@ -101,7 +92,7 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
         let vc = ViewDeckViewController.newInstance(
             titleText: "Your deck",
             subtitleText: "You can upgrade your deck in buildings or on adventures.",
-            cards: self.playerData.decklist,
+            cards: self.gameState.playerData.decklist,
             onSelectedCard: { (vc, card) in
                 print("Selected \(card.name).")
                 vc.dismiss(animated: true, completion: nil)
