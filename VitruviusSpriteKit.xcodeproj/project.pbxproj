@@ -19,6 +19,7 @@
 		64183631236410F500FABF66 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64183630236410F500FABF66 /* GameState.swift */; };
 		64183633236414E900FABF66 /* GameNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64183632236414E900FABF66 /* GameNavigationController.swift */; };
 		641836352364177A00FABF66 /* BuildingNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641836342364177A00FABF66 /* BuildingNode.swift */; };
+		64183638236423D400FABF66 /* AutoSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64183637236423D400FABF66 /* AutoSaver.swift */; };
 		643588B82345FD8F007334D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588B72345FD8F007334D9 /* AppDelegate.swift */; };
 		643588BC2345FD8F007334D9 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 643588BB2345FD8F007334D9 /* Actions.sks */; };
 		643588C02345FD8F007334D9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643588BF2345FD8F007334D9 /* GameViewController.swift */; };
@@ -112,6 +113,7 @@
 		64183630236410F500FABF66 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		64183632236414E900FABF66 /* GameNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameNavigationController.swift; sourceTree = "<group>"; };
 		641836342364177A00FABF66 /* BuildingNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingNode.swift; sourceTree = "<group>"; };
+		64183637236423D400FABF66 /* AutoSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSaver.swift; sourceTree = "<group>"; };
 		643588B42345FD8F007334D9 /* VitruviusSpriteKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VitruviusSpriteKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		643588B72345FD8F007334D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		643588BB2345FD8F007334D9 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
@@ -263,6 +265,14 @@
 			path = SelectCharacterViewController;
 			sourceTree = "<group>";
 		};
+		64183636236423C400FABF66 /* Saving and Loading */ = {
+			isa = PBXGroup;
+			children = (
+				64183637236423D400FABF66 /* AutoSaver.swift */,
+			);
+			path = "Saving and Loading";
+			sourceTree = "<group>";
+		};
 		643588AB2345FD8F007334D9 = {
 			isa = PBXGroup;
 			children = (
@@ -288,6 +298,7 @@
 		643588B62345FD8F007334D9 /* VitruviusSpriteKit */ = {
 			isa = PBXGroup;
 			children = (
+				64183636236423C400FABF66 /* Saving and Loading */,
 				6418362D236408BF00FABF66 /* SelectCharacterViewController */,
 				64B45469235EBE7B00D43450 /* TestCardViewerScene */,
 				64B9AF11235C295900610AD2 /* DialogScene */,
@@ -683,6 +694,7 @@
 			files = (
 				64B4546F236158DD00D43450 /* ViewDeckViewController.swift in Sources */,
 				64B9AF10235C212F00610AD2 /* TownScene.swift in Sources */,
+				64183638236423D400FABF66 /* AutoSaver.swift in Sources */,
 				6472DEF623487BAE009B75C0 /* FaithCards.swift in Sources */,
 				6472DEB7234727F7009B75C0 /* HandNode.swift in Sources */,
 				6472DEF123487BAE009B75C0 /* EventHandler.swift in Sources */,

@@ -24,6 +24,7 @@ class BattleViewController: UIViewController, BattleSceneDelegate {
         scene.setBattleState(battleState: self.gameState.currentBattle!)
         scene.battleSceneDelegate = self
         
+        
         // Present the scene
         view.ignoresSiblingOrder = false
         view.showsFPS = true
