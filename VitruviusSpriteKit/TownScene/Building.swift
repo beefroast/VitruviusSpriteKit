@@ -22,6 +22,10 @@ class Building: Codable {
         self.daysUntilFinished = daysUntilFinished
     }
     
+    func descriptiveName() -> String {
+        return "lvl \(level) \(self.type.name)"
+    }
+    
     // MARK: - Codable Implementation
     
     private enum CodingKeys: String, CodingKey {
