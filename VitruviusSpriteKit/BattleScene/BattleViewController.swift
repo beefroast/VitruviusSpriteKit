@@ -48,6 +48,9 @@ class BattleViewController: UIViewController, BattleSceneDelegate {
         // TODO: Continue the mission
         // for now we just go back to the town
         
+        // TODO: This is shonky as..
+        self.gameState.playerData.currentHp = self.gameState.currentBattle!.player.body.hp
+        
         self.gameState.currentBattle = nil
         let vc = TownViewController.newInstance(gameState: self.gameState)
         self.navigationController?.setViewControllers([vc], animated: false)
