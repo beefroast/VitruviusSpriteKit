@@ -29,4 +29,12 @@ class BattleViewController: UIViewController {
         view.showsDrawCount = true
         view.presentScene(scene)
     }
+    
+    static func newInstance(battleState: BattleState) -> BattleViewController {
+        let sb = UIStoryboard.init(name: "Main", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "battle") as! BattleViewController
+        vc.battleState = battleState
+        return vc
+        
+    }
 }

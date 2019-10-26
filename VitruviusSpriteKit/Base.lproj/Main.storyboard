@@ -146,11 +146,12 @@
             </objects>
             <point key="canvasLocation" x="-651" y="64"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Game Navigation Controller-->
         <scene sceneID="2jP-a7-Qld">
             <objects>
-                <navigationController navigationBarHidden="YES" id="vMT-08-ubb" sceneMemberID="viewController">
+                <navigationController id="vMT-08-ubb" customClass="GameNavigationController" customModule="VitruviusSpriteKit" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tzu-UX-2G6">
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -239,7 +240,7 @@
         <!--Battle View Controller-->
         <scene sceneID="atr-6J-42z">
             <objects>
-                <viewController id="ACV-fp-H4U" customClass="BattleViewController" customModule="VitruviusSpriteKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="battle" id="ACV-fp-H4U" customClass="BattleViewController" customModule="VitruviusSpriteKit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rym-3C-CyB" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

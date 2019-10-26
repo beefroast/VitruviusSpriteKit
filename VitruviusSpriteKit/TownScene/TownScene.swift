@@ -23,36 +23,21 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate, Collectio
     
     private var updatables: [IUpdatable] = []
     private var collectionNode: CollectionNode!
-    private var buildingNodes: [BuildingNode]
-    var gameState: GameState
-    var dialogBox: DialogBoxNode?
+    private var buildingNodes: [BuildingNode]!
+    var gameState: GameState!
+    
     weak var townSceneDelegate: TownSceneDelegate? = nil
     var buildingParentNode: BuildingParentNode? = nil
     
     required init?(coder aDecoder: NSCoder) {
-        
-        self.gameState = GameState.init(
-            random: RandomnessSource(seed: "Ghost of perdition"),
-            playerData: PlayerData.newPlayerFor(name: "Benji", characterClass: .wizard),
-            buildings: [BTTavern().newInstance(), BTJoinery().newInstance()],
-            daysUntilNextBoss: 30,
-            currentMission: nil,
-            currentBattle: nil
-        )
-        
+        super.init(coder: aDecoder)
+    }
+    
+    func setGameState(gameState: GameState) -> Void {
+        self.gameState = gameState
         self.buildingNodes = self.gameState.buildings.map({ (building) -> BuildingNode in
             return BuildingNode.newInstance(building: building, delegate: nil)
         })
-        
-        super.init(coder: aDecoder)
-    
-        
- 
-        self.dialogBox = self.childNode(withName: "dialog") as? DialogBoxNode
-        self.dialogBox?.delegate = self
-        self.dialogBox?.isUserInteractionEnabled = true
-        self.dialogBox?.alpha = 0.0
-        self.dialogBox?.zPosition = 200
     }
     
     func addBuilding(building: Building) -> Void {

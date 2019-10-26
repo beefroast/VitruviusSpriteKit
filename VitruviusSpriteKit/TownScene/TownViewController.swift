@@ -32,6 +32,7 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
         let scene = SKScene(fileNamed: "TownScene") as! TownScene
         scene.scaleMode = .aspectFill
         scene.viewController = self
+        scene.setGameState(gameState: gameState)
         self.townScene = scene
                 
         // Present the scene
@@ -62,16 +63,13 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
     // MARK: - TavernViewControllerDelegate Implementation
     
     func tavern(viewController: TavernViewController, selectedMission: Mission) {
-        
-        
-        self.dismiss(animated: true) {
-            let battleState = selectedMission.getBattleState(gameState: self.townScene.gameState)
-            self.performSegue(withIdentifier: "battle", sender: battleState)
-        }
+        let battleState = selectedMission.getBattleState(gameState: self.townScene.gameState)
+        let vc = BattleViewController.newInstance(battleState: battleState)
+        self.navigationController?.setViewControllers([vc], animated: false)
     }
     
     func tavern(viewController: TavernViewController, selectedRest: Any?) {
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
         
         self.gameState.playerData.currentHp = min(self.gameState.playerData.currentHp + 20, self.gameState.playerData.maxHp)
         self.gameState.playerData.daysUntilNextBoss = self.gameState.playerData.daysUntilNextBoss - 1
@@ -81,8 +79,7 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
     }
     
     func tavern(viewController: TavernViewController, cancelled: Any?) {
-        self.dismiss(animated: true, completion: nil)
-        self.townScene.tavern(viewController: viewController, cancelled: cancelled)
+        self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Actions
