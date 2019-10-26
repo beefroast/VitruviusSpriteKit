@@ -64,7 +64,8 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
     
     func tavern(viewController: TavernViewController, selectedMission: Mission) {
         let battleState = selectedMission.getBattleState(gameState: self.townScene.gameState)
-        let vc = BattleViewController.newInstance(battleState: battleState)
+        gameState.currentBattle = battleState
+        let vc = BattleViewController.newInstance(gameState: gameState)
         self.navigationController?.setViewControllers([vc], animated: false)
     }
     
@@ -101,5 +102,13 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
         self.present(vc, animated: true, completion: nil)
     }
     
-
+    // MARK: - Static Helper methods
+    
+    static func newInstance(gameState: GameState) -> TownViewController {
+        let sb = UIStoryboard.init(name: "Main", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "town") as! TownViewController
+        vc.gameState = gameState
+        return vc
+    }
+    
 }

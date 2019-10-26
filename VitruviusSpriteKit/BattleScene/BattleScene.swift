@@ -16,8 +16,6 @@ protocol BattleSceneDelegate: AnyObject {
 
 class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventHandlerDelegate, ChooseRewardNodeDelegate {
 
-    
-
     weak var battleSceneDelegate: BattleSceneDelegate? = nil
     
     enum State {
@@ -435,6 +433,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                    
                case .onBattleWon:
                    
+                self.battleSceneDelegate?.onBattleWon(sender: self)
                 self.handNode.setCardsInteraction(enabled: false)
                 self.offerCards()
                 

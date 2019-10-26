@@ -9,8 +9,9 @@
 import UIKit
 import SpriteKit
 
-class BattleViewController: UIViewController {
-    
+class BattleViewController: UIViewController, BattleSceneDelegate {
+
+    var gameState: GameState!
     var battleState: BattleState!
     
     override func viewDidLoad() {
@@ -20,8 +21,9 @@ class BattleViewController: UIViewController {
         
         let scene = SKScene(fileNamed: "BattleScene") as! BattleScene
         scene.scaleMode = .aspectFill
-        scene.setBattleState(battleState: battleState)
-
+        scene.setBattleState(battleState: self.gameState.currentBattle!)
+        scene.battleSceneDelegate = self
+        
         // Present the scene
         view.ignoresSiblingOrder = false
         view.showsFPS = true
@@ -30,11 +32,27 @@ class BattleViewController: UIViewController {
         view.presentScene(scene)
     }
     
-    static func newInstance(battleState: BattleState) -> BattleViewController {
+    static func newInstance(gameState: GameState) -> BattleViewController {
         let sb = UIStoryboard.init(name: "Main", bundle: nil)
         let vc = sb.instantiateViewController(withIdentifier: "battle") as! BattleViewController
-        vc.battleState = battleState
+        vc.gameState = gameState
         return vc
         
+    }
+    
+    // MARK: - BattleSceneDelegate Implementation
+    
+    func onBattleWon(sender: BattleScene) {
+        
+        // TODO: Continue the mission
+        // for now we just go back to the town
+        
+        self.gameState.currentBattle = nil
+        let vc = TownViewController.newInstance(gameState: self.gameState)
+        self.navigationController?.setViewControllers([vc], animated: false)
+    }
+    
+    func onBattleLost(sender: BattleScene) {
+        // TODO: Show game over screen.
     }
 }

@@ -40,7 +40,8 @@ class GameState: Codable {
             playerData: PlayerData.newPlayerFor(name: name, characterClass: characterClass),
             buildings: [
                 BTTavern().newInstance(),
-                BTJoinery().newInstance()
+                BTJoinery().newInstance(),
+                BTForge().newInstance()
             ],
             daysUntilNextBoss: 30,
             currentMission: nil,

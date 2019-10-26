@@ -25,7 +25,7 @@ class BuildingNode: SKSpriteNode {
     static func newInstance(building: Building, delegate: BuildingNodeDelegate?) -> BuildingNode {
         // TODO: Make this so it creates everything we need to display a building
         let node = BuildingNode(imageNamed: "Highlander's_hut")
-        node.size = CGSize(width: 100, height: 100)
+        node.size = CGSize(width: 300, height: 400)
         node.delegate = delegate
         node.building = building
         
