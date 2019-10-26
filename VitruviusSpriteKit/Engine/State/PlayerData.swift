@@ -13,10 +13,6 @@ class PlayerData: Codable {
     
     let uuid: UUID
     let decklist: [Card]   // Cards need to be duplictable
-    var daysUntilNextBoss: Int
-    var bossesKilled: Int
-    var nextBoss: String
-    let currentXp: Int
     var currentGold: Int
     var currentHp: Int
     var maxHp: Int
@@ -26,10 +22,6 @@ class PlayerData: Codable {
     init(
         uuid: UUID,
         decklist: [Card],
-        daysUntilNextBoss: Int,
-        bossesKilled: Int,
-        nextBoss: String,
-        currentXp: Int,
         currentGold: Int,
         currentHp: Int,
         maxHp: Int,
@@ -38,10 +30,6 @@ class PlayerData: Codable {
         
         self.uuid = uuid
         self.decklist = decklist
-        self.daysUntilNextBoss = daysUntilNextBoss
-        self.bossesKilled = bossesKilled
-        self.nextBoss = nextBoss
-        self.currentXp = currentXp
         self.currentGold = currentGold
         self.currentHp = currentHp
         self.maxHp = maxHp
@@ -72,10 +60,6 @@ class PlayerData: Codable {
         return PlayerData.init(
             uuid: UUID(),
             decklist: starterDeckFor(characterClass: characterClass),
-            daysUntilNextBoss: 30,
-            bossesKilled: 0,
-            nextBoss: "Goblin Horde",
-            currentXp: 0,
             currentGold: 100,
             currentHp: 70,
             maxHp: 70,

@@ -48,7 +48,6 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
         self.lblHp.text = "\(data.currentHp)/\(data.maxHp)hp"
         self.lblGp.text = "\(data.currentGold)gp"
         self.lblCards.text = "\(data.decklist.count)"
-        self.lblDaysRemaining.text = "\(data.daysUntilNextBoss) days until \(data.nextBoss) arrives."
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -73,7 +72,7 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
         self.navigationController?.popViewController(animated: true)
         
         self.gameState.playerData.currentHp = min(self.gameState.playerData.currentHp + 20, self.gameState.playerData.maxHp)
-        self.gameState.playerData.daysUntilNextBoss = self.gameState.playerData.daysUntilNextBoss - 1
+        self.gameState.daysUntilNextBoss = self.gameState.daysUntilNextBoss - 1
         self.setupWith(data: self.gameState.playerData)
         
         self.townScene.tavern(viewController: viewController, selectedRest: selectedRest)
