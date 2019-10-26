@@ -99,7 +99,11 @@ class PlayerData: Codable {
         self.characterClass = characterClass
     }
     
+    
     func newActor() -> Player {
+        
+        let decklist = self.decklist.map({ $0.duplicate() })
+        
         return Player(
             uuid: self.uuid,
             name: self.name,
@@ -107,7 +111,7 @@ class PlayerData: Codable {
             body: Body(block: 0, hp: self.currentHp, maxHp: self.maxHp),
             cardZones: CardZones(
                 hand: Hand.init(),
-                drawPile: DrawPile.init(cards: self.decklist),
+                drawPile: DrawPile.init(cards: decklist),
                 discard: DiscardPile.init()),
             currentMana: 0,
             maxMana: 3
