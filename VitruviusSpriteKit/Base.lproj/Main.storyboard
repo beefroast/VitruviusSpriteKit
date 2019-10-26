@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kXE-6G-wL1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vMT-08-ubb">
     <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -9,6 +9,81 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Select Character View Controller-->
+        <scene sceneID="zf7-tk-7d2">
+            <objects>
+                <viewController id="9L4-1E-1gV" customClass="SelectCharacterViewController" customModule="VitruviusSpriteKit" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="diA-TW-TNv">
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4cI-3M-grw">
+                                <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="79" id="UE0-78-9DG" customClass="TavernViewControllerTableViewCell" customModule="VitruviusSpriteKit" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="896" height="79"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UE0-78-9DG" id="qrG-RW-EdN">
+                                            <rect key="frame" x="44" y="0.0" width="808" height="79"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select a card to upgrade" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yfa-m8-GSV">
+                                                    <rect key="frame" x="20" y="11" width="768" height="41"/>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="17"/>
+                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upgrading removes a card from your deck for n days." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A4J-gv-6GJ">
+                                                    <rect key="frame" x="20" y="48" width="768" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" placeholder="YES" id="XUg-ie-SDl"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-Italic" family="Avenir Next" pointSize="14"/>
+                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="yfa-m8-GSV" secondAttribute="trailing" id="0oL-9i-uSf"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="A4J-gv-6GJ" secondAttribute="bottom" id="7Wx-w9-hFT"/>
+                                                <constraint firstItem="yfa-m8-GSV" firstAttribute="leading" secondItem="qrG-RW-EdN" secondAttribute="leadingMargin" id="IcR-hR-aTa"/>
+                                                <constraint firstItem="A4J-gv-6GJ" firstAttribute="top" secondItem="yfa-m8-GSV" secondAttribute="bottom" constant="-4" id="Ln1-qE-bi4"/>
+                                                <constraint firstItem="yfa-m8-GSV" firstAttribute="top" secondItem="qrG-RW-EdN" secondAttribute="topMargin" id="fla-We-1sD"/>
+                                                <constraint firstItem="A4J-gv-6GJ" firstAttribute="leading" secondItem="qrG-RW-EdN" secondAttribute="leadingMargin" id="h67-mO-M0j"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="A4J-gv-6GJ" secondAttribute="trailing" id="q2e-Ge-Wvd"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="lblHeader" destination="yfa-m8-GSV" id="Och-dH-IRo"/>
+                                            <outlet property="lblSubtitle" destination="A4J-gv-6GJ" id="DYR-F9-Fi2"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="9L4-1E-1gV" id="j7Z-wv-trS"/>
+                                    <outlet property="delegate" destination="9L4-1E-1gV" id="R95-IY-Rdf"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="4cI-3M-grw" secondAttribute="bottom" id="7P9-oa-HWc"/>
+                            <constraint firstAttribute="trailing" secondItem="4cI-3M-grw" secondAttribute="trailing" id="LzS-WB-2fw"/>
+                            <constraint firstItem="4cI-3M-grw" firstAttribute="leading" secondItem="diA-TW-TNv" secondAttribute="leading" id="bPw-rg-tnF"/>
+                            <constraint firstItem="4cI-3M-grw" firstAttribute="top" secondItem="diA-TW-TNv" secondAttribute="top" id="tEx-4s-2s3"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="JPn-xi-8W4"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ZgH-ew-0Mn"/>
+                    <connections>
+                        <outlet property="tableView" destination="4cI-3M-grw" id="E2f-5F-M2k"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aCE-Am-dkG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-675" y="832"/>
+        </scene>
         <!--View Deck View Controller-->
         <scene sceneID="vle-nW-6d7">
             <objects>
@@ -70,6 +145,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fZ0-YV-0mj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-651" y="64"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="2jP-a7-Qld">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="vMT-08-ubb" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tzu-UX-2G6">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="9L4-1E-1gV" kind="relationship" relationship="rootViewController" id="Gil-uw-Mb2"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LgX-DM-O8b" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1408" y="832"/>
         </scene>
         <!--Tavern View Controller-->
         <scene sceneID="KA4-8X-pDJ">
@@ -165,7 +255,7 @@
         <!--Town View Controller-->
         <scene sceneID="o1i-WT-DhI">
             <objects>
-                <viewController id="kXE-6G-wL1" customClass="TownViewController" customModule="VitruviusSpriteKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="town" id="kXE-6G-wL1" customClass="TownViewController" customModule="VitruviusSpriteKit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YH9-fn-YFE">
                         <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

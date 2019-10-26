@@ -36,6 +36,21 @@ enum CharacterClass: Int, Codable {
     func allowedCardClasses() -> CardClasses {
         return CardClasses.init(rawValue: self.rawValue + 1)
     }
+    
+    static func asList() -> [CharacterClass] {
+        return [
+        .swashbucker,
+        .barbarian,
+        .priest,
+        .wizard,
+        .scoundrel,
+        .monk,
+        .thief,
+        .paladin,
+        .spellsword,
+        .sage
+        ]
+    }
 }
 
 

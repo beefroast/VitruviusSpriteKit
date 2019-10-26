@@ -34,7 +34,11 @@ class TavernViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidLoad() {
         self.availableMissions = [
-            Mission.init(name: "Kill the orcs, slay the horde, destroy the orcs", totalDays: 3)
+            Mission.init(
+                name: "Kill the orcs, slay the horde, destroy the orcs",
+                totalDays: 3,
+                encountersRemaining: 1
+            )
         ]
     }
 

@@ -8,19 +8,22 @@
 
 import Foundation
 
-class Mission {
+class Mission: Codable {
     
     let name: String
     let totalDays: Int
+    var encountersRemaining: Int
     
-    init(name: String, totalDays: Int) {
+    init(name: String, totalDays: Int, encountersRemaining: Int) {
         self.name = name
         self.totalDays = totalDays
+        self.encountersRemaining = encountersRemaining
     }
     
     func getBattleState(gameState: GameState) -> BattleState {
         
         let player = gameState.playerData.newActor()
+        
         
         let goomba = Enemy(
              uuid: UUID(),
@@ -76,3 +79,4 @@ class Mission {
     }
     
 }
+

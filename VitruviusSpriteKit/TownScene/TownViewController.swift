@@ -11,6 +11,7 @@ import SpriteKit
 
 class TownViewController: UIViewController, TavernViewControllerDelegate {
 
+    var gameState: GameState!
     var playerData: PlayerData!
     var townScene: TownScene!
     
@@ -70,6 +71,7 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
     // MARK: - TavernViewControllerDelegate Implementation
     
     func tavern(viewController: TavernViewController, selectedMission: Mission) {
+        
         
         self.dismiss(animated: true) {
             let battleState = selectedMission.getBattleState(gameState: self.townScene.gameState)
