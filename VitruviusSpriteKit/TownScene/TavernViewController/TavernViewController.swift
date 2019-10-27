@@ -36,8 +36,25 @@ class TavernViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.availableMissions = [
             Mission.init(
                 name: "Kill the orcs, slay the horde, destroy the orcs",
-                totalDays: 3,
-                encountersRemaining: 1
+                encounters: [
+                .battle([
+                    Enemy(
+                        uuid: UUID(),
+                        name: "Koopa",
+                        faction: .enemies,
+                        body: Body(block: 0, hp: 40, maxHp: 40),
+                        cardZones: CardZones(
+                           hand: Hand.newEmpty(),
+                           drawPile: DrawPile.init(cards: [
+                               CSStrike().instance(),
+                               CSDefend().instance()
+                           ]),
+                            discard: DiscardPile()
+                        ),
+                        enemyStrategy: SuccubusEnemyStrategy()
+                    )
+                ])
+                ]
             )
         ]
     }
@@ -67,7 +84,7 @@ class TavernViewController: UIViewController, UITableViewDelegate, UITableViewDa
         default:
             let mission = availableMissions[indexPath.row - 1]
             cell.lblHeader?.text = mission.name
-            cell.lblSubtitle?.text = "Will take \(mission.totalDays) days."
+            cell.lblSubtitle?.text = "Will take \(mission.encounters.count + 4) days."
         }
         
         return cell

@@ -12,7 +12,7 @@ import Foundation
 class PlayerData: Codable {
     
     let uuid: UUID
-    let decklist: [Card]   // Cards need to be duplictable
+    let decklist: [Card]  
     var currentGold: Int
     var currentHp: Int
     var maxHp: Int

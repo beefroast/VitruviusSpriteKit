@@ -62,10 +62,33 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
     // MARK: - TavernViewControllerDelegate Implementation
     
     func tavern(viewController: TavernViewController, selectedMission: Mission) {
-        let battleState = selectedMission.getBattleState(gameState: self.townScene.gameState)
-        gameState.currentBattle = battleState
-        let vc = BattleViewController.newInstance(gameState: gameState)
-        self.navigationController?.setViewControllers([vc], animated: false)
+        
+        guard selectedMission.isFinished() == false else {
+            return
+        }
+        
+        // TODO: The number of days lost should be variable.
+        gameState.daysUntilNextBoss -= selectedMission.encounters.count + 4
+        gameState.currentMission = selectedMission
+        
+        let enc = selectedMission.getNextEncounter()
+        
+        switch enc {
+            
+        case .battle(let enemies):
+            
+            let battleState = BattleState.newInstance(
+                randomSource: self.gameState.random,
+                player: self.gameState.playerData.newActor(),
+                enemies: enemies
+            )
+            
+            gameState.currentBattle = battleState
+            let vc = BattleViewController.newInstance(gameState: gameState)
+            self.navigationController?.setViewControllers([vc], animated: false)
+            
+        }
+        
     }
     
     func tavern(viewController: TavernViewController, selectedRest: Any?) {
