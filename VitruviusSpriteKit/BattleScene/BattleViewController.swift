@@ -47,11 +47,10 @@ class BattleViewController: UIViewController, BattleSceneDelegate {
         
         // Generate some cards to win
         
-        let cardsOffered = self.gameState.cardOfferer.getCards(
+        let cardsOffered = self.gameState.cardOfferer.getBattleRewards(
+            challengeRating: 1,
             rng: self.gameState.random.rewardRng,
             classes: self.gameState.playerData.characterClass.allowedCardClasses(),
-            requiredAttributes: CardAttributes.none,
-            excludedAttributes: CardAttributes.nonRewardTypes,
             amount: 3
         )
         

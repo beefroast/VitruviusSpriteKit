@@ -109,6 +109,19 @@ extension Array {
         }
         return result
     }
+    
+    func takeRandom(n: Int, rng: RandomIntegerGenerator) -> [Element] {
+        // Fischer-Yates that ends early
+        var result = [Element]()
+        guard self.count > 0 else { return result }
+        var indicies = (0...self.count-1).map({ return $0 })
+        while indicies.count > 0 && result.count < n {
+            let i = rng.nextInt(exclusiveUpperBound: indicies.count)
+            let idx = indicies.remove(at: i)
+            result.append(self[idx])
+        }
+        return result
+    }
 }
 
 extension String {

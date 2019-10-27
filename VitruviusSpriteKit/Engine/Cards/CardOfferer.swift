@@ -66,6 +66,48 @@ class CardOfferer: Codable {
         return cardStrategy.instance()
     }
     
+    func getBattleRewards(
+        challengeRating: Int,
+        rng: RandomIntegerGenerator,
+        classes: CardClasses,
+        amount: Int) -> [Card] {
+        
+        return (1...amount).map { (_) -> CardRarity in
+            
+            // Calculate which rarities we're giving out...
+            self.getRarityAndAdjustWeights(challengeRating: challengeRating, rng: rng)
+            
+        }.countedMembers().map { (rarityAndCount) -> [Card] in
+            
+            // Get n cards for each rarity
+            self.getCards(
+                rng: rng,
+                classes: classes,
+                rarity: rarityAndCount.key,
+                amount: rarityAndCount.value
+            )
+        }.reduce([]) { (arr0, arr1) -> [Card] in
+            
+            // Reduce the arrays to an array
+            arr0 + arr1
+        }
+    }
+    
+    func getCards(
+        rng: RandomIntegerGenerator,
+        classes: CardClasses,
+        rarity: CardRarity,
+        amount: Int
+    ) -> [Card] {
+        return allCardStrategies().filter { (cs) -> Bool in
+            return cs.classes.isSubset(of: classes)
+                && cs.rarity == rarity
+        }.takeRandom(n: amount, rng: rng).map { (cs) -> Card in
+            return cs.instance()
+        }
+    }
+    
+    
     func getCards(
         rng: RandomIntegerGenerator,
         classes: CardClasses,
@@ -104,7 +146,20 @@ class CardOfferer: Codable {
 }
 
 extension Array {
+
     func randomElement(rng: RandomIntegerGenerator) -> Element {
         return self[rng.nextInt(exclusiveUpperBound: self.count)]
     }
 }
+
+extension Array where Element: Hashable {
+    func countedMembers() -> [Element: Int] {
+        var counts: [Element: Int] = [:]
+        for elt in self { counts[elt] = (counts[elt] ?? 0) + 1 }
+        return counts
+    }
+}
+
+
+
+
