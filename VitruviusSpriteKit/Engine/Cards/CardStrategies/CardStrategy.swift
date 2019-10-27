@@ -57,7 +57,9 @@ enum CharacterClass: Int, Codable {
 
 
 struct CardAttributes: OptionSet, Codable {
+    
     let rawValue: Int
+    
     static let attack = CardAttributes(rawValue: 1 << 0)
     static let spell = CardAttributes(rawValue: 1 << 1)
     static let melee = CardAttributes(rawValue: 1 << 2)
@@ -70,6 +72,14 @@ struct CardAttributes: OptionSet, Codable {
     static let potion = CardAttributes(rawValue: 1 << 9)
     static let status = CardAttributes(rawValue: 1 << 10)
     static let curse = CardAttributes(rawValue: 1 << 11)
+    
+    static var none: CardAttributes = []
+    
+    static var desirableCards: CardAttributes = [
+        .attack, .spell, .melee, .ranged, .buff, .debuff, .defence, .heal, .summons, .potion
+    ]
+    
+    static var nonRewardTypes: CardAttributes = [.status, .curse]
 }
 
 

@@ -10,7 +10,7 @@ import Foundation
 
 
 
-class CardOfferer {
+class CardOfferer: Codable {
     
     var mythicChance: Int = -10
     var rareChance: Int = 0
@@ -66,11 +66,17 @@ class CardOfferer {
         return cardStrategy.instance()
     }
     
-    func getCards(rng: RandomIntegerGenerator, classes: CardClasses, attributes: CardAttributes, amount: Int) -> [Card] {
+    func getCards(
+        rng: RandomIntegerGenerator,
+        classes: CardClasses,
+        requiredAttributes: CardAttributes,
+        excludedAttributes: CardAttributes,
+        amount: Int) -> [Card] {
         
         var choices = allCardStrategies().filter { (cs) -> Bool in
             return cs.classes.isSubset(of: classes)
-                && cs.attributes.isSuperset(of: attributes)
+                && cs.attributes.isSuperset(of: requiredAttributes)
+                && cs.attributes.contains(excludedAttributes) == false
         }
         
         let shuffledChoices = choices.shuffled(rng: rng)

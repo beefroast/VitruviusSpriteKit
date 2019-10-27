@@ -12,6 +12,7 @@ import CollectionNode
 
 
 
+
 protocol TownSceneDelegate: AnyObject {
     func town(scene: TownScene, selectedBuildBuilding: Any?)
 }

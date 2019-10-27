@@ -12,6 +12,7 @@ import SpriteKit
 protocol BattleSceneDelegate: AnyObject {
     func onBattleWon(sender: BattleScene)
     func onBattleLost(sender: BattleScene)
+    func onSelectedReward(sender: BattleScene, card: Card?)
 }
 
 class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventHandlerDelegate, ChooseRewardNodeDelegate {
@@ -38,6 +39,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
     var cardNodePool: CardNodePool!
     var arrow: ArrowNode!
     var touchNode: SKNode!
+    var isPickingReward: Bool = false
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -103,8 +105,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
         
         // Now pop the first event of the stack
         battleState.popNext()
-        
-        self.offerCards()
 
     }
     
@@ -116,20 +116,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
         self.lastTime = currentTime
     }
     
-    
-    func offerCards() {
-        
-        let cardOfferer = CardOfferer()
-        
-        let offeredCards = cardOfferer.getCards(
-            rng: battleState.rng.rewardRng,
-            classes: .neutral,
-            attributes: .potion,
-            amount: 3
-        )
-        
-        self.showCardSelection(cards: offeredCards)
-    }
+
     
     func showCardSelection(cards: [Card]) -> Void {
         let node = ChooseRewardNode()
@@ -144,6 +131,11 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
     // MARK: - ChooseRewardNodeDelegate Implementation
     
     func chooseReward(node: ChooseRewardNode, chose: CardNode) {
+        
+        if self.isPickingReward == true {
+            self.battleSceneDelegate?.onSelectedReward(sender: self, card: chose.card)
+            return
+        }
         
         self.handNode.addCardAndAnimationIntoPosiiton(cardNode: chose)
         self.battleState.player.cardZones.hand.cards.append(chose.card)
@@ -435,7 +427,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
                    
                 self.battleSceneDelegate?.onBattleWon(sender: self)
                 self.handNode.setCardsInteraction(enabled: false)
-                self.offerCards()
                 
                case .destroyCard(let e):
                 

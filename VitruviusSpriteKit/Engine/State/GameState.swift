@@ -8,6 +8,12 @@
 
 import Foundation
 
+enum GameStateMode {
+    case inTown
+    case inBattle(Mission, BattleState)
+    case choosingCard(Mission, [Card])
+}
+
 
 class GameState: Codable {
     
@@ -15,14 +21,17 @@ class GameState: Codable {
     var playerData: PlayerData
     var buildings: [Building]
     var daysUntilNextBoss: Int
+    var cardOfferer: CardOfferer
     var currentMission: Mission?
     var currentBattle: BattleState?
+    
     
     init(
         random: RandomnessSource,
         playerData: PlayerData,
         buildings: [Building],
         daysUntilNextBoss: Int,
+        cardOfferer: CardOfferer,
         currentMission: Mission?,
         currentBattle: BattleState?) {
         
@@ -30,6 +39,7 @@ class GameState: Codable {
         self.playerData = playerData
         self.buildings = buildings
         self.daysUntilNextBoss = daysUntilNextBoss
+        self.cardOfferer = cardOfferer
         self.currentMission = currentMission
         self.currentBattle = currentBattle
     }
@@ -44,6 +54,7 @@ class GameState: Codable {
                 BTForge().newInstance()
             ],
             daysUntilNextBoss: 30,
+            cardOfferer: CardOfferer(),
             currentMission: nil,
             currentBattle: nil
         )

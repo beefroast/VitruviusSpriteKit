@@ -45,18 +45,37 @@ class BattleViewController: UIViewController, BattleSceneDelegate {
     
     func onBattleWon(sender: BattleScene) {
         
-        // TODO: Continue the mission
-        // for now we just go back to the town
+        // Generate some cards to win
+        
+        let cardsOffered = self.gameState.cardOfferer.getCards(
+            rng: self.gameState.random.rewardRng,
+            classes: self.gameState.playerData.characterClass.allowedCardClasses(),
+            requiredAttributes: CardAttributes.none,
+            excludedAttributes: CardAttributes.nonRewardTypes,
+            amount: 3
+        )
+        
+        // TODO: Update our game state such that we're offering these cards
+        sender.isPickingReward = true
+        sender.showCardSelection(cards: cardsOffered)
         
         // TODO: This is shonky as..
         self.gameState.playerData.currentHp = self.gameState.currentBattle!.player.body.hp
-        
         self.gameState.currentBattle = nil
-        let vc = TownViewController.newInstance(gameState: self.gameState)
-        self.navigationController?.setViewControllers([vc], animated: false)
     }
     
     func onBattleLost(sender: BattleScene) {
         // TODO: Show game over screen.
+    }
+    
+    func onSelectedReward(sender: BattleScene, card: Card?) {
+        
+        // Add the selected card to the players deck
+        if let c = card {
+            self.gameState.playerData.decklist.append(c)
+        }
+        
+        let vc = TownViewController.newInstance(gameState: self.gameState)
+        self.navigationController?.setViewControllers([vc], animated: false)
     }
 }

@@ -31,9 +31,6 @@ class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingVie
         scene.scaleMode = .aspectFit
         scene.townSceneDelegate = self
         
-//        let scene = SKScene(fileNamed: "TestCardViewerScene")!
-//        scene.scaleMode = .aspectFill
-        
         // Present the scene
         view.ignoresSiblingOrder = false
         view.showsFPS = true
@@ -41,14 +38,6 @@ class GameViewController: UIViewController, TownSceneDelegate, SelectBuildingVie
         view.showsDrawCount = true
         view.presentScene(scene)
 
-
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-//            let vc = ViewDeckViewController.newInstance()
-//            vc.modalPresentationStyle = .overCurrentContext
-//            vc.modalTransitionStyle = .crossDissolve
-//            self.present(vc, animated: true)
-//        }
-        
     }
     
     
