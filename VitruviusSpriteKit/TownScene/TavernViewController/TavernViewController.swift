@@ -35,26 +35,16 @@ class TavernViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         self.availableMissions = [
             Mission.init(
-                name: "Kill the orcs, slay the horde, destroy the orcs",
-                encounters: [
-                .battle([
-                    Enemy(
-                        uuid: UUID(),
-                        name: "Koopa",
-                        faction: .enemies,
-                        body: Body(block: 0, hp: 40, maxHp: 40),
-                        cardZones: CardZones(
-                           hand: Hand.newEmpty(),
-                           drawPile: DrawPile.init(cards: [
-                               CSStrike().instance(),
-                               CSDefend().instance()
-                           ]),
-                            discard: DiscardPile()
-                        ),
-                        enemyStrategy: SuccubusEnemyStrategy()
-                    )
-                ])
-                ]
+                challengeRatingModifier: 1,
+                remainingEncounters: 2
+            ),
+            Mission.init(
+                challengeRatingModifier: 4,
+                remainingEncounters: 1
+            ),
+            Mission.init(
+                challengeRatingModifier: 0,
+                remainingEncounters: 5
             )
         ]
     }
@@ -83,8 +73,8 @@ class TavernViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
         default:
             let mission = availableMissions[indexPath.row - 1]
-            cell.lblHeader?.text = mission.name
-            cell.lblSubtitle?.text = "Will take \(mission.encounters.count + 4) days."
+            cell.lblHeader?.text = mission.placeholderName()
+            cell.lblSubtitle?.text = "Will take \(mission.calculateMissionDuration(travelTime: 4)) days."
         }
         
         return cell

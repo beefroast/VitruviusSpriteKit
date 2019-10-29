@@ -69,12 +69,19 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
         
         // TODO: The number of days lost should be variable and based
         // on your stable upgrades.
-        gameState.daysUntilNextBoss -= selectedMission.encounters.count + 4
+        gameState.daysUntilNextBoss -= selectedMission.calculateMissionDuration(travelTime: 4)
         gameState.currentMission = selectedMission
         
-        let enc = selectedMission.getNextEncounter()
+        let enc = selectedMission.getNextEncounter(
+            generator: EncounterGenerator(),
+            playerLevel: gameState.playerData.currentLevel
+        )
         
-        switch enc {
+        guard let encounter = enc else {
+            return
+        }
+        
+        switch encounter {
             
         case .battle(let enemies):
             

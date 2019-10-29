@@ -60,6 +60,7 @@ class BattleViewController: UIViewController, BattleSceneDelegate {
         
         // TODO: This is shonky as..
         self.gameState.playerData.currentHp = self.gameState.currentBattle!.player.body.hp
+        self.gameState.playerData.currentLevel += 1
         self.gameState.currentBattle = nil
     }
     
@@ -74,7 +75,32 @@ class BattleViewController: UIViewController, BattleSceneDelegate {
             self.gameState.playerData.decklist.append(c)
         }
         
-        let vc = TownViewController.newInstance(gameState: self.gameState)
-        self.navigationController?.setViewControllers([vc], animated: false)
+        let enc = self.gameState.currentMission?.getNextEncounter(
+            generator: EncounterGenerator(),
+            playerLevel: self.gameState.playerData.currentLevel
+        )
+        
+        // Handle the next encounter if it exists
+        guard let nextEncounter = enc else {
+            let vc = TownViewController.newInstance(gameState: self.gameState)
+            self.navigationController?.setViewControllers([vc], animated: false)
+            return
+        }
+        
+        switch nextEncounter {
+        case .battle(let enemies):
+            
+            let battleState = BattleState.newInstance(
+                randomSource: self.gameState.random,
+                player: self.gameState.playerData.newActor(),
+                enemies: enemies
+            )
+            
+            gameState.currentBattle = battleState
+            let vc = BattleViewController.newInstance(gameState: gameState)
+            self.navigationController?.setViewControllers([vc], animated: false)
+        }
+        
+        
     }
 }

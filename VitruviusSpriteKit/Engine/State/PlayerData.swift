@@ -18,6 +18,7 @@ class PlayerData: Codable {
     var maxHp: Int
     let name: String
     let characterClass: CharacterClass
+    var currentLevel: Int
     
     init(
         uuid: UUID,
@@ -26,7 +27,8 @@ class PlayerData: Codable {
         currentHp: Int,
         maxHp: Int,
         name: String,
-        characterClass: CharacterClass) {
+        characterClass: CharacterClass,
+        currentLevel: Int) {
         
         self.uuid = uuid
         self.decklist = decklist
@@ -35,6 +37,7 @@ class PlayerData: Codable {
         self.maxHp = maxHp
         self.name = name
         self.characterClass = characterClass
+        self.currentLevel = currentLevel
     }
     
     
@@ -64,7 +67,8 @@ class PlayerData: Codable {
             currentHp: 70,
             maxHp: 70,
             name: name,
-            characterClass: characterClass
+            characterClass: characterClass,
+            currentLevel: 0
         )
     }
     

@@ -56,7 +56,21 @@ enum Encounter: Codable {
 
 class EncounterGenerator {
     
-    
-  
+    func generateEncounterFor(level: Int) -> Encounter {
+        
+        // For now, just generate a dummy battle encounter
+        
+        return Encounter.battle([
+            Enemy(
+                uuid: UUID(),
+                name: "Crab",
+                faction: .enemies,
+                body: Body(block: 0, hp: 10, maxHp: 10),
+                cardZones: CardZones.newEmpty(),
+                enemyStrategy: CrabEnemyStrategy()
+            )
+        ])
+        
+    }
     
 }
