@@ -44,6 +44,13 @@ class GameState: Codable {
         self.currentBattle = currentBattle
     }
     
+    func decrememntDaysUntilNextBoss(days: Int) {
+        self.daysUntilNextBoss -= days
+        self.buildings.forEach { (building) in
+            building.updateDaysElapsed(deltaDays: days)
+        }
+    }
+    
     static func newGameWith(name: String, characterClass: CharacterClass) -> GameState {
         return GameState.init(
             random: RandomnessSource.newInstance(),

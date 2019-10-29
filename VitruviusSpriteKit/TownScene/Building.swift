@@ -26,6 +26,10 @@ class Building: Codable {
         return "lvl \(level) \(self.type.name)"
     }
     
+    func updateDaysElapsed(deltaDays: Int) {
+        self.type.updateDaysElapsed(days: deltaDays)
+    }
+    
     // MARK: - Codable Implementation
     
     private enum CodingKeys: String, CodingKey {
@@ -61,6 +65,7 @@ protocol BuildingType: Codable {
     var description: String { get }
     var maxLevel: Int { get }
     func daysToUpdateFor(level: Int) -> Int
+    func updateDaysElapsed(days: Int)
 }
 
 extension BuildingType {
@@ -83,7 +88,7 @@ extension BuildingType {
 // ARENA - Lets you fight other players
 
 class BTTavern: BuildingType {
-    
+
     var name: String { get { return "Tavern" }}
     var cost: Int { get { return 0 }}
     var description: String { get { return "The tarvern allows you to undertake quests and sleep to regain hp." }}
@@ -98,6 +103,10 @@ class BTTavern: BuildingType {
         case 4: return 6
         default: return 7
         }
+    }
+    
+    func updateDaysElapsed(days: Int) {
+        // TODO: Handle upgrades
     }
 }
 
@@ -118,14 +127,28 @@ class BTJoinery: BuildingType {
         default: return 7
         }
     }
+    
+    func updateDaysElapsed(days: Int) {
+        // TODO: Handle upgrades
+    }
+}
+
+enum ForgeState: Int, Codable {
+    case ready
+    case upgradingCard
+    case upgradingSelf
 }
 
 class BTForge: BuildingType {
-    
+
     var name: String { get { return "Forge" }}
     var cost: Int { get { return 40 }}
     var description: String { get { return "Allows you to leave cards to be upgraded." }}
     var maxLevel: Int { get { return 5 }}
+    var state: ForgeState = .ready
+    
+    var daysUntilUpgradeIsComplete = 0
+    var upgradingCard: Card? = nil
 
     func daysToUpdateFor(level: Int) -> Int {
         switch level {
@@ -136,6 +159,10 @@ class BTForge: BuildingType {
         case 4: return 12
         default: return 13
         }
+    }
+    
+    func updateDaysElapsed(days: Int) {
+        self.daysUntilUpgradeIsComplete = max(0, self.daysUntilUpgradeIsComplete - days)
     }
 }
 

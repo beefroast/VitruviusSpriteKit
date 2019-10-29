@@ -78,9 +78,40 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate, Collectio
         } else if let type = buildingNode.building?.type as? BTJoinery {
             self.townSceneDelegate?.town(scene: self, selectedBuildBuilding: self)
         
-        } else if let type = buildingNode.building?.type as? BTForge {
-            // Allow the user to pick a card to upgrade
+        } else if let forge = buildingNode.building?.type as? BTForge {
             
+            if let upgradingCard = forge.upgradingCard {
+                
+                if forge.daysUntilUpgradeIsComplete == 0 {
+                    upgradingCard.level += 1
+                    self.gameState.playerData.decklist.append(upgradingCard)
+                }
+                forge.upgradingCard = nil
+            
+            } else {
+                
+                let vc = ViewDeckViewController.newInstance(
+                       titleText: "Select a card to upgrade",
+                       subtitleText: "Upgrade that sweet sweet card",
+                       cards: self.gameState.playerData.decklist,
+                       onSelectedCard: { (vc, card) in
+                           
+                           self.gameState.playerData.decklist.removeAll { (c) -> Bool in
+                               c.uuid == card.uuid
+                           }
+                           
+                           forge.upgradingCard = card
+                           // TODO: Make this variable
+                           forge.daysUntilUpgradeIsComplete = 6
+                           
+                           self.viewController?.navigationController?.popViewController(animated: true)
+                           
+                   }) { (vc) in
+                       self.viewController?.navigationController?.popViewController(animated: true)
+                   }
+                   
+                   self.viewController?.navigationController?.pushViewController(vc, animated: true)
+            }
         }
     }
     
@@ -147,7 +178,7 @@ class TownScene: SKScene, DialogBoxNodeDelegate, BuildingNodeDelegate, Collectio
         self.run(SKAction.fadeOut(withDuration: 0.2)) {
             dialog.alpha = 0.0
             dialog.isUserInteractionEnabled = false
-            self.gameState.daysUntilNextBoss -= 1
+            self.gameState.decrememntDaysUntilNextBoss(days: 1)
             self.gameState.playerData.currentHp = min(self.gameState.playerData.currentHp + 20, self.gameState.playerData.maxHp)
             self.run(SKAction.fadeIn(withDuration: 0.2)) {
                 
