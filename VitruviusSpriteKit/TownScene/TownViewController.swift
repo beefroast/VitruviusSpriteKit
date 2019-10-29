@@ -27,7 +27,7 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
         self.lblCards.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(onCardsTapped(sender:))))
         self.lblCards.isUserInteractionEnabled = true
         
-        self.setupWith(data: self.gameState.playerData)
+        self.setupWith(state: self.gameState)
         
         let scene = SKScene(fileNamed: "TownScene") as! TownScene
         scene.scaleMode = .aspectFill
@@ -42,6 +42,11 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
         skView.showsDrawCount = true
         skView.presentScene(scene)
         
+    }
+    
+    func setupWith(state: GameState) {
+        self.lblDaysRemaining.text = "\(state.daysUntilNextBoss) days."
+        self.setupWith(data: state.playerData)
     }
     
     func setupWith(data: PlayerData) {
@@ -104,7 +109,7 @@ class TownViewController: UIViewController, TavernViewControllerDelegate {
         
         self.gameState.playerData.currentHp = min(self.gameState.playerData.currentHp + 20, self.gameState.playerData.maxHp)
         self.gameState.daysUntilNextBoss = self.gameState.daysUntilNextBoss - 1
-        self.setupWith(data: self.gameState.playerData)
+        self.setupWith(state: self.gameState)
         
         self.townScene.tavern(viewController: viewController, selectedRest: selectedRest)
     }

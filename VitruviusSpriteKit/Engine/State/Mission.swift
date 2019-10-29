@@ -12,6 +12,7 @@ class Mission: Codable {
     
     let challengeRatingModifier: Int
     var remainingEncounters: Int
+    var canReturnHomeInbetweenEncounters = true
     
     init(challengeRatingModifier: Int, remainingEncounters: Int) {
         self.challengeRatingModifier = challengeRatingModifier
