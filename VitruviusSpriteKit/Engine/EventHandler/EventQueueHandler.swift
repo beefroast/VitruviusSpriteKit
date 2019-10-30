@@ -10,7 +10,7 @@ import Foundation
 
 
 
-class EventQueueHandler {
+class EventQueueHandler: Codable {
     
     private var eventQueue: PriorityQueue<Event>
     private var effectList: PriorityQueue<Effect>

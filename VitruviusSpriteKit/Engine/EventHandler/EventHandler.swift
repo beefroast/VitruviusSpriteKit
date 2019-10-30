@@ -301,7 +301,9 @@ class EventHandler: Codable {
                 return false
             }
             
-            card.onDrawn(source: actor, battleState: battleState)
+            
+            
+//            card.onDrawn(source: actor, battleState: battleState)
             
         case .shuffleDiscardIntoDrawPile(let e):
             
@@ -429,11 +431,11 @@ class EventHandler: Codable {
             
             // Resolve the card...
             
-            card.resolve(
-                source: actor,
-                battleState: battleState,
-                target: e.target.flatMap(battleState.actorWith(uuid:))
-            )
+//            card.resolve(
+//                source: actor,
+//                battleState: battleState,
+//                target: e.target.flatMap(battleState.actorWith(uuid:))
+//            )
             
         case .attack(let e):
             

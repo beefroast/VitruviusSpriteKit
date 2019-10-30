@@ -15,10 +15,10 @@ class BattleState: Codable {
     var player: Player
     var allies: [Actor]
     var enemies: [Enemy]
-    var eventHandler: EventHandler
+    var eventHandler: EventQueueHandler
     var rng: RandomnessSource
     
-    init(player: Player, allies: [Actor], enemies: [Enemy], eventHandler: EventHandler, rng: RandomnessSource) {
+    init(player: Player, allies: [Actor], enemies: [Enemy], eventHandler: EventQueueHandler, rng: RandomnessSource) {
         self.player = player
         self.allies = allies
         self.enemies = enemies
@@ -57,7 +57,7 @@ class BattleState: Codable {
     }
     
     func popNext() -> Void {
-        _ = self.eventHandler.popAndHandle(battleState: self)
+        
     }
     
     static func newInstance(randomSource: RandomnessSource, player: Player, enemies: [Enemy]) -> BattleState {

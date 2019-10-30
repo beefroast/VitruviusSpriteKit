@@ -10,7 +10,7 @@ import Foundation
 
 
 
-class PriorityQueueElement<T> {
+class PriorityQueueElement<T>: Codable where T: Codable {
     
     let element: T
     var priority: Int
@@ -45,11 +45,34 @@ class PriorityQueueElement<T> {
             return self
         }
     }
+    
+    // MARK: - Codable Implementation
+    
+    private enum CodingKeys: String, CodingKey {
+        case priority
+        case element
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.priority = try values.decode(Int.self, forKey: .priority)
+        self.element = try values.decode(T.self, forKey: .element)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.priority, forKey: .priority)
+        try container.encode(self.element, forKey: .element)
+    }
+    
+    
 }
 
-class PriorityQueue<T> {
+class PriorityQueue<T>: Codable where T: Codable {
 
     var head: PriorityQueueElement<T>? = nil
+    
+    init() {}
     
     func insert(element: T, priority: Int) -> Int {
         var insertedIndex = 0
@@ -72,12 +95,40 @@ class PriorityQueue<T> {
         self.head = head?.removeWhere(fn: fn)
     }
     
-    
     func toArray() -> [PriorityQueueElement<T>] {
         var result: [PriorityQueueElement<T>] = []
         head?.forEach(fn: { (elt) in result.append(elt) })
         return result
     }
     
+    // MARK: - Codable Implementation
+
+    
+    private enum CodingKeys: String, CodingKey {
+        case elements
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let elementsAsArray = try values.decode([PriorityQueueElement<T>].self, forKey: .elements)
+        elementsAsArray.forEachPair { (x, y) in x.next = y }
+        self.head = elementsAsArray.first
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.toArray(), forKey: .elements)
+    }
 }
 
+extension Array {
+    func forEachPair(fn: (Element, Element) -> Void) {
+        var last: Element? = nil
+        self.forEach { (elt) in
+            if let x = last {
+                fn(x, elt)
+            }
+            last = elt
+        }
+    }
+}

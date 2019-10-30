@@ -106,9 +106,9 @@ protocol CardStrategy {
     
     func textFor(card: Card) -> String
     func costFor(card: Card) -> Int
-    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) -> Void
-    func onDrawn(card: Card, source: Actor, battleState: BattleState) -> Void
-    func onDiscarded(card: Card, source: Actor, battleState: BattleState) -> Void
+    func resolve(card: Card, source: Actor, gameState: GameState, target: Actor?) -> Void
+    func onDrawn(card: Card, source: Actor, gameState: GameState) -> Void
+    func onDiscarded(card: Card, source: Actor, gameState: GameState) -> Void
 }
 
 extension CardStrategy {
@@ -140,16 +140,16 @@ class Card: Codable {
         return self.strategy.textFor(card: self)
     }
     
-    func resolve(source: Actor, battleState: BattleState, target: Actor?) -> Void {
-        self.strategy.resolve(card: self, source: source, battleState: battleState, target: target)
+    func resolve(source: Actor, gameState: GameState, target: Actor?) -> Void {
+        self.strategy.resolve(card: self, source: source, gameState: gameState, target: target)
     }
     
-    func onDrawn(source: Actor, battleState: BattleState) -> Void {
-        self.strategy.onDrawn(card: self, source: source, battleState: battleState)
+    func onDrawn(source: Actor, gameState: GameState) -> Void {
+        self.strategy.onDrawn(card: self, source: source, gameState: gameState)
     }
     
-    func onDiscarded(source: Actor, battleState: BattleState) -> Void {
-        self.strategy.onDiscarded(card: self, source: source, battleState: battleState)
+    func onDiscarded(source: Actor, gameState: GameState) -> Void {
+        self.strategy.onDiscarded(card: self, source: source, gameState: gameState)
     }
     
     func duplicate(uuid: UUID = UUID()) -> Card {

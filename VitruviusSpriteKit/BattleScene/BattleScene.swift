@@ -97,9 +97,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
         
         self.arrow.tipNode = self.touchNode
         
-        // Make ourselves the delegate
-        battleState.eventHandler.delegate = self
-        
         // Push the battle began event
         self.battleState.eventHandler.push(event: Event.onBattleBegan)
         

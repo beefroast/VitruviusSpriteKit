@@ -26,7 +26,7 @@ class CSDrain: CardStrategy {
     
     func costFor(card: Card) -> Int { return 1 }
     
-    func resolve(card: Card, source: Actor, battleState: BattleState, target: Actor?) {
+    func resolve(card: Card, source: Actor, gameState: GameState, target: Actor?) {
 
         guard let target = target?.uuid else {
             return
@@ -60,10 +60,10 @@ class CSDrain: CardStrategy {
         
     }
 
-    func onDrawn(card: Card, source: Actor, battleState: BattleState) {
+    func onDrawn(card: Card, source: Actor, gameState: GameState) {
     }
     
-    func onDiscarded(card: Card, source: Actor, battleState: BattleState) {
+    func onDiscarded(card: Card, source: Actor, gameState: GameState) {
     }
     
     
