@@ -181,6 +181,14 @@ class StackQueue<T>: Codable where T: Codable {
         self.count = 0
     }
     
+    func forEach(fn: (T) -> ()) -> Void {
+        var next = self.first
+        while next != nil {
+            fn(next!.element)
+            next = next!.next
+        }
+    }
+    
     // MARK: - Codable Implementation
 
     enum CodingKeys: String, CodingKey {

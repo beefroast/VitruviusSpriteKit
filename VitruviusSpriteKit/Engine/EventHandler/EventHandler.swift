@@ -126,15 +126,27 @@ class EventHandler: Codable {
     }
     
     func push(events: [Event]) -> Void {
-        for e in events.reversed() { eventStack.push(elt: e) }
+        for e in events.reversed() {
+            eventStack.push(elt: e)
+            self.delegate?.onEventPushed(sender: self, event: e)
+        }
     }
     
     func enqueue(events: [Event]) -> Void {
-        for e in events { eventStack.enqueue(elt: e) }
+        for e in events {
+            eventStack.enqueue(elt: e)
+            self.delegate?.onEventEnqueued(sender: self, event: e)
+        }
     }
     
     func push(event: Event) -> Void {
         eventStack.push(elt: event)
+        self.delegate?.onEventPushed(sender: self, event: event)
+    }
+    
+    func enqueue(event: Event) -> Void {
+        eventStack.enqueue(elt: event)
+        self.delegate?.onEventEnqueued(sender: self, event: event)
     }
     
     func appendToEffectsList(effect: Effect) {
@@ -153,6 +165,7 @@ class EventHandler: Codable {
     
     func popAndHandle(battleState: BattleState) -> Bool {
         guard let e = eventStack.pop() else { return false }
+        self.delegate?.onEventPopped(sender: self, event: e)
         let playerInputRequired = self.handle(event: e, battleState: battleState)
         return playerInputRequired
     }
@@ -178,14 +191,13 @@ class EventHandler: Codable {
         case .onBattleBegan:
             
             // The player draws their hand
-            self.eventStack.enqueue(elt: Event.willDrawCards(DrawCardsEvent.init(actorUuid: battleState.player.uuid, amount: 5)))
+            self.enqueue(event: Event.willDrawCards(DrawCardsEvent.init(actorUuid: battleState.player.uuid, amount: 5)))
             
             // The enemies draw their hand
             // TODO: This number of cards drawn shouldn't be specified here
             battleState.enemies.forEach { (enemy) in
-                self.eventStack.enqueue(elt: Event.willDrawCards(DrawCardsEvent.init(actorUuid: enemy.uuid, amount: 2)))
+                self.enqueue(event: Event.willDrawCards(DrawCardsEvent.init(actorUuid: enemy.uuid, amount: 2)))
             }
-            
             
             // The enemy plans their turns
             let enemyPlansEvents = battleState.enemies.map({ $0.planTurn(state: battleState) })
@@ -215,9 +227,7 @@ class EventHandler: Codable {
                     amount: actor.body.block)))
         
         case .onTurnEnded(let e):
-            self.eventStack.enqueue(
-                elt: Event.onTurnBegan(ActorEvent.init(actorUuid: e.actorUuid))
-            )
+            self.enqueue(event: Event.onTurnBegan(ActorEvent.init(actorUuid: e.actorUuid)))
             
         case .addEffect(let effect):
             self.effectList.insert(effect, at: 0)
@@ -475,16 +485,12 @@ class EventHandler: Codable {
                 let damageRemaining = e.amount - blockLost
                 
                 if damageRemaining > 0 {
-                    self.eventStack.push(elt:
-                        Event.willLoseHp(UpdateAmountEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: damageRemaining))
-                    )
+                    self.push(event: Event.willLoseHp(UpdateAmountEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: damageRemaining)))
                 }
                 
-                self.eventStack.push(elt:
-                    Event.willLoseBlock(
-                        UpdateAmountEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: blockLost)
-                    )
-                )
+                self.push(event: Event.willLoseBlock(
+                    UpdateAmountEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: blockLost)
+                ))
             }
             
         case .onEnemyDefeated(let e):
