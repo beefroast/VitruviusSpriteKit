@@ -62,35 +62,7 @@ class BattleState: Codable {
     
     static func newInstance(randomSource: RandomnessSource, player: Player, enemies: [Enemy]) -> BattleState {
         
-        let battleState = BattleState.init(
-            player: player,
-            allies: [],
-            enemies: enemies,
-            eventHandler: EventHandler(
-                uuid: UUID(),
-                eventStack: StackQueuePrinter<Event>(),
-                effectList: [
-                    EventPrinterEffect.init().withWrapper(uuid: UUID())
-                ]
-            ),
-            rng: randomSource
-        )
-        
-        let events = [
-            Event.willGainMana(UpdateAmountEvent.init(targetActorUuid: player.uuid, sourceUuid: UUID(), amount: 3)),
-            Event.addEffect(DiscardThenDrawAtEndOfTurnEffect(ownerUuid: player.uuid, cardsDrawn: 5).withWrapper(uuid: UUID())),
-        ] + enemies.map { (enemy) -> Event in
-            Event.addEffect(
-                DiscardThenDrawAtEndOfTurnEffect(
-                    ownerUuid: enemy.uuid,
-                    cardsDrawn: 1
-                ).withWrapper(uuid: UUID())
-            )
-        }
-        
-        battleState.eventHandler.push(events: events)
-  
-        return battleState
+       fatalError()
     }
 }
 

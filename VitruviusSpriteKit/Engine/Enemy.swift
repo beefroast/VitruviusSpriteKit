@@ -29,20 +29,7 @@ class Enemy: Actor {
     
     // Convenience methods
     func planAttack(state: BattleState, amount: Int) -> Event {
-        return Event.onEnemyPlannedTurn(
-            EnemyTurnEffect.init(
-                enemyUuid: self.uuid,
-                name: "\(self.name)'s turn",
-                events: [
-                    Event.attack(AttackEvent.init(
-                        sourceUuid: self.uuid,
-                        sourceOwner: self.uuid,
-                        targets: [state.getAllActors(faction: .player).first?.uuid].compactMap({ return $0 }),
-                        amount: amount
-                    ))
-                ]
-            )
-        )
+        fatalError()
     }
     
     // MARK: - Codable Implementation
@@ -77,80 +64,6 @@ class Enemy: Actor {
     
 }
 
-class EnemyTurnEffect: HandleEffectStrategy {
-    
-    let enemyUuid: UUID
-    var events: [Event]
-    
-    init(enemyUuid: UUID, name: String, events: [Event]) {
-        self.enemyUuid = enemyUuid
-        self.events = events
-        super.init(identifier: .enemyTurn, effectName: name)
-    }
-    
-    // MARK: - Codable Implementation
-    
-    private enum CodingKeys: String, CodingKey {
-        case enemyUuid
-        case events
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        self.enemyUuid = try values.decode(UUID.self, forKey: .enemyUuid)
-        self.events = try values.decode([Event].self, forKey: .events)
-        try super.init(from: decoder)
-    }
-
-    override func encode(to encoder: Encoder) throws {
-        try super.encode(to: encoder)
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.enemyUuid, forKey: .enemyUuid)
-        try container.encode(self.events, forKey: .events)
-    }
-    
-    override func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
-        switch event {
-            
-        case .onEnemyDefeated(let e):
-            
-            // Remove this event if the enemy is defeated...
-            return e.actorUuid == self.enemyUuid
-            
-        case .onTurnBegan(let e):
-            
-            // When our turn begins...
-            guard e.actorUuid == self.enemyUuid else {
-                return false
-            }
-            
-            // Find the enemy
-            guard let enemy = state.actorWith(uuid: enemyUuid) as? Enemy else {
-                return true
-            }
-            
-            state.eventHandler.push(events:
-                
-                // Do our planned turn
-                events + [
-                    
-                // Plan our next turn
-                enemy.planTurn(state: state),
-                
-                //End our turn
-                Event.onTurnEnded(ActorEvent.init(actorUuid: enemyUuid))
-            
-            ])
-            
-            // Remove this listener
-            return true
-            
-        default:
-            return false
-        }
-    }
-}
-
 
 
 
@@ -163,20 +76,9 @@ class EnemyStrategy: Codable {
 class CrabEnemyStrategy: EnemyStrategy {
     override func getStrategyName() -> String { return "crab" }
     override func planTurn(enemy: Enemy, state: BattleState) -> Event {
-        return Event.onEnemyPlannedTurn(
-            EnemyTurnEffect.init(
-                enemyUuid: enemy.uuid,
-                name: "\(enemy.name)'s turn",
-                events: [
-                    Event.attack(AttackEvent.init(
-                        sourceUuid: enemy.uuid,
-                        sourceOwner: enemy.uuid,
-                        targets: [state.getAllActors(faction: .player).first?.uuid].compactMap({ return $0 }),
-                        amount: 6
-                    ))
-                ]
-            )
-        )
+        
+        fatalError()
+        
     }
     
     func with(challengeRating: Int, rng: RandomIntegerGenerator) -> Enemy {
@@ -194,37 +96,17 @@ class CrabEnemyStrategy: EnemyStrategy {
 }
 
 class SuccubusEnemyStrategy: EnemyStrategy {
+    
     override func getStrategyName() -> String { return "succubus" }
+    
+    
+    
+    
     
     
     override func planTurn(enemy: Enemy, state: BattleState) -> Event {
         
-        
-        return Event.onEnemyPlannedTurn(
-            EnemyTurnEffect.init(
-                enemyUuid: enemy.uuid,
-                name: enemy.name,
-                events: enemy.cardZones.hand.cards.map({ (card) -> Event in
-                    
-                    guard card.strategy.requiresSingleTarget else {
-                        return Event.playCard(PlayCardEvent.init(actorUuid: enemy.uuid, cardUuid: card.uuid, target: nil))
-                    }
-                    
-                    if card.strategy.attributes.contains(.attack)
-                        || card.strategy.attributes.contains(.curse)
-                        || card.strategy.attributes.contains(.debuff) {
-                        
-                        // Target an enemy
-                        let enemyTarget = state.getAllOpponentActors(faction: .enemies).randomElement(rng: state.rng.enemyRng)
-                        return Event.playCard(PlayCardEvent.init(actorUuid: enemy.uuid, cardUuid: card.uuid, target: enemyTarget.uuid))
-                    
-                    } else {
-                        let friendlyTarget = state.enemies.randomElement(rng: state.rng.enemyRng)
-                        return Event.playCard(PlayCardEvent.init(actorUuid: enemy.uuid, cardUuid: card.uuid, target: friendlyTarget.uuid))
-                    }
-                })
-            )
-        )
+        fatalError()
     }
     override func onBattleBegan(enemy: Enemy, state: BattleState)  {
         

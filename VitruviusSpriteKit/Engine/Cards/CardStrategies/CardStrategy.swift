@@ -179,8 +179,6 @@ class Card: Codable {
         
         switch number {
         case 1: self.strategy = CSStrike()
-        case 2: self.strategy = CSMistForm()
-        case 3: self.strategy = CSPierce()
         case 4: self.strategy = CSDrain()
         case 5: self.strategy = CSDefend()
         case 6: self.strategy = CSRecall()

@@ -14,9 +14,7 @@ enum Event: Codable {
     case playerInputRequired
     
     case onBattleBegan
-    
-    case onEnemyPlannedTurn(EnemyTurnEffect)
-    
+        
     case onTurnBegan(ActorEvent)
     case onTurnEnded(ActorEvent)
     
@@ -79,8 +77,7 @@ enum Event: Codable {
             self = .onBattleBegan
             
         case "onEnemyPlannedTurn":
-            let data = try values.decode(EnemyTurnEffect.self, forKey: .data)
-            self = .onEnemyPlannedTurn(data)
+            fatalError()
             
         case "onTurnBegan":
             let data = try values.decode(ActorEvent.self, forKey: .data)
@@ -200,10 +197,7 @@ enum Event: Codable {
             
         case .onBattleBegan:
             try container.encode("onBattleBegan", forKey: .type)
-            
-        case .onEnemyPlannedTurn(let e):
-            try container.encode("onEnemyPlannedTurn", forKey: .type)
-            try container.encode(e, forKey: .data)
+
             
         case .onTurnBegan(let e):
             try container.encode("onTurnBegan", forKey:. type)

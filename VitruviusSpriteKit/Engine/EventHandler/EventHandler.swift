@@ -9,61 +9,52 @@
 import Foundation
 
 
-enum EffectIdentifier: Int, Codable {
-    case drain
-    case enemyTurn
-    case discardThenDrawEndOfTurn
-    case eventPrinter
-    case mistForm
+struct EffectResult {
+    
+    let consumeEvent: Bool
+    let consumeEffect: Bool
+    
+    static var consumeEffect = EffectResult.init(consumeEvent: false, consumeEffect: true)
+    static var noChange = EffectResult.init(consumeEvent: false, consumeEffect: false)
 }
 
-class HandleEffectStrategy: Codable {
-    
-    let identifier: EffectIdentifier
-    let effectName: String
-    
-    init(identifier: EffectIdentifier, effectName: String) {
-        self.identifier = identifier
-        self.effectName = effectName
-    }
-    
-    func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
-        fatalError("Abstract method, must override!" )
+protocol EffectStrategy: Codable {
+    func handle(effect: Effect, event: Event, gameState: GameState) -> EffectResult
+}
+
+extension EffectStrategy {
+    func withEffect(uuid: UUID, owner: UUID) -> Effect {
+        return Effect(uuid: uuid, owner: owner, strategy: self)
     }
 }
 
 class Effect: Codable {
     
     let uuid: UUID
-    let strategy: HandleEffectStrategy
+    let owner: UUID
+    let strategy: EffectStrategy
     
-    var identifier: EffectIdentifier { get { self.strategy.identifier } }
-    var effectName: String { get { self.strategy.effectName } }
-    
-    func handle(event: Event, state: BattleState) -> Bool {
-        self.strategy.handle(event: event, state: state, effectUuid: self.uuid)
+    init(uuid: UUID, owner: UUID, strategy: EffectStrategy) {
+        self.uuid = uuid
+        self.owner = owner
+        self.strategy = strategy
     }
     
-    init(uuid: UUID, effect: HandleEffectStrategy) {
-        self.uuid = uuid
-        self.strategy = effect
+    func handle(event: Event, gameState: GameState) -> EffectResult {
+        self.strategy.handle(effect: self, event: event, gameState: gameState)
     }
     
     // MARK: - Codable Implementation
     
     private enum CodingKeys: String, CodingKey {
-        case identifier
+        case owner
         case uuid
-        case strategy
+        case strategyName
+        case strategyData
     }
     
     func encode(to encoder: Encoder) throws {
         
-        var container = encoder.container(keyedBy: CodingKeys.self)
-             
-        try container.encode(self.uuid, forKey: .uuid)
-        try container.encode(self.identifier, forKey: .identifier)
-        try container.encode(self.strategy, forKey: .strategy)
     }
     
     required init(from decoder: Decoder) throws {
@@ -71,37 +62,11 @@ class Effect: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         self.uuid = try values.decode(UUID.self, forKey: .uuid)
-        
-        let identifier = try values.decode(EffectIdentifier.self, forKey: .identifier)
- 
-        switch identifier {
-            
-        case .drain:
-            self.strategy = try values.decode(CSDrain.DrainEffect.self, forKey: .strategy)
-            
-        case .enemyTurn:
-            self.strategy = try values.decode(EnemyTurnEffect.self, forKey: .strategy)
-            
-        case .discardThenDrawEndOfTurn:
-            self.strategy = try values.decode(DiscardThenDrawAtEndOfTurnEffect.self, forKey: .strategy)
-            
-        case .eventPrinter:
-            self.strategy = try values.decode(EventPrinterEffect.self, forKey: .strategy)
-            
-        case .mistForm:
-            self.strategy = try values.decode(CSMistForm.MistFormEffect.self, forKey: .strategy)
-
-        }
-
-    }
-    
-}
-
-extension HandleEffectStrategy {
-    func withWrapper(uuid: UUID) -> Effect {
-        return Effect(uuid: uuid, effect: self)
+        self.owner = try values.decode(UUID.self, forKey: .owner)
+        fatalError()
     }
 }
+
 
 protocol EventHandlerDelegate: AnyObject {
     func onEvent(sender: EventHandler, battleState: BattleState, event: Event)
@@ -173,9 +138,9 @@ class EventHandler: Codable {
     func handle(event: Event, battleState: BattleState) -> Bool {
         
         // Loop through the effect list
-        self.effectList.removeAll { (effect) -> Bool in
-            effect.handle(event: event, state: battleState)
-        }
+//        self.effectList.removeAll { (effect) -> Bool in
+//            effect.handle(event: event, state: battleState)
+//        }
         
         // Post the event to the delegate, this is used to
         // allow the game to perform animation and respond to
@@ -207,8 +172,7 @@ class EventHandler: Codable {
             let enemyTurnsStart = battleState.enemies.map({ Event.onTurnBegan(ActorEvent.init(actorUuid: $0.uuid)) })
             self.enqueue(events: [Event.onTurnBegan(ActorEvent.init(actorUuid: battleState.player.uuid))] + enemyTurnsStart)
             
-        case .onEnemyPlannedTurn(let e):
-            self.effectList.append(e.withWrapper(uuid: UUID()))
+        
         
         case .onTurnBegan(let e):
             
@@ -551,226 +515,7 @@ class EventHandler: Codable {
 }
 
 
-class DiscardThenDrawAtEndOfTurnEffect: HandleEffectStrategy {
-
-    let ownerUuid: UUID
-    let cardsDrawn: Int
-    
-    init(ownerUuid: UUID, cardsDrawn: Int) {
-        self.ownerUuid = ownerUuid
-        self.cardsDrawn = cardsDrawn
-        super.init(
-            identifier: .discardThenDrawEndOfTurn,
-            effectName: "Discard then draw at end of turn"
-        )
-    }
-    
-    override func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
-    
-        switch event {
-            
-        case .onTurnEnded(let e):
-            
-            guard let actor = state.actorWith(uuid: e.actorUuid) else {
-                return false
-            }
-            
-            guard actor.uuid == self.ownerUuid else {
-                return false
-            }
-            
-            state.eventHandler.push(events: [
-                Event.discardHand(ActorEvent.init(actorUuid: e.actorUuid)),
-                Event.willDrawCards(DrawCardsEvent.init(actorUuid: e.actorUuid, amount: 5)),
-                Event.willGainMana(UpdateAmountEvent.init(targetActorUuid: e.actorUuid, sourceUuid: UUID(), amount: 3))
-            ])
-            
-        default:
-            break
-        }
-        
-        return false
-    }
-    
-    // MARK: - Codable Implementation
-    
-    private enum CodingKeys: String, CodingKey {
-        case ownerUuid
-        case cardsDrawn
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        self.ownerUuid = try values.decode(UUID.self, forKey: .ownerUuid)
-        self.cardsDrawn = try values.decode(Int.self, forKey: .cardsDrawn)
-        try super.init(from: decoder)
-    }
-
-    override func encode(to encoder: Encoder) throws {
-        try super.encode(to: encoder)
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.ownerUuid, forKey: .ownerUuid)
-        try container.encode(self.cardsDrawn, forKey: .cardsDrawn)
-    }
-}
 
 
-
-class EventPrinterEffect: HandleEffectStrategy {
-    
-    init() {
-        super.init(identifier: .eventPrinter, effectName: "Event Printer")
-    }
-    
-    required init(from decoder: Decoder) throws {
-        try super.init(from: decoder)
-    }
-    
-    override func handle(event: Event, state: BattleState, effectUuid: UUID) -> Bool {
-
-        switch event {
-            
-        case .playerInputRequired:
-            print("Player input required.")
-            
-        case .onBattleBegan:
-            print("Battle began.")
-            
-        case .onEnemyPlannedTurn(let e):
-            let nameOrUuid = state.actorWith(uuid: e.enemyUuid)?.name ?? e.enemyUuid.uuidString
-            print("\n\(nameOrUuid) planned their next turn.")
-            
-        case .onTurnBegan(let e):
-            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
-            print("\n>>> \(nameOrUuid) began their turn.")
-            
-        case .onTurnEnded(let e):
-            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
-            print("\n<<< \(nameOrUuid) ended their turn.")
-            
-        case .addEffect(let e):
-            print("\(e.effectName) added to effects list.")
-            
-        case .removeEffect(let e):
-            print("\(e.effectName) removed from effects list.")
-            
-        case .willDrawCards(let e):
-            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
-            print("\(nameOrUuid) will draw \(e.amount) cards.")
-            
-        case .drawCard(let e):
-            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
-            print("\(nameOrUuid) drew a card.")
-            
-        case .onCardDrawn(let e):
-            let actor = state.actorWith(uuid: e.actorUuid)
-            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
-            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
-            print("\(nameOrUuid) drew \(cardName).")
-            
-        case .discardCard(let e):
-            let actor = state.actorWith(uuid: e.actorUuid)
-            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
-            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
-            print("\(nameOrUuid) discarded \(cardName).")
-            
-        case .discardHand(let e):
-            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
-            print("\(nameOrUuid) discards their hand.")
-            
-        case .destroyCard(let e):
-            let actor = state.actorWith(uuid: e.actorUuid)
-            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
-            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
-            print("\(nameOrUuid) destroyed \(cardName).")
-            
-        case .expendCard(let e):
-            let actor = state.actorWith(uuid: e.actorUuid)
-            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
-            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
-            print("\(nameOrUuid) expended \(cardName).")
-            
-        case .upgradeCard(let e):
-            let actor = state.actorWith(uuid: e.actorUuid)
-            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
-            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
-            print("\(nameOrUuid) upgraded \(cardName).")
-            
-        case .shuffleDiscardIntoDrawPile(let e):
-            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.uuidString
-            print("\(nameOrUuid) shuffles their discard into their draw pile.")
-            
-        case .willLoseHp(let e):
-            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
-            print("\(nameOrUuid) will lose \(e.amount) hp.")
-            
-        case .willLoseBlock(let e):
-            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
-            print("\(nameOrUuid) will lose \(e.amount) block.")
-            
-        case .didLoseHp(let e):
-            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
-            print("\(nameOrUuid) lost \(e.amount) hp.")
-            
-        case .didLoseBlock(let e):
-            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
-            print("\(nameOrUuid) lost \(e.amount) block.")
-            
-        case .willGainHp(let e):
-            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
-            print("\(nameOrUuid) will gain \(e.amount) hp.")
-            
-        case .willGainBlock(let e):
-            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
-            print("\(nameOrUuid) will gain \(e.amount) block.")
-        
-        case .didGainHp(let e):
-            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
-            print("\(nameOrUuid) gained \(e.amount) hp.")
-            
-        case .didGainBlock(let e):
-            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
-            print("\(nameOrUuid) gained \(e.amount) block.")
-            
-        case .willLoseMana(let e):
-            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
-            print("\(nameOrUuid) lost \(e.amount) mana.")
-            
-        case .willGainMana(let e):
-            let nameOrUuid = state.actorWith(uuid: e.targetActorUuid)?.name ?? e.targetActorUuid.description
-            print("\(nameOrUuid) gained \(e.amount) mana.")
-            
-        case .playCard(let e):
-            let actor = state.actorWith(uuid: e.actorUuid)
-            let cardName = actor?.cardZones.hand.cardWith(uuid: e.cardUuid)?.name ?? e.cardUuid.uuidString
-            let nameOrUuid = actor?.name ?? e.actorUuid.uuidString
-            print("\n\(nameOrUuid) played \(cardName).")
-            
-        case .attack(let e):
-            let nameOrUuid = state.actorWith(uuid: e.sourceOwner)?.name ?? e.sourceOwner.description
-            let targetList = e.targets
-                .compactMap({ state.actorWith(uuid: $0) })
-                .map({ $0.name })
-                .joined(separator: ",")
-            print("\(nameOrUuid) attacked \(targetList) for \(e.amount).")
-            
-        case .onEnemyDefeated(let e):
-            let nameOrUuid = state.actorWith(uuid: e.actorUuid)?.name ?? e.actorUuid.description
-            print("\(nameOrUuid) was defeated.")
-            
-        case .onBattleWon:
-            print("\nPlayer won the battle.")
-            
-        case .onBattleLost:
-            print("\nPlayer lost the battle.")
-            
-        }
-
-        
-        return false
-    }
-    
-    
-}
 
 
