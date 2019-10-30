@@ -13,27 +13,31 @@ protocol BuildingNodeDelegate: AnyObject {
     func onPressed(sender: BuildingNode)
 }
 
-class BuildingNode: SKSpriteNode {
+class BuildingNode: SKNode {
     
     weak var delegate: BuildingNodeDelegate? = nil
     var building: Building? = nil
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.delegate?.onPressed(sender: self)
+    var nameLabel: SKLabelNode? = nil
+    var statusLabel: SKLabelNode? = nil
+    var statusBarForeground: SKSpriteNode? = nil
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.nameLabel = self.getFirstChildRecursive(fn: { (node) -> Bool in node.name == "name" }) as? SKLabelNode
+        self.statusBarForeground = self.getFirstChildRecursive(fn: { (node) -> Bool in node.name == "foreground" }) as? SKSpriteNode
+        self.statusLabel = self.getFirstChildRecursive(fn: { (node) -> Bool in node.name == "title" }) as? SKLabelNode
     }
     
+
     static func newInstance(building: Building, delegate: BuildingNodeDelegate?) -> BuildingNode {
-        // TODO: Make this so it creates everything we need to display a building
-        let node = BuildingNode(imageNamed: "Highlander's_hut")
-        node.size = CGSize(width: 300, height: 400)
-        node.delegate = delegate
-        node.building = building
+        let scene = SKScene(fileNamed: "BuildingNodeScene")
+        let node = scene?.children.first
+        let buildingNode = node as! BuildingNode
         
-        let label = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        label.text = building.descriptiveName()
-        label.fontSize = 14
-        node.addChild(label)
+        buildingNode.building = building
+        building.configureBuildingNode(node: buildingNode)
         
-        return node
+        return buildingNode
     }
 }

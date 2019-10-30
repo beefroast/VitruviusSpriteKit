@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreGraphics
 
 class Building: Codable {
     
@@ -28,6 +29,11 @@ class Building: Codable {
     
     func updateDaysElapsed(deltaDays: Int) {
         self.type.updateDaysElapsed(days: deltaDays)
+    }
+    
+    func configureBuildingNode(node: BuildingNode) {
+        node.nameLabel?.text = self.descriptiveName()
+        type.configureBuildingNode(building: self, node: node)
     }
     
     // MARK: - Codable Implementation
@@ -66,6 +72,7 @@ protocol BuildingType: Codable {
     var maxLevel: Int { get }
     func daysToUpdateFor(level: Int) -> Int
     func updateDaysElapsed(days: Int)
+    func configureBuildingNode(building: Building, node: BuildingNode)
 }
 
 extension BuildingType {
@@ -108,6 +115,8 @@ class BTTavern: BuildingType {
     func updateDaysElapsed(days: Int) {
         // TODO: Handle upgrades
     }
+    
+    func configureBuildingNode(building: Building, node: BuildingNode) {}
 }
 
 class BTJoinery: BuildingType {
@@ -131,6 +140,9 @@ class BTJoinery: BuildingType {
     func updateDaysElapsed(days: Int) {
         // TODO: Handle upgrades
     }
+    
+    func configureBuildingNode(building: Building, node: BuildingNode) {}
+    
 }
 
 enum ForgeState: Int, Codable {
@@ -163,6 +175,23 @@ class BTForge: BuildingType {
     
     func updateDaysElapsed(days: Int) {
         self.daysUntilUpgradeIsComplete = max(0, self.daysUntilUpgradeIsComplete - days)
+    }
+    
+    func configureBuildingNode(building: Building, node: BuildingNode) {
+        
+        let complete = 1.0 - CGFloat(self.daysUntilUpgradeIsComplete) / CGFloat(6)
+        
+        node.statusBarForeground?.xScale = complete
+        
+        if let c = self.upgradingCard {
+            if complete == 1.0 {
+                node.statusLabel?.text = "\(c.name) Upgraded"
+            } else {
+                node.statusLabel?.text = "Upgrading \(c.name)"
+            }
+        } else {
+            node.statusLabel?.text = "Ready"
+        }
     }
 }
 

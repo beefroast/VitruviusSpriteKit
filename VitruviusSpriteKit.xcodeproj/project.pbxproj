@@ -63,6 +63,7 @@
 		6472DF09234B3F80009B75C0 /* CardNodePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF08234B3F80009B75C0 /* CardNodePool.swift */; };
 		6472DF0C234C11B6009B75C0 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0B234C11B6009B75C0 /* Event.swift */; };
 		6472DF0F234C3D0F009B75C0 /* BattleScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0E234C3D0F009B75C0 /* BattleScene.swift */; };
+		64A030982367E76400AF8618 /* BuildingNodeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 64A030972367E76400AF8618 /* BuildingNodeScene.sks */; };
 		64B4546B235EBE9000D43450 /* ViewDeckScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 64B4546A235EBE9000D43450 /* ViewDeckScene.sks */; };
 		64B4546D235EBE9F00D43450 /* ViewDeckScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B4546C235EBE9F00D43450 /* ViewDeckScene.swift */; };
 		64B4546F236158DD00D43450 /* ViewDeckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B4546E236158DD00D43450 /* ViewDeckViewController.swift */; };
@@ -167,6 +168,7 @@
 		6472DF08234B3F80009B75C0 /* CardNodePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNodePool.swift; sourceTree = "<group>"; };
 		6472DF0B234C11B6009B75C0 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		6472DF0E234C3D0F009B75C0 /* BattleScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleScene.swift; sourceTree = "<group>"; };
+		64A030972367E76400AF8618 /* BuildingNodeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BuildingNodeScene.sks; sourceTree = "<group>"; };
 		64B4546A235EBE9000D43450 /* ViewDeckScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ViewDeckScene.sks; sourceTree = "<group>"; };
 		64B4546C235EBE9F00D43450 /* ViewDeckScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDeckScene.swift; sourceTree = "<group>"; };
 		64B4546E236158DD00D43450 /* ViewDeckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDeckViewController.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 			children = (
 				641836232362A85D00FABF66 /* TavernViewController */,
 				64B9AF0D235C211900610AD2 /* TownScene.sks */,
+				64A030972367E76400AF8618 /* BuildingNodeScene.sks */,
 				64B9AF16235D6B6C00610AD2 /* Building.swift */,
 				64B9AF0F235C212F00610AD2 /* TownScene.swift */,
 				641836342364177A00FABF66 /* BuildingNode.swift */,
@@ -592,6 +595,7 @@
 				643588C52345FD92007334D9 /* Assets.xcassets in Resources */,
 				6472DEBB23485553009B75C0 /* ActorArea.sks in Resources */,
 				6472DEBD2348558A009B75C0 /* ActorScene.sks in Resources */,
+				64A030982367E76400AF8618 /* BuildingNodeScene.sks in Resources */,
 				6472DEB52347072F009B75C0 /* CardSceneWood.sks in Resources */,
 				64B4546B235EBE9000D43450 /* ViewDeckScene.sks in Resources */,
 				64B9AF0E235C211900610AD2 /* TownScene.sks in Resources */,

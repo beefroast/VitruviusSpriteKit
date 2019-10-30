@@ -105,6 +105,9 @@ extension HandleEffectStrategy {
 
 protocol EventHandlerDelegate: AnyObject {
     func onEvent(sender: EventHandler, battleState: BattleState, event: Event)
+    func onEventEnqueued(sender: EventHandler, event: Event)
+    func onEventPushed(sender: EventHandler, event: Event)
+    func onEventPopped(sender: EventHandler, event: Event)
 }
 
 

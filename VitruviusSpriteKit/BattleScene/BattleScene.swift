@@ -520,6 +520,20 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
            return
        }
     
+    
+    
+    func onEventPopped(sender: EventHandler, event: Event) {
+        
+    }
+    
+    func onEventPushed(sender: EventHandler, event: Event) {
+        
+    }
+    
+    func onEventEnqueued(sender: EventHandler, event: Event) {
+        
+    }
+    
     // MARK: - EndTurnButtonDelegate Implementation
     
     func endTurnPressed(button: EndTurnButton) {
