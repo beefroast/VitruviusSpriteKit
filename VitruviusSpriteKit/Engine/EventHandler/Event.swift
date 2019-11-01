@@ -43,7 +43,7 @@ enum Event: Codable {
     case playCard(PlayCardEvent)
     case attack(AttackEvent)
     
-    
+    case enemyTurn(UUID)
     case onEnemyDefeated(ActorEvent)
     
     case onBattleWon
@@ -285,6 +285,9 @@ enum Event: Codable {
         case .onEnemyDefeated(let e):
             try container.encode("onEnemyDefeated", forKey: .type)
             try container.encode(e, forKey: .data)
+            
+        case .enemyTurn(let e):
+            fatalError()
             
         case .onBattleWon:
             try container.encode("onBattleWon", forKey: .type)

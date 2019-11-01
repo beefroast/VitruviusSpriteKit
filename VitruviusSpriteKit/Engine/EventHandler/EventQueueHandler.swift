@@ -9,7 +9,6 @@
 import Foundation
 
 
-
 class EventQueueHandler: Codable {
     
     private var eventQueue: PriorityQueue<Event>
@@ -32,10 +31,15 @@ class EventQueueHandler: Codable {
         }
     }
     
-    func popAndHandle(state: GameState) -> Void {
+    func hasCurrentEvent() -> Bool {
+        return self.eventQueue.head?.priority == 0
+    }
+
+    
+    func popAndHandle(state: GameState) -> Event? {
         
-        guard let battleState = state.currentBattle else { return }
-        guard let e = self.eventQueue.popNext() else { return }
+        guard let battleState = state.currentBattle else { return nil }
+        guard let e = self.eventQueue.popNext() else { return nil }
         
         var isEventConsumed: Bool = false
         
@@ -47,7 +51,7 @@ class EventQueueHandler: Codable {
         }
         
         // If the event was consumed, we no longer handle it here
-        if isEventConsumed { return }
+        if isEventConsumed { return nil }
         
         switch e {
             
@@ -67,6 +71,9 @@ class EventQueueHandler: Codable {
                 enemy.planTurn(state: battleState)
             }
             
+            // It's the player's turn
+            _ = self.push(event: Event.playerInputRequired)
+            
             // The player draws their hand
             _ = self.push(event: Event.willDrawCards(DrawCardsEvent.init(actorUuid: battleState.player.uuid, amount: 5)))
             
@@ -85,7 +92,7 @@ class EventQueueHandler: Codable {
             guard actor.cardZones.drawPile.hasDraw() else {
                 guard actor.cardZones.discard.isEmpty == false else {
                     // Cannot draw a card or reshuffle so do nothing instead
-                    return
+                    return nil
                 }
                 
                 // Reshuffle and then draw again
@@ -93,12 +100,12 @@ class EventQueueHandler: Codable {
                     Event.shuffleDiscardIntoDrawPile(ActorEvent.init(actorUuid: e.actorUuid)),
                     Event.drawCard(ActorEvent.init(actorUuid: e.actorUuid))
                 ])
-                return
+                return nil
             }
             
             // Draw a card
             guard let card = actor.cardZones.drawPile.drawRandom(rng: battleState.rng.drawRng) else {
-                return
+                return nil
             }
             
             // Put the card in their hand
@@ -119,7 +126,7 @@ class EventQueueHandler: Codable {
             
         case .upgradeCard(let e):
             guard let card = battleState.actorWith(uuid: e.actorUuid)?.cardZones.hand.cardWith(uuid: e.cardUuid) else {
-                return
+                return nil
             }
             
             // TODO: In the future we might want more than one upgrade
@@ -136,7 +143,7 @@ class EventQueueHandler: Codable {
         case .willDrawCards(let e):
             
             // Enqueue a draw for each in amount
-            guard e.amount > 0 else { return }
+            guard e.amount > 0 else { return nil }
             for _ in 0...e.amount-1 {
                 _ = self.push(event: Event.drawCard(ActorEvent(actorUuid: e.actorUuid)))
             }
@@ -147,7 +154,7 @@ class EventQueueHandler: Codable {
             guard let card = actor.cardZones.hand.cards.first(where: { (c) -> Bool in
                 c.uuid == e.cardUuid
             }) else {
-                return
+                return nil
             }
             
         case .shuffleDiscardIntoDrawPile(let e):
@@ -160,14 +167,14 @@ class EventQueueHandler: Codable {
         case .willLoseHp(let e):
             
             guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {
-                return
+                return nil
             }
             
             // Calculate the amount of lost HP
             let remainingHp = max(actor.body.hp - e.amount, 0)
             let lostHp = actor.body.hp - remainingHp
             guard lostHp > 0 else {
-                return
+                return nil
             }
             actor.body.hp -= lostHp
             self.push(event: Event.didLoseHp(e.with(amount: lostHp)))
@@ -175,14 +182,14 @@ class EventQueueHandler: Codable {
         case .willLoseBlock(let e):
             
             guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {
-                return
+                return nil
             }
             
             // Calculate the amount of lost block
             let remainingBlock = max(actor.body.block - e.amount, 0)
             let lostBlock = actor.body.block - remainingBlock
             guard lostBlock > 0 else {
-                return
+                return nil
             }
             actor.body.block -= lostBlock
             self.push(event: Event.didLoseBlock(e.with(amount: lostBlock)))
@@ -190,7 +197,7 @@ class EventQueueHandler: Codable {
         case .didLoseHp(let e):
             
             guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {
-                return
+                return nil
             }
             
             // TODO: This is a little dodgey
@@ -208,7 +215,7 @@ class EventQueueHandler: Codable {
         case .willGainHp(let e):
             
             guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {
-                return
+                return nil
             }
             
             // Gain up to your maximum HP
@@ -221,7 +228,7 @@ class EventQueueHandler: Codable {
         case .willGainBlock(let e):
             
             guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {
-                return
+                return nil
             }
             
             actor.body.block += e.amount
@@ -235,13 +242,13 @@ class EventQueueHandler: Codable {
             
         case .willGainMana(let e):
             guard let actor = battleState.actorWith(uuid: e.targetActorUuid) as? Player else {
-                return
+                return nil
             }
             actor.currentMana += e.amount
             
         case .willLoseMana(let e):
             guard let actor = battleState.actorWith(uuid: e.targetActorUuid) as? Player else {
-                return
+                return nil
             }
             actor.currentMana = max(actor.currentMana - e.amount, 0)
             
@@ -250,7 +257,7 @@ class EventQueueHandler: Codable {
             let player = battleState.player
 
             guard let card = player.cardZones.hand.cardWith(uuid: e.cardUuid) else {
-                return
+                return nil
             }
             
             // Pay for the card
@@ -293,6 +300,11 @@ class EventQueueHandler: Codable {
             if battleState.enemies.count == 0 {
                 self.push(event: Event.onBattleWon)
             }
+            
+        case .enemyTurn(let uuid):
+            
+            let enemy = battleState.enemies.first { $0.uuid == uuid }
+            enemy?.planTurn(state: battleState)
 
         case .onBattleWon:
             break
@@ -302,6 +314,9 @@ class EventQueueHandler: Codable {
             self.push(event: Event.playerInputRequired)
                 
         }
+        
+        return e
     }
+    
     
 }

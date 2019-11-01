@@ -21,7 +21,7 @@ class BattleViewController: UIViewController, BattleSceneDelegate {
         
         let scene = SKScene(fileNamed: "BattleScene") as! BattleScene
         scene.scaleMode = .aspectFill
-        scene.setBattleState(battleState: self.gameState.currentBattle!)
+        scene.setGameState(gameState: self.gameState)
         scene.battleSceneDelegate = self
         
         

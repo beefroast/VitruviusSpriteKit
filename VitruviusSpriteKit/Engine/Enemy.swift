@@ -74,9 +74,15 @@ class EnemyStrategy: Codable {
 }
 
 class CrabEnemyStrategy: EnemyStrategy {
+    
+    
+    
     override func getStrategyName() -> String { return "crab" }
     
     override func planTurn(enemy: Enemy, state: BattleState) {
+        
+        
+        
         _ = state.eventHandler.push(event:
             Event.attack(AttackEvent.init(sourceUuid: enemy.uuid, sourceOwner: enemy.uuid, targets: [state.player.uuid], amount: 5))
             , priority: 10)

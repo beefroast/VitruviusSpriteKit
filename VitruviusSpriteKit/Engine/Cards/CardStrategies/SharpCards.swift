@@ -58,6 +58,8 @@ class CSFireball: CardStrategy {
         
     func resolve(card: Card, source: Actor, gameState: GameState, target: Actor?) {
         
+        
+        
 //        let targets = battleState.getAllOpponentActors(faction: source.faction).map({ $0.uuid })
 //        
 //        battleState.eventHandler.push(events: [

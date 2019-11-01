@@ -27,7 +27,8 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
     }
 
     
-    var battleState: BattleState!
+    var gameState: GameState!
+    var battleState: BattleState { get { return self.gameState.currentBattle! }}
     var state: State = .waitingForAnimation
     
     var handNode: HandNode!
@@ -45,9 +46,9 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
         super.init(coder: aDecoder)
     }
     
-    func setBattleState(battleState: BattleState) {
+    func setGameState(gameState: GameState) {
         
-        self.battleState = battleState
+        self.gameState = gameState
         
         // Generate the card nodes to be re-used...
         self.cardNodePool = CardNodePool()
@@ -98,10 +99,9 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
         self.arrow.tipNode = self.touchNode
         
         // Push the battle began event
-        self.battleState.eventHandler.push(event: Event.onBattleBegan)
         
         // Now pop the first event of the stack
-        battleState.popNext()
+        self.dispatchPopAndHandle()
 
     }
     
@@ -147,6 +147,334 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
     
     // MARK: - EventHandlerDelegate Implementation
     
+    func dispatchPopAndHandle()  {
+        DispatchQueue.main.async { self.popAndHandle() }
+    }
+    
+    func popAndHandle()  {
+        
+        guard self.battleState.eventHandler.hasCurrentEvent() else {
+            self.battleState.eventHandler.push(event: Event.tick)
+            dispatchPopAndHandle()
+            return
+        }
+        
+        let event = self.battleState.eventHandler.popAndHandle(state: self.gameState)
+        print(event)
+                
+        let state = self.battleState
+        
+        switch event {
+              
+          case .onCardDrawn(let e):
+            
+
+              guard let card = state.player.cardZones.hand.cardWith(uuid: e.cardUuid) else {
+                  self.dispatchPopAndHandle()
+                  return
+              }
+              
+              // Raise the hand
+              self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
+
+              // Make the card
+              let cardNode = self.cardNodePool.getFromPool()
+              cardNode.isUserInteractionEnabled = false
+              cardNode.setupWith(card: card, delegate: self)
+              cardNode.removeFromParent()
+              self.drawNode.addChild(cardNode)
+              
+              cardNode.setScale(0.2)
+              cardNode.alpha = 0.0
+              cardNode.position = CGPoint.zero
+              cardNode.zRotation = 0.0
+              
+              let drawAction = self.handNode.addCardAndAnimationIntoPosiiton(cardNode: cardNode)
+              self.run(drawAction) {
+                  self.dispatchPopAndHandle()
+              }
+              
+              // Update the count on the draw pile
+              if let label = self.drawNode.childNode(withName: "count") as? SKLabelNode {
+                  label.text = "\(self.battleState.player.cardZones.drawPile.count)"
+              }
+              
+          case .discardCard(let e):
+
+              // Find the card
+              guard let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in
+                  (node as? CardNode)?.card.uuid == e.cardUuid
+              }) else {
+                  self.dispatchPopAndHandle()
+                  return
+              }
+              
+              // Remove from the hand
+              self.handNode.removeCardAndAnimateIntoPosition(cardNode: cardNode as! CardNode)
+              
+              // Reparent to the discard node
+              self.discardNode.addChildPreserveTransform(child: cardNode)
+              
+              // Animate it disappearing
+              let discardAction = SKAction.group([
+                  SKAction.fadeAlpha(to: 0.0, duration: 0.2),
+                  SKAction.move(to: CGPoint.zero, duration: 0.2),
+                  SKAction.scale(by: 0.2, duration: 0.2)
+              ])
+              
+              cardNode.run(discardAction) {
+                  self.cardNodePool.returnToPool(cardNode: cardNode as! CardNode)
+              }
+              
+              // Update the count on the discard pile
+              if let label = self.discardNode.childNode(withName: "count") as? SKLabelNode {
+                  label.text = "\(self.battleState.player.cardZones.discard.getCount())"
+              }
+              
+              // Discarding doesn't block
+              self.dispatchPopAndHandle()
+              
+          case .shuffleDiscardIntoDrawPile(_):
+              
+              // Update the count on the draw pile
+              if let label = self.drawNode.childNode(withName: "count") as? SKLabelNode {
+                  label.text = "\(self.battleState.player.cardZones.drawPile.count)"
+              }
+              
+              // Update the count on the discard pile
+              if let label = self.discardNode.childNode(withName: "count") as? SKLabelNode {
+                  label.text = "\(self.battleState.player.cardZones.discard.getCount())"
+              }
+              
+              self.dispatchPopAndHandle()
+              
+              
+              
+          case .playerInputRequired:
+              self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
+              self.handNode.setCardsInteraction(enabled: true)
+              self.endTurnButton.isUserInteractionEnabled = true
+               
+              // Enable/disable each card depending on if we can afford it or not...
+              self.handNode.cards.forEach { (cardNode) in
+                   cardNode.isUserInteractionEnabled = true
+              }
+              
+          case .didLoseHp(let e):
+              
+              guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
+                  self.dispatchPopAndHandle()
+                  return
+              }
+              
+              guard let actorNode = self.playArea.actorNode(withUuid: actor.uuid) else {
+                  self.dispatchPopAndHandle()
+                  return
+              }
+              
+              // Bulge
+              actorNode.isPaused = false
+              actorNode.setScale(1.05)
+              actorNode.run(SKAction.scale(to: 1.0, duration: 0.1)) {
+              }
+              
+              // Update the HP bar
+              let newWidth = 130.0 * (CGFloat(actor.body.hp) / CGFloat(actor.body.maxHp))
+              actorNode.healthBar?.size = CGSize(
+                  width: newWidth,
+                  height: actorNode.healthBar?.size.height ?? 0
+              )
+              actorNode.healthBarText?.text = "\(actor.body.hp)/\(actor.body.maxHp)"
+              
+              // Show a hit counter
+              let label = SKLabelNode(text: "\(e.amount)")
+              label.position = actorNode.getGlobalPosition()
+              label.attributedText = FontHandler().getDamageText(amount: e.amount)
+              
+              self.addChild(label)
+              label.run(SKAction.sequence([
+                  SKAction.group([
+                      SKAction.moveBy(x: 0, y: 100, duration: 0.2),
+                      SKAction.scale(by: 1.5, duration: 0.2)
+                  ]),
+                  SKAction.fadeAlpha(to: 0, duration: 0.2)
+              ])) {
+                  label.removeFromParent()
+              }
+              
+              self.dispatchPopAndHandle()
+              
+          case .didLoseBlock(let e):
+              guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
+                  self.dispatchPopAndHandle()
+                  return
+              }
+              
+              if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
+                  actorNode.setBlock(amount: actor.body.block)
+              }
+              self.dispatchPopAndHandle()
+              
+          case .didGainHp(let e):
+              guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
+                  self.dispatchPopAndHandle()
+                  return
+              }
+              if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
+                  actorNode.details?.text = actor.body.description
+              }
+              self.dispatchPopAndHandle()
+              
+          case .didGainBlock(let e):
+              guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
+                  self.dispatchPopAndHandle()
+                  return
+              }
+              if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
+                  actorNode.setBlock(amount: actor.body.block)
+              }
+              self.dispatchPopAndHandle()
+           
+          case .willLoseMana(let e):
+           if let label = self.manaNode.childNode(withName: "count") as? SKLabelNode {
+               label.text = "\(self.battleState.player.currentMana)"
+           }
+           self.dispatchPopAndHandle()
+           
+          case .willGainMana(let e):
+           if let label = self.manaNode.childNode(withName: "count") as? SKLabelNode {
+               label.text = "\(self.battleState.player.currentMana)"
+           }
+           self.dispatchPopAndHandle()
+              
+          case .attack(let e):
+              guard let ownerActor = state.actorWith(uuid: e.sourceOwner) else {
+                  self.dispatchPopAndHandle()
+                  return
+              }
+              guard let actorNode = self.playArea.actorNode(withUuid: ownerActor.uuid) else {
+                  self.dispatchPopAndHandle()
+                  return
+              }
+              
+              actorNode.isPaused = false
+              
+              let xBump: CGFloat = ownerActor.faction == .player ? 40.0 : -40.0
+              
+              actorNode.run(SKAction.moveBy(x: xBump, y: 0, duration: 0.1)) {
+                  self.dispatchPopAndHandle()
+                  DispatchQueue.main.async {
+                      actorNode.run(SKAction.moveBy(x: -xBump, y: 0, duration: 0.1))
+                  }
+              }
+              
+          case .onEnemyDefeated(let e):
+              guard let a = self.playArea.actorNode(withUuid: e.actorUuid) else {
+                  self.dispatchPopAndHandle()
+                  return
+              }
+              a.run(SKAction.fadeAlpha(to: 0.0, duration: 0.1)) {
+                  a.removeFromParent()
+                  self.dispatchPopAndHandle()
+              }
+            
+        case .enemyTurn(let uuid):
+            self.dispatchPopAndHandle()
+              
+          case .onBattleWon:
+              
+           self.battleSceneDelegate?.onBattleWon(sender: self)
+           self.handNode.setCardsInteraction(enabled: false)
+           
+          case .destroyCard(let e):
+           
+           // Find the card
+           guard let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in
+               (node as? CardNode)?.card.uuid == e.cardUuid
+           }) else {
+               self.dispatchPopAndHandle()
+               return
+           }
+           
+           // Remove from the hand
+           self.handNode.removeCardAndAnimateIntoPosition(cardNode: cardNode as! CardNode)
+           
+           // Animate it disappearing
+           let discardAction = SKAction.group([
+               SKAction.fadeAlpha(to: 0.0, duration: 0.2),
+               SKAction.scale(by: 0.0, duration: 0.2)
+           ])
+           
+           cardNode.run(discardAction) {
+               self.cardNodePool.returnToPool(cardNode: cardNode as! CardNode)
+           }
+
+           
+           // Destroying doesn't block
+           self.dispatchPopAndHandle()
+           
+          case .expendCard(let e):
+           
+           // Find the card
+           guard let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in
+               (node as? CardNode)?.card.uuid == e.cardUuid
+           }) else {
+               self.dispatchPopAndHandle()
+               return
+           }
+           
+           // Remove from the hand
+           self.handNode.removeCardAndAnimateIntoPosition(cardNode: cardNode as! CardNode)
+           
+           // Animate it disappearing
+           let discardAction = SKAction.group([
+               SKAction.fadeAlpha(to: 0.0, duration: 0.2),
+               SKAction.scale(by: 0.0, duration: 0.2)
+           ])
+           
+           cardNode.run(discardAction) {
+               self.cardNodePool.returnToPool(cardNode: cardNode as! CardNode)
+           }
+
+           
+           // Destroying doesn't block
+           self.dispatchPopAndHandle()
+           
+          case .upgradeCard(let e):
+           
+           // Make sure the card has the upgraded text (TODO: Add a visual effect for an upgrade)
+           
+           // Find the card and node
+           guard let card = battleState.actorWith(uuid: e.actorUuid)?.cardZones.hand.cardWith(uuid: e.cardUuid),
+               let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in (node as? CardNode)?.card.uuid == e.cardUuid }) as? CardNode else {
+                   self.dispatchPopAndHandle()
+                   return
+           }
+           
+           cardNode.setupWith(card: card, delegate: self)
+           
+           self.dispatchPopAndHandle()
+           
+           case .playCard(_):
+               self.handNode.setCardsInteraction(enabled: false)
+               self.dispatchPopAndHandle()
+           
+            case .some(.tick): fallthrough
+        case .none: fallthrough
+          case .onBattleBegan: fallthrough
+          case .addEffect(_): fallthrough
+          case .removeEffect(_): fallthrough
+          case .willDrawCards(_): fallthrough
+          case .drawCard(_): fallthrough
+          case .discardHand(_): fallthrough
+          case .willLoseHp(_): fallthrough
+          case .willLoseBlock(_): fallthrough
+          case .willGainHp(_): fallthrough
+          case .willGainBlock(_): fallthrough
+          case .onBattleLost: self.dispatchPopAndHandle()
+        
+        }
+    }
     
 //    func onEvent(sender: EventHandler, battleState: BattleState, event: Event) {
 //
@@ -268,7 +596,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
                         )
                     )
                 )
-                self.battleState.popNext()
+                self.dispatchPopAndHandle()
                 return
                 
             }
@@ -304,7 +632,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
                 target: actorNode.actorUuid
             )))
                 
-            self.battleState.popNext()
+            self.dispatchPopAndHandle()
             
             
         } else {
