@@ -62,7 +62,14 @@ class BattleState: Codable {
     
     static func newInstance(randomSource: RandomnessSource, player: Player, enemies: [Enemy]) -> BattleState {
         
-       fatalError()
+        return BattleState.init(
+            player: player,
+            allies: [],
+            enemies: enemies,
+            eventHandler: EventQueueHandler.init(
+                eventQueue: PriorityQueue.init().withInserted(element: Event.onBattleBegan),
+                effectList: PriorityQueue.init()
+        ), rng: randomSource)
     }
 }
 

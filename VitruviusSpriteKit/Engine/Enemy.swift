@@ -23,8 +23,8 @@ class Enemy: Actor {
         self.enemyStrategy.onBattleBegan(enemy: self, state: state)
     }
 
-    func planTurn(state: BattleState) -> Event {
-        return self.enemyStrategy.planTurn(enemy: self, state: state)
+    func planTurn(state: BattleState)  {
+        self.enemyStrategy.planTurn(enemy: self, state: state)
     }
     
     // Convenience methods
@@ -69,16 +69,17 @@ class Enemy: Actor {
 
 class EnemyStrategy: Codable {
     func getStrategyName() -> String { return "" }
-    func planTurn(enemy: Enemy, state: BattleState) -> Event { fatalError("Must be overriden") }
+    func planTurn(enemy: Enemy, state: BattleState) {  }
     func onBattleBegan(enemy: Enemy, state: BattleState) -> Void {}
 }
 
 class CrabEnemyStrategy: EnemyStrategy {
     override func getStrategyName() -> String { return "crab" }
-    override func planTurn(enemy: Enemy, state: BattleState) -> Event {
-        
-        fatalError()
-        
+    
+    override func planTurn(enemy: Enemy, state: BattleState) {
+        _ = state.eventHandler.push(event:
+            Event.attack(AttackEvent.init(sourceUuid: enemy.uuid, sourceOwner: enemy.uuid, targets: [state.player.uuid], amount: 5))
+            , priority: 10)
     }
     
     func with(challengeRating: Int, rng: RandomIntegerGenerator) -> Enemy {
@@ -95,23 +96,7 @@ class CrabEnemyStrategy: EnemyStrategy {
     }
 }
 
-class SuccubusEnemyStrategy: EnemyStrategy {
-    
-    override func getStrategyName() -> String { return "succubus" }
-    
-    
-    
-    
-    
-    
-    override func planTurn(enemy: Enemy, state: BattleState) -> Event {
-        
-        fatalError()
-    }
-    override func onBattleBegan(enemy: Enemy, state: BattleState)  {
-        
-    }
-}
+
 
 
 

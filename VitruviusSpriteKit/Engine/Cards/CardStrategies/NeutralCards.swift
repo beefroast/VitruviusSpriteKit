@@ -23,31 +23,17 @@ class CSStrike: CardStrategy, Codable {
         return "Attack for \(card.level > 0 ? "9" : "6")"
     }
     
-    func costFor(card: Card) -> Int { return 1 }
+    func costFor(card: Card) -> Int { return 4 }
     
     func resolve(card: Card, source: Actor, gameState: GameState, target: Actor?) {
         
-//        guard let target = target else {
-//            return
-//        }
-//
-//
-//        battleState.eventHandler.push(events: [
-//
-//            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
-//            Event.attack(
-//                 AttackEvent(
-//                    sourceUuid: card.uuid,
-//                     sourceOwner: source.uuid,
-//                     targets: [target.uuid],
-//                     amount: card.level > 0 ? 9 : 6
-//                 )
-//             )
-//
-//        ])
-//
-//
- 
+        guard let battleState = gameState.currentBattle else { return }
+        guard let targetUuid = target?.uuid else { return }
+        
+        battleState.eventHandler.push(events: [
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
+            Event.attack(AttackEvent.init(sourceUuid: card.uuid, sourceOwner: source.uuid, targets: [targetUuid], amount: 6)),
+        ])
     }
     
     func onDrawn(card: Card, source: Actor, gameState: GameState) {}

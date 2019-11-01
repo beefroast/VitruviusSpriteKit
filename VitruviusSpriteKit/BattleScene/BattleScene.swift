@@ -15,7 +15,7 @@ protocol BattleSceneDelegate: AnyObject {
     func onSelectedReward(sender: BattleScene, card: Card?)
 }
 
-class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventHandlerDelegate, ChooseRewardNodeDelegate {
+class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, ChooseRewardNodeDelegate {
 
     weak var battleSceneDelegate: BattleSceneDelegate? = nil
     
@@ -148,40 +148,37 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, EventH
     // MARK: - EventHandlerDelegate Implementation
     
     
-    func onEvent(sender: EventHandler, battleState: BattleState, event: Event) {
-           
-        let state = battleState
-        
-           fatalError()
-       }
-    
-    func onEventPopped(sender: EventHandler, event: Event) {
-        self.updateEventQueueIndicator(eventHandler: sender)
-    }
-    
-    func onEventPushed(sender: EventHandler, event: Event) {
-        self.updateEventQueueIndicator(eventHandler: sender)
-    }
-    
-    func onEventEnqueued(sender: EventHandler, event: Event) {
-        self.updateEventQueueIndicator(eventHandler: sender)
-    }
-    
-    func updateEventQueueIndicator(eventHandler: EventHandler) {
-        print("==== PRINTING EVENT STACK")
-        eventHandler.eventStack.forEach { (event) in
-            print(event)
-        }
-        print("==== EVENT STACK DONE")
-    }
+//    func onEvent(sender: EventHandler, battleState: BattleState, event: Event) {
+//
+//        let state = battleState
+//
+//           fatalError()
+//       }
+//
+//    func onEventPopped(sender: EventHandler, event: Event) {
+//        self.updateEventQueueIndicator(eventHandler: sender)
+//    }
+//
+//    func onEventPushed(sender: EventHandler, event: Event) {
+//        self.updateEventQueueIndicator(eventHandler: sender)
+//    }
+//
+//    func onEventEnqueued(sender: EventHandler, event: Event) {
+//        self.updateEventQueueIndicator(eventHandler: sender)
+//    }
+//
+//    func updateEventQueueIndicator(eventHandler: EventHandler) {
+//        print("==== PRINTING EVENT STACK")
+//        eventHandler.eventStack.forEach { (event) in
+//            print(event)
+//        }
+//        print("==== EVENT STACK DONE")
+//    }
     
     // MARK: - EndTurnButtonDelegate Implementation
     
     func endTurnPressed(button: EndTurnButton) {
-        self.battleState.eventHandler.push(event:
-            Event.onTurnEnded(ActorEvent.init(actorUuid: self.battleState.player.uuid))
-        )
-        self.battleState.popNext()
+        // Do nothing, can no longer end your turn
     }
     
     // MARK: - CardNodeTouchDelegate Implementation

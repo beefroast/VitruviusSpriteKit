@@ -9,14 +9,10 @@
 import Foundation
 
 enum Event: Codable {
-    
 
+    case tick
     case playerInputRequired
-    
     case onBattleBegan
-        
-    case onTurnBegan(ActorEvent)
-    case onTurnEnded(ActorEvent)
     
     case addEffect(Effect)
     case removeEffect(Effect)
@@ -78,14 +74,6 @@ enum Event: Codable {
             
         case "onEnemyPlannedTurn":
             fatalError()
-            
-        case "onTurnBegan":
-            let data = try values.decode(ActorEvent.self, forKey: .data)
-            self = .onTurnBegan(data)
-            
-        case "onTurnEnded":
-            let data = try values.decode(ActorEvent.self, forKey: .data)
-            self = .onTurnEnded(data)
             
         case "addEffect":
             let data = try values.decode(Effect.self, forKey: .data)
@@ -191,6 +179,9 @@ enum Event: Codable {
          var container = encoder.container(keyedBy: CodingKeys.self)
         
         switch self {
+            
+        case .tick:
+            try container.encode("tick", forKey: .type)
         
         case .playerInputRequired:
             try container.encode("playerInputRequired", forKey: .type)
@@ -198,14 +189,6 @@ enum Event: Codable {
         case .onBattleBegan:
             try container.encode("onBattleBegan", forKey: .type)
 
-            
-        case .onTurnBegan(let e):
-            try container.encode("onTurnBegan", forKey:. type)
-            try container.encode(e, forKey: .data)
-            
-        case .onTurnEnded(let e):
-            try container.encode("onTurnEnded", forKey:. type)
-            try container.encode(e, forKey: .data)
             
         case .addEffect(let e):
             try container.encode("addEffect", forKey:. type)

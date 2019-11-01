@@ -81,6 +81,11 @@ class PriorityQueue<T>: Codable where T: Codable {
         return insertedIndex
     }
     
+    func withInserted(element: T, priority: Int = 0) -> PriorityQueue<T> {
+        _ = insert(element: element, priority: priority)
+        return self
+    }
+    
     func popNext() -> T? {
         let value = self.head?.element
         self.head = self.head?.next
