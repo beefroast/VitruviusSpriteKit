@@ -75,17 +75,31 @@ class EnemyStrategy: Codable {
 
 class CrabEnemyStrategy: EnemyStrategy {
     
-    
+    var nextAction: Event? = nil
     
     override func getStrategyName() -> String { return "crab" }
     
     override func planTurn(enemy: Enemy, state: BattleState) {
         
+        // Work out what we're going to do next
+        let nextAction = Event.attack(
+            AttackEvent.init(
+                sourceUuid: enemy.uuid,
+                sourceOwner: enemy.uuid,
+                targets: [state.player.uuid],
+                amount: 5
+            )
+        )
         
+        // Do the last thing we decided we're going to do
+        if let a = self.nextAction {
+            state.eventHandler.push(event: a)
+        }
         
-        _ = state.eventHandler.push(event:
-            Event.attack(AttackEvent.init(sourceUuid: enemy.uuid, sourceOwner: enemy.uuid, targets: [state.player.uuid], amount: 5))
-            , priority: 10)
+        // Queue up our next turn
+        state.eventHandler.push(event: Event.enemyTurn(enemy.uuid), priority: 10)
+        
+        self.nextAction = nextAction
     }
     
     func with(challengeRating: Int, rng: RandomIntegerGenerator) -> Enemy {

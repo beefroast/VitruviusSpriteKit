@@ -164,6 +164,17 @@ class EventQueueHandler: Codable {
             actor.cardZones.discard.removeAll()
             actor.cardZones.drawPile.shuffleIn(cards: discardedCards)
             
+        case .refreshHand:
+            let actor = battleState.player
+            
+            // Costs 5 by default, maybe this can be upgraded
+            self.push(event: Event.playerInputRequired, priority: 5)
+            
+            self.push(events: [
+                Event.discardHand(ActorEvent.init(actorUuid: actor.uuid)),
+                Event.willDrawCards(DrawCardsEvent.init(actorUuid: actor.uuid, amount: 5))
+            ])
+            
         case .willLoseHp(let e):
             
             guard let actor = battleState.actorWith(uuid: e.targetActorUuid) else {

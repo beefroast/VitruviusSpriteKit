@@ -26,6 +26,7 @@ enum Event: Codable {
     case expendCard(CardEvent)
     case upgradeCard(CardEvent)
     case shuffleDiscardIntoDrawPile(ActorEvent)
+    case refreshHand
         
     case willLoseHp(UpdateAmountEvent)
     case willLoseBlock(UpdateAmountEvent)
@@ -233,6 +234,9 @@ enum Event: Codable {
         case .shuffleDiscardIntoDrawPile(let e):
             try container.encode("shuffleDiscardIntoDrawPile", forKey: .type)
             try container.encode(e, forKey: .data)
+            
+        case .refreshHand:
+            fatalError()
             
         case .willLoseHp(let e):
             try container.encode("willLoseHp", forKey: .type)

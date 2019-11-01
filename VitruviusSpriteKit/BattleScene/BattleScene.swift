@@ -248,7 +248,8 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
               
               self.dispatchPopAndHandle()
               
-              
+        case .refreshHand:
+            self.dispatchPopAndHandle()
               
           case .playerInputRequired:
               self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
@@ -506,7 +507,8 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
     // MARK: - EndTurnButtonDelegate Implementation
     
     func endTurnPressed(button: EndTurnButton) {
-        // Do nothing, can no longer end your turn
+        self.battleState.eventHandler.push(event: Event.refreshHand)
+        self.dispatchPopAndHandle()
     }
     
     // MARK: - CardNodeTouchDelegate Implementation
