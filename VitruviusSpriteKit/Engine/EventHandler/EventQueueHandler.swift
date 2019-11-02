@@ -8,9 +8,13 @@
 
 import Foundation
 
+protocol EventQueueHandlerDelegate: AnyObject {
+    func eventQueue(handler: EventQueueHandler, enqueued: EventType, withPriority: Int)
+}
 
 class EventQueueHandler: Codable {
     
+    weak var delegate: EventQueueHandlerDelegate? = nil
     private var eventQueue: PriorityQueue<EventType>
     private var effectList: PriorityQueue<Effect>
     
@@ -21,8 +25,32 @@ class EventQueueHandler: Codable {
         self.effectList = effectList
     }
     
+    // MARK: - Codable Implementation
+    
+    private enum CodingKeys: String, CodingKey {
+        case eventQueue
+        case effectList
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.eventQueue = try values.decode(PriorityQueue<EventType>.self, forKey: .eventQueue)
+        self.effectList = try values.decode(PriorityQueue<Effect>.self, forKey: .effectList)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.eventQueue, forKey: .eventQueue)
+        try container.encode(self.effectList, forKey: .effectList)
+    }
+    
+    
     func push(event: EventType, priority: Int = 0, shouldQueue: Bool = false) {
         _ = self.eventQueue.insert(element: event, priority: priority, shouldQueue: shouldQueue)
+        
+        if priority > 0 || shouldQueue == true {
+            self.delegate?.eventQueue(handler: self, enqueued: event, withPriority: priority)
+        }
     }
     
     func push(events: [EventType]) {

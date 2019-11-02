@@ -15,7 +15,9 @@ protocol BattleSceneDelegate: AnyObject {
     func onSelectedReward(sender: BattleScene, card: Card?)
 }
 
-class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, ChooseRewardNodeDelegate {
+class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, ChooseRewardNodeDelegate, EventQueueHandlerDelegate {
+    
+    
 
     weak var battleSceneDelegate: BattleSceneDelegate? = nil
     
@@ -98,7 +100,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
         
         self.arrow.tipNode = self.touchNode
         
-        // Push the battle began event
+        self.gameState.currentBattle!.eventHandler.delegate = self
         
         // Now pop the first event of the stack
         self.dispatchPopAndHandle()
@@ -626,14 +628,17 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
         
     }
 
-    
-      
-      
-
       
       func touchesCancelled(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
           
       }
+    
+    
+    // MARK: - EventQueueHandlerDelegate Implementation
+    
+    func eventQueue(handler: EventQueueHandler, enqueued: EventType, withPriority: Int) {
+        print("WE CARE ABOUT: \(enqueued)")
+    }
     
 }
 
@@ -755,6 +760,7 @@ class EventQueuePrinterEffect: EffectStrategy {
     
         return EffectResult.noChange
     }
+    
     
     
     
