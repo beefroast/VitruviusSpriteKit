@@ -8,7 +8,8 @@
 
 import Foundation
 
-enum Event: Codable {
+
+enum EventType: Codable {
 
     case tick
     case playerInputRequired
@@ -47,6 +48,8 @@ enum Event: Codable {
     case onEnemyDefeated(ActorEvent)
     
     case concentrationBroken(ActorEvent)
+    case chanelledEvent(ChannelledEvent)
+    case cancelChanelledEvent(UUID)
     
     case onBattleWon
     case onBattleLost
@@ -186,6 +189,12 @@ enum Event: Codable {
             fatalError()
             
         case .concentrationBroken(_):
+            fatalError()
+            
+        case .chanelledEvent(_):
+            fatalError()
+        
+        case .cancelChanelledEvent(_):
             fatalError()
             
         case .tick:
@@ -384,3 +393,5 @@ class UpdateAmountEvent: Codable {
         )
     }
 }
+
+

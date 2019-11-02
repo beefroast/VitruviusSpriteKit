@@ -67,7 +67,7 @@ class BattleState: Codable {
             allies: [],
             enemies: enemies,
             eventHandler: EventQueueHandler.init(
-                eventQueue: PriorityQueue.init().withInserted(element: Event.onBattleBegan),
+                eventQueue: PriorityQueue.init().withInserted(element: EventType.onBattleBegan),
                 effectList: PriorityQueue.init()
         ), rng: randomSource)
     }

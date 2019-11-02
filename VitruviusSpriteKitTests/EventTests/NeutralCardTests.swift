@@ -64,10 +64,10 @@ class NeutralCardTests: XCTestCase {
         )
     }
     
-    func addEventAndRunUntilDone(event: Event) -> Void {
+    func addEventAndRunUntilDone(event: EventType) -> Void {
         
         // Push the player input event so that we stop once we've applied everything
-        self.battleState.eventHandler.push(event: Event.playerInputRequired)
+        self.battleState.eventHandler.push(event: EventType.playerInputRequired)
         
         // Push the event under testing
         self.battleState.eventHandler.push(event: event)
@@ -85,7 +85,7 @@ class NeutralCardTests: XCTestCase {
     func testCardStrike() {
         
         // Push the player input event so that we stop once we've applied everything
-        self.battleState.eventHandler.push(event: Event.playerInputRequired)
+        self.battleState.eventHandler.push(event: EventType.playerInputRequired)
         
         let c = CSStrike().instance()
         

@@ -62,19 +62,68 @@ class CSFireball: CardStrategy {
             return
         }
         
-//        battleState.eventHandler.push(event: Event.addEffect(Effect.))
+        let event = CSFireballEvent.init(uuid: UUID(), sourceUuid: card.uuid, sourceOwner: source.uuid, damage: 8)
+        let channelEffect = event.channelEffect().withEffect(uuid: UUID(), owner: source.uuid)
         
+        battleState.eventHandler.push(events: [
+            EventType.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
+            EventType.addEffect(channelEffect)
+        ])
         
-//        let targets = battleState.getAllOpponentActors(faction: source.faction).map({ $0.uuid })
-//        
-//        battleState.eventHandler.push(events: [
-//            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
-//            Event.attack(AttackEvent.init(sourceUuid: card.uuid, sourceOwner: source.uuid, targets: targets, amount: 8))
-//        ])
-
+        battleState.eventHandler.push(
+            event: EventType.chanelledEvent(event),
+            priority: self.costFor(card: card)
+        )
     }
     
     func onDrawn(card: Card, source: Actor, gameState: GameState) {}
     func onDiscarded(card: Card, source: Actor, gameState: GameState) {}
     
+    class CSFireballEvent: ChannelledEvent {
+        
+        let uuid: UUID
+        let sourceUuid: UUID
+        let sourceOwner: UUID
+        let damage: Int
+        
+        init(
+            uuid: UUID,
+            sourceUuid: UUID,
+            sourceOwner: UUID,
+            damage: Int
+        ) {
+            self.uuid = uuid
+            self.sourceUuid = sourceUuid
+            self.sourceOwner = sourceOwner
+            self.damage = damage
+        }
+        
+        func onChannelled(battleState: BattleState) {
+            battleState.eventHandler.push(
+                event: EventType.attack(
+                    AttackEvent.init(
+                        sourceUuid: sourceUuid,
+                        sourceOwner: sourceOwner,
+                        targets: battleState.enemies.map({ $0.uuid }),
+                        amount: damage
+                    )
+                )
+            )
+        }
+    }
+
+    
+}
+
+protocol ChannelledEvent {
+    var uuid: UUID { get }
+    var sourceUuid: UUID { get }
+    var sourceOwner: UUID { get }
+    func onChannelled(battleState: BattleState)
+}
+
+extension ChannelledEvent {
+    func channelEffect() -> EChannel {
+        return EChannel.init(actorUuid: self.sourceOwner, eventUuid: uuid)
+    }
 }

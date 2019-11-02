@@ -21,7 +21,7 @@ class EventSerializationTests: XCTestCase {
 
     func testEventSerialization() {
         
-        var events: [Event] = []
+        var events: [EventType] = []
         
         // TODO: Need to work out how to serialize effects, probably similiar to what we're doing with
         // cards.
@@ -30,7 +30,7 @@ class EventSerializationTests: XCTestCase {
         events.append(.onBattleBegan)
         
         events.append(.onEnemyPlannedTurn(EnemyTurnEffect.init(enemyUuid: UUID(), name: "Goomba's Turn", events: [
-            Event.onTurnBegan(ActorEvent.init(actorUuid: UUID()))
+            EventType.onTurnBegan(ActorEvent.init(actorUuid: UUID()))
         ])))
 
         events.append(.onTurnBegan(ActorEvent.init(actorUuid: UUID())))
@@ -66,7 +66,7 @@ class EventSerializationTests: XCTestCase {
              
              print(s)
 
-             let deserializedArray = try JSONDecoder().decode([Event].self, from: data)
+             let deserializedArray = try JSONDecoder().decode([EventType].self, from: data)
              
              zip(events, deserializedArray).forEach { (eventPair) in
                  let originalEvent = eventPair.0

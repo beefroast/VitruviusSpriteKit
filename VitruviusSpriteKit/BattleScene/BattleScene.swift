@@ -154,7 +154,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
     func popAndHandle()  {
         
         guard self.battleState.eventHandler.hasCurrentEvent() else {
-            self.battleState.eventHandler.push(event: Event.tick)
+            self.battleState.eventHandler.push(event: EventType.tick)
             dispatchPopAndHandle()
             return
         }
@@ -459,7 +459,8 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
            case .playCard(_):
                self.handNode.setCardsInteraction(enabled: false)
                self.dispatchPopAndHandle()
-           
+            
+        case .cancelChanelledEvent(let uuid): fallthrough
             case .some(.tick): fallthrough
         case .none: fallthrough
           case .onBattleBegan: fallthrough
@@ -473,6 +474,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
           case .willGainHp(_): fallthrough
           case .willGainBlock(_): fallthrough
         case .concentrationBroken(_): fallthrough
+        case .chanelledEvent(_): fallthrough
           case .onBattleLost: self.dispatchPopAndHandle()
         
         
@@ -510,7 +512,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
     // MARK: - EndTurnButtonDelegate Implementation
     
     func endTurnPressed(button: EndTurnButton) {
-        self.battleState.eventHandler.push(event: Event.refreshHand)
+        self.battleState.eventHandler.push(event: EventType.refreshHand)
         self.dispatchPopAndHandle()
     }
     
@@ -594,7 +596,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
                 // We don't need to check for a valid target, we can just play the card...
                 self.state = .waitingForPlayerAction
                 self.battleState.eventHandler.push(
-                    event: Event.playCard(
+                    event: EventType.playCard(
                         PlayCardEvent.init(
                             actorUuid: self.battleState.player.uuid,
                             cardUuid: card.card.uuid
@@ -631,7 +633,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
             self.state = .waitingForPlayerAction
             
             
-            self.battleState.eventHandler.push(event: Event.playCard(PlayCardEvent.init(
+            self.battleState.eventHandler.push(event: EventType.playCard(PlayCardEvent.init(
                 actorUuid: self.battleState.player.uuid,
                 cardUuid: card.card.uuid,
                 target: actorNode.actorUuid

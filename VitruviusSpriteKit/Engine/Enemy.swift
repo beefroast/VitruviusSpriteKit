@@ -28,7 +28,7 @@ class Enemy: Actor {
     }
     
     // Convenience methods
-    func planAttack(state: BattleState, amount: Int) -> Event {
+    func planAttack(state: BattleState, amount: Int) -> EventType {
         fatalError()
     }
     
@@ -75,14 +75,14 @@ class EnemyStrategy: Codable {
 
 class CrabEnemyStrategy: EnemyStrategy {
     
-    var nextAction: Event? = nil
+    var nextAction: EventType? = nil
     
     override func getStrategyName() -> String { return "crab" }
     
     override func planTurn(enemy: Enemy, state: BattleState) {
         
         // Work out what we're going to do next
-        let nextAction = Event.attack(
+        let nextAction = EventType.attack(
             AttackEvent.init(
                 sourceUuid: enemy.uuid,
                 sourceOwner: enemy.uuid,
@@ -97,7 +97,7 @@ class CrabEnemyStrategy: EnemyStrategy {
         }
         
         // Queue up our next turn
-        state.eventHandler.push(event: Event.turnBegan(enemy.uuid), priority: 10)
+        state.eventHandler.push(event: EventType.turnBegan(enemy.uuid), priority: 10)
         
         self.nextAction = nextAction
     }

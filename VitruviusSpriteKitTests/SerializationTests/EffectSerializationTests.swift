@@ -28,7 +28,7 @@ class EffectSerializationTests: XCTestCase {
             let effects = [
                 CSDrain.DrainEffect.init(ownerUuid: UUID(), sourceUuid: UUID()).withWrapper(uuid: UUID()),
                 EnemyTurnEffect.init(enemyUuid: UUID(), name: "TestName", events: [
-                    Event.attack(AttackEvent.init(sourceUuid: UUID(), sourceOwner: UUID(), targets: [UUID()], amount: 42))
+                    EventType.attack(AttackEvent.init(sourceUuid: UUID(), sourceOwner: UUID(), targets: [UUID()], amount: 42))
                 ]).withWrapper(uuid: UUID()),
                 DiscardThenDrawAtEndOfTurnEffect.init(ownerUuid: UUID(), cardsDrawn: 7).withWrapper(uuid: UUID()),
                 EventPrinterEffect().withWrapper(uuid: UUID()),

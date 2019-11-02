@@ -90,7 +90,7 @@ class BattleStateSerializationTests: XCTestCase {
           )
                   
           battleState.eventHandler.push(event:
-              Event.addEffect(
+              EventType.addEffect(
                   DiscardThenDrawAtEndOfTurnEffect(
                       ownerUuid: player.uuid, cardsDrawn: 5
                   ).withWrapper(uuid: UUID())

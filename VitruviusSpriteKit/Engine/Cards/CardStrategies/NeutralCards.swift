@@ -30,9 +30,13 @@ class CSStrike: CardStrategy, Codable {
         guard let battleState = gameState.currentBattle else { return }
         guard let targetUuid = target?.uuid else { return }
         
+        // Pay for the card
+        battleState.eventHandler.push(event: EventType.turnBegan(source.uuid), priority: self.costFor(card: card))
+        
+        // Push the card effects
         battleState.eventHandler.push(events: [
-            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
-            Event.attack(AttackEvent.init(sourceUuid: card.uuid, sourceOwner: source.uuid, targets: [targetUuid], amount: 6)),
+            EventType.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
+            EventType.attack(AttackEvent.init(sourceUuid: card.uuid, sourceOwner: source.uuid, targets: [targetUuid], amount: 6)),
         ])
     }
     
@@ -67,8 +71,8 @@ class CSDefend: CardStrategy {
     
     func resolve(card: Card, source: Actor, gameState: GameState, target: Actor?) {
         gameState.currentBattle!.eventHandler.push(events: [
-            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
-            Event.willGainBlock(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: card.uuid, amount: self.amount(card: card)))
+            EventType.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
+            EventType.willGainBlock(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: card.uuid, amount: self.amount(card: card)))
         
         ])
     }

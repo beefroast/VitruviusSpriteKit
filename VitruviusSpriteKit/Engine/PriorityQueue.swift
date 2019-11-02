@@ -79,7 +79,7 @@ class PriorityQueue<T>: Codable where T: Codable {
     
     init() {}
     
-    func insert(element: T, priority: Int, shouldQueue: Bool = false) -> Int {
+    func insert(element: T, priority: Int = 0, shouldQueue: Bool = false) -> Int {
         var insertedIndex = 0
         let elt = PriorityQueueElement(element: element, priority: priority)
         self.head = self.head?.insert(elt: elt, insertedIndex: &insertedIndex, shouldQueue: shouldQueue) ?? elt

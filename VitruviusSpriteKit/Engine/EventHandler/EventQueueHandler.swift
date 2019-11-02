@@ -11,21 +11,21 @@ import Foundation
 
 class EventQueueHandler: Codable {
     
-    private var eventQueue: PriorityQueue<Event>
+    private var eventQueue: PriorityQueue<EventType>
     private var effectList: PriorityQueue<Effect>
     
     init(
-        eventQueue: PriorityQueue<Event> = PriorityQueue(),
+        eventQueue: PriorityQueue<EventType> = PriorityQueue(),
         effectList: PriorityQueue<Effect> = PriorityQueue()) {
         self.eventQueue = eventQueue
         self.effectList = effectList
     }
     
-    func push(event: Event, priority: Int = 0, shouldQueue: Bool = false) {
+    func push(event: EventType, priority: Int = 0, shouldQueue: Bool = false) {
         _ = self.eventQueue.insert(element: event, priority: priority, shouldQueue: shouldQueue)
     }
     
-    func push(events: [Event]) {
+    func push(events: [EventType]) {
         for e in events.reversed() {
             _ = self.eventQueue.insert(element: e, priority: 0)
         }
@@ -36,7 +36,7 @@ class EventQueueHandler: Codable {
     }
 
     
-    func popAndHandle(state: GameState) -> Event? {
+    func popAndHandle(state: GameState) -> EventType? {
         
         guard let battleState = state.currentBattle else { return nil }
         guard let e = self.eventQueue.popNext() else { return nil }
@@ -63,6 +63,17 @@ class EventQueueHandler: Codable {
         case .playerInputRequired:
             break
             
+        case .chanelledEvent(let e):
+            e.onChannelled(battleState: battleState)
+            
+        case .cancelChanelledEvent(let uuid):
+            self.eventQueue.removeWhere { (e) -> Bool in
+                switch e {
+                case .chanelledEvent(let e): return e.uuid == uuid
+                default: return false
+                }
+            }
+            
         case .onBattleBegan:
             
             // Enemies plan their turns
@@ -72,10 +83,10 @@ class EventQueueHandler: Codable {
             }
             
             // It's the player's turn
-            _ = self.push(event: Event.turnBegan(battleState.player.uuid))
+            _ = self.push(event: EventType.turnBegan(battleState.player.uuid))
             
             // The player draws their hand
-            _ = self.push(event: Event.willDrawCards(DrawCardsEvent.init(actorUuid: battleState.player.uuid, amount: 5)))
+            _ = self.push(event: EventType.willDrawCards(DrawCardsEvent.init(actorUuid: battleState.player.uuid, amount: 5)))
             
         case .addEffect(let effect):
             _ = self.effectList.insert(element: effect, priority: 0)
@@ -97,8 +108,8 @@ class EventQueueHandler: Codable {
                 
                 // Reshuffle and then draw again
                 self.push(events: [
-                    Event.shuffleDiscardIntoDrawPile(ActorEvent.init(actorUuid: e.actorUuid)),
-                    Event.drawCard(ActorEvent.init(actorUuid: e.actorUuid))
+                    EventType.shuffleDiscardIntoDrawPile(ActorEvent.init(actorUuid: e.actorUuid)),
+                    EventType.drawCard(ActorEvent.init(actorUuid: e.actorUuid))
                 ])
                 return nil
             }
@@ -110,7 +121,7 @@ class EventQueueHandler: Codable {
             
             // Put the card in their hand
             actor.cardZones.hand.cards.append(card)
-            _ = self.push(event: Event.onCardDrawn(CardEvent.init(actorUuid: actor.uuid, cardUuid: card.uuid)))
+            _ = self.push(event: EventType.onCardDrawn(CardEvent.init(actorUuid: actor.uuid, cardUuid: card.uuid)))
             
         case .discardCard(let e):
             battleState.player.cardZones.discard(cardUuid: e.cardUuid)
@@ -136,7 +147,7 @@ class EventQueueHandler: Codable {
             let player = battleState.player
             self.push(events:
                 player.cardZones.hand.cards.map({
-                    Event.discardCard(CardEvent.init(actorUuid: player.uuid, cardUuid: $0.uuid))
+                    EventType.discardCard(CardEvent.init(actorUuid: player.uuid, cardUuid: $0.uuid))
                 })
             )
             
@@ -145,7 +156,7 @@ class EventQueueHandler: Codable {
             // Enqueue a draw for each in amount
             guard e.amount > 0 else { return nil }
             for _ in 0...e.amount-1 {
-                _ = self.push(event: Event.drawCard(ActorEvent(actorUuid: e.actorUuid)))
+                _ = self.push(event: EventType.drawCard(ActorEvent(actorUuid: e.actorUuid)))
             }
             
         case .onCardDrawn(let e):
@@ -168,11 +179,11 @@ class EventQueueHandler: Codable {
             let actor = battleState.player
             
             // Costs 5 by default, maybe this can be upgraded
-            self.push(event: Event.playerInputRequired, priority: 5)
+            self.push(event: EventType.playerInputRequired, priority: 5)
             
             self.push(events: [
-                Event.discardHand(ActorEvent.init(actorUuid: actor.uuid)),
-                Event.willDrawCards(DrawCardsEvent.init(actorUuid: actor.uuid, amount: 5))
+                EventType.discardHand(ActorEvent.init(actorUuid: actor.uuid)),
+                EventType.willDrawCards(DrawCardsEvent.init(actorUuid: actor.uuid, amount: 5))
             ])
             
         case .willLoseHp(let e):
@@ -188,7 +199,7 @@ class EventQueueHandler: Codable {
                 return nil
             }
             actor.body.hp -= lostHp
-            self.push(event: Event.didLoseHp(e.with(amount: lostHp)))
+            self.push(event: EventType.didLoseHp(e.with(amount: lostHp)))
             
         case .willLoseBlock(let e):
             
@@ -203,7 +214,7 @@ class EventQueueHandler: Codable {
                 return nil
             }
             actor.body.block -= lostBlock
-            self.push(event: Event.didLoseBlock(e.with(amount: lostBlock)))
+            self.push(event: EventType.didLoseBlock(e.with(amount: lostBlock)))
             
         case .didLoseHp(let e):
             
@@ -211,14 +222,18 @@ class EventQueueHandler: Codable {
                 return nil
             }
             
+            
+            
             // TODO: This is a little dodgey
             if actor.body.hp == 0 {
                 if actor.faction == .enemies {
-                    self.push(event: Event.onEnemyDefeated(ActorEvent.init(actorUuid: actor.uuid)))
+                    self.push(event: EventType.onEnemyDefeated(ActorEvent.init(actorUuid: actor.uuid)))
                 } else if actor.faction == .player {
-                    self.push(event: Event.onBattleLost)
+                    self.push(event: EventType.onBattleLost)
                 }
             }
+            
+            self.eventQueue.insert(element: EventType.concentrationBroken(ActorEvent.init(actorUuid: actor.uuid)))
             
         case .didLoseBlock(let e):
             break
@@ -234,7 +249,7 @@ class EventQueueHandler: Codable {
             let gainedLife = nextHp - actor.body.hp
             actor.body.hp += gainedLife
             let event = e.with(amount: gainedLife)
-            self.push(event: Event.didGainHp(event))
+            self.push(event: EventType.didGainHp(event))
             
         case .willGainBlock(let e):
             
@@ -243,7 +258,7 @@ class EventQueueHandler: Codable {
             }
             
             actor.body.block += e.amount
-            self.push(event: Event.didGainBlock(e))
+            self.push(event: EventType.didGainBlock(e))
             
         case .didGainHp(let e):
             break
@@ -271,8 +286,6 @@ class EventQueueHandler: Codable {
                 return nil
             }
             
-            // Pay for the card
-            self.push(event: Event.playerInputRequired, priority: card.cost)
             
             // Play the card
             card.resolve(source: player, gameState: state, target: e.target.flatMap(battleState.actorWith(uuid:)))
@@ -291,10 +304,10 @@ class EventQueueHandler: Codable {
                 let damageRemaining = e.amount - blockLost
                 
                 if damageRemaining > 0 {
-                    self.push(event: Event.willLoseHp(UpdateAmountEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: damageRemaining)))
+                    self.push(event: EventType.willLoseHp(UpdateAmountEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: damageRemaining)))
                 }
                 
-                self.push(event: Event.willLoseBlock(
+                self.push(event: EventType.willLoseBlock(
                     UpdateAmountEvent.init(targetActorUuid: targetUuid, sourceUuid: e.sourceUuid, amount: blockLost)
                 ))
             }
@@ -309,7 +322,7 @@ class EventQueueHandler: Codable {
             
             // If there's no enemies, post a win event
             if battleState.enemies.count == 0 {
-                self.push(event: Event.onBattleWon)
+                self.push(event: EventType.onBattleWon)
             }
             
         case .turnBegan(let uuid):
@@ -321,7 +334,7 @@ class EventQueueHandler: Codable {
             case .player:
                 // Enqueue the player input required event after anything
                 // that was triggered by the turn starting.
-                self.push(event: Event.playerInputRequired, priority: 0, shouldQueue: true)
+                self.push(event: EventType.playerInputRequired, priority: 0, shouldQueue: true)
                 
             case .enemies:
                 (actor as? Enemy)?.planTurn(state: battleState)
@@ -336,7 +349,7 @@ class EventQueueHandler: Codable {
             
         case .onBattleLost:
             // Push a player input required here
-            self.push(event: Event.playerInputRequired)
+            self.push(event: EventType.playerInputRequired)
          
         case .concentrationBroken(_):
             break

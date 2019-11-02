@@ -63,10 +63,10 @@ class EventTests: XCTestCase {
     }
 
     
-    func addEventAndRunUntilDone(event: Event) -> Void {
+    func addEventAndRunUntilDone(event: EventType) -> Void {
         
         // Push the player input event so that we stop once we've applied everything
-        self.battleState.eventHandler.push(event: Event.playerInputRequired)
+        self.battleState.eventHandler.push(event: EventType.playerInputRequired)
         
         // Push the event under testing
         self.battleState.eventHandler.push(event: event)
@@ -78,7 +78,7 @@ class EventTests: XCTestCase {
     
     func testGainBlock() {
 
-        self.addEventAndRunUntilDone(event: Event.willGainBlock(
+        self.addEventAndRunUntilDone(event: EventType.willGainBlock(
             UpdateAmountEvent.init(
                 targetActorUuid: self.battleState.player.uuid,
                 sourceUuid: UUID(),
@@ -93,7 +93,7 @@ class EventTests: XCTestCase {
     func testLoseBlock() {
 
          // Gain 10 block...
-         self.addEventAndRunUntilDone(event: Event.willGainBlock(
+         self.addEventAndRunUntilDone(event: EventType.willGainBlock(
              UpdateAmountEvent.init(
                  targetActorUuid: self.battleState.player.uuid,
                  sourceUuid: UUID(),
@@ -102,7 +102,7 @@ class EventTests: XCTestCase {
          ))
         
         // Now lose 6 block
-        self.addEventAndRunUntilDone(event: Event.willLoseBlock(
+        self.addEventAndRunUntilDone(event: EventType.willLoseBlock(
             UpdateAmountEvent.init(
                 targetActorUuid: self.battleState.player.uuid,
                 sourceUuid: UUID(),
@@ -118,7 +118,7 @@ class EventTests: XCTestCase {
     func testLoseHp() {
         
         // Lose 6 hp
-        self.addEventAndRunUntilDone(event: Event.willLoseHp(
+        self.addEventAndRunUntilDone(event: EventType.willLoseHp(
             UpdateAmountEvent.init(
                 targetActorUuid: self.battleState.player.uuid,
                 sourceUuid: UUID(),
@@ -134,7 +134,7 @@ class EventTests: XCTestCase {
     func testGainHp() {
         
         // Lose 8 hp
-        self.addEventAndRunUntilDone(event: Event.willLoseHp(
+        self.addEventAndRunUntilDone(event: EventType.willLoseHp(
             UpdateAmountEvent.init(
                 targetActorUuid: self.battleState.player.uuid,
                 sourceUuid: UUID(),
@@ -143,7 +143,7 @@ class EventTests: XCTestCase {
         ))
         
         // Gain 5 hp
-        self.addEventAndRunUntilDone(event: Event.willGainHp(
+        self.addEventAndRunUntilDone(event: EventType.willGainHp(
             UpdateAmountEvent.init(
                 targetActorUuid: self.battleState.player.uuid,
                 sourceUuid: UUID(),

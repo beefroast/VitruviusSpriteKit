@@ -52,7 +52,7 @@ class ActorNode: SKNode {
         }
     }
     
-    func setIntentionToEvents(battleState: BattleState, events: [Event]) -> Void {
+    func setIntentionToEvents(battleState: BattleState, events: [EventType]) -> Void {
         
         // TODO: This should be better
         self.intentionNode?.text = events.map { (e) -> String in

@@ -19,7 +19,7 @@ struct EffectResult {
 }
 
 protocol EffectStrategy: Codable {
-    func handle(effect: Effect, event: Event, gameState: GameState) -> EffectResult
+    func handle(effect: Effect, event: EventType, gameState: GameState) -> EffectResult
 }
 
 extension EffectStrategy {
@@ -40,7 +40,7 @@ class Effect: Codable {
         self.strategy = strategy
     }
     
-    func handle(event: Event, gameState: GameState) -> EffectResult {
+    func handle(event: EventType, gameState: GameState) -> EffectResult {
         self.strategy.handle(effect: self, event: event, gameState: gameState)
     }
     
@@ -77,13 +77,15 @@ class EChannel: EffectStrategy {
         self.eventUuid = eventUuid
     }
     
-    func handle(effect: Effect, event: Event, gameState: GameState) -> EffectResult {
+    func handle(effect: Effect, event: EventType, gameState: GameState) -> EffectResult {
         switch event {
         
         case .concentrationBroken(let e):
             guard e.actorUuid == actorUuid else { return EffectResult.noChange }
-            // TODO: Cancel the event
-            
+            gameState.currentBattle!.eventHandler.push(events: [
+                EventType.cancelChanelledEvent(eventUuid),
+                EventType.turnBegan(actorUuid)
+            ])
             return EffectResult.consumeEffect
             
         default: return EffectResult.noChange
