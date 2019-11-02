@@ -160,7 +160,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
         }
         
         let event = self.battleState.eventHandler.popAndHandle(state: self.gameState)
-        print(event)
                 
         let state = self.battleState
         
@@ -482,33 +481,6 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
         }
     }
     
-//    func onEvent(sender: EventHandler, battleState: BattleState, event: Event) {
-//
-//        let state = battleState
-//
-//           fatalError()
-//       }
-//
-//    func onEventPopped(sender: EventHandler, event: Event) {
-//        self.updateEventQueueIndicator(eventHandler: sender)
-//    }
-//
-//    func onEventPushed(sender: EventHandler, event: Event) {
-//        self.updateEventQueueIndicator(eventHandler: sender)
-//    }
-//
-//    func onEventEnqueued(sender: EventHandler, event: Event) {
-//        self.updateEventQueueIndicator(eventHandler: sender)
-//    }
-//
-//    func updateEventQueueIndicator(eventHandler: EventHandler) {
-//        print("==== PRINTING EVENT STACK")
-//        eventHandler.eventStack.forEach { (event) in
-//            print(event)
-//        }
-//        print("==== EVENT STACK DONE")
-//    }
-    
     // MARK: - EndTurnButtonDelegate Implementation
     
     func endTurnPressed(button: EndTurnButton) {
@@ -662,5 +634,128 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
       func touchesCancelled(card: CardNode, touches: Set<UITouch>, with event: UIEvent?) {
           
       }
+    
+}
+
+
+
+class EventQueuePrinterEffect: EffectStrategy {
+    
+    func actorNameFor(uuid: UUID?, gameState: GameState) -> String {
+        return uuid.flatMap(gameState.currentBattle!.actorWith(uuid:))?.name ?? "(Unknown)"
+    }
+    
+    func handle(effect: Effect, event: EventType, gameState: GameState) -> EffectResult {
+        
+        switch event {
+        
+        case .tick:
+            print("Tick")
+            
+        case .playerInputRequired:
+            print("Player input required")
+            
+        case .onBattleBegan:
+            print("Battle began")
+            
+        case .turnBegan(let uuid):
+            print("\(actorNameFor(uuid: uuid, gameState: gameState))'s turn began")
+            
+        case .addEffect(let effect):
+            print("Adding effect: \(effect.uuid)")
+            
+        case .removeEffect(let effect):
+            print("Removing effect: \(effect.uuid)")
+            
+        case .willDrawCards(let e):
+            print("\(actorNameFor(uuid: e.actorUuid, gameState: gameState)) will draw \(e.amount) cards.")
+            
+        case .drawCard(let e):
+            print("\(actorNameFor(uuid: e.actorUuid, gameState: gameState)) draws card.")
+            
+        case .onCardDrawn(let e):
+            print("\(actorNameFor(uuid: e.actorUuid, gameState: gameState)) drew card.")
+            
+        case .discardCard(let e):
+            break
+            
+        case .discardHand(let e):
+            break
+            
+        case .destroyCard(let e):
+            break
+            
+        case .expendCard(let e):
+            break
+            
+        case .upgradeCard(let e):
+            break
+            
+        case .shuffleDiscardIntoDrawPile(let e):
+            break
+            
+        case .refreshHand:
+            break
+            
+        case .willLoseHp(let e):
+            break
+            
+        case .willLoseBlock(let e):
+            break
+            
+        case .didLoseHp(let e):
+            break
+            
+        case .didLoseBlock(let e):
+            break
+            
+        case .willGainHp(let e):
+            break
+            
+        case .willGainBlock(let e):
+            break
+            
+        case .didGainHp(let e):
+            break
+            
+        case .didGainBlock(let e):
+            break
+            
+        case .willGainMana(let e):
+            break
+            
+        case .willLoseMana(let e):
+            break
+            
+        case .playCard(let e):
+            break
+            
+        case .attack(let e):
+            break
+            
+        case .onEnemyDefeated(let e):
+            break
+            
+        case .concentrationBroken(let e):
+            break
+            
+        case .chanelledEvent(let e):
+            break
+            
+        case .cancelChanelledEvent(let e):
+            break
+            
+        case .onBattleWon:
+            break
+            
+        case .onBattleLost:
+            break
+            
+        }
+    
+        return EffectResult.noChange
+    }
+    
+    
     
 }

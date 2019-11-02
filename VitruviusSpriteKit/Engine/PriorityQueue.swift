@@ -73,6 +73,35 @@ class PriorityQueueElement<T>: Codable where T: Codable {
     
 }
 
+class NoisyPriorityQueue<T>: PriorityQueue<T> where T: Codable {
+    
+    func printSelf() {
+        print("===QUEUE")
+        self.toArray().forEach { (elt) in
+            print("[\(elt.priority)] \(elt.element)")
+        }
+        print("===ENDQUEUE")
+    }
+    
+    override func insert(element: T, priority: Int = 0, shouldQueue: Bool = false) -> Int {
+        let x = super.insert(element: element, priority: priority, shouldQueue: shouldQueue)
+        printSelf()
+        return x
+    }
+    
+    override func popNext() -> T? {
+        let x = super.popNext()
+        printSelf()
+        return x
+    }
+    
+    override func removeWhere(fn: (T) -> Bool) {
+        super.removeWhere(fn: fn)
+        printSelf()
+    }
+    
+}
+
 class PriorityQueue<T>: Codable where T: Codable {
 
     var head: PriorityQueueElement<T>? = nil

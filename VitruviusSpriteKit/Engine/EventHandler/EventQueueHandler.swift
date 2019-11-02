@@ -65,6 +65,7 @@ class EventQueueHandler: Codable {
             
         case .chanelledEvent(let e):
             e.onChannelled(battleState: battleState)
+            self.push(event: EventType.turnBegan(e.sourceOwner), priority: 0, shouldQueue: true)
             
         case .cancelChanelledEvent(let uuid):
             self.eventQueue.removeWhere { (e) -> Bool in
@@ -179,7 +180,7 @@ class EventQueueHandler: Codable {
             let actor = battleState.player
             
             // Costs 5 by default, maybe this can be upgraded
-            self.push(event: EventType.playerInputRequired, priority: 5)
+            self.push(event: EventType.turnBegan(actor.uuid), priority: 5)
             
             self.push(events: [
                 EventType.discardHand(ActorEvent.init(actorUuid: actor.uuid)),

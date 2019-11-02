@@ -56,9 +56,6 @@ class BattleState: Codable {
         return self.actorWith(uuid: uuid)?.name ?? uuid.uuidString
     }
     
-    func popNext() -> Void {
-        
-    }
     
     static func newInstance(randomSource: RandomnessSource, player: Player, enemies: [Enemy]) -> BattleState {
         
@@ -67,8 +64,8 @@ class BattleState: Codable {
             allies: [],
             enemies: enemies,
             eventHandler: EventQueueHandler.init(
-                eventQueue: PriorityQueue.init().withInserted(element: EventType.onBattleBegan),
-                effectList: PriorityQueue.init()
+                eventQueue: NoisyPriorityQueue.init().withInserted(element: EventType.onBattleBegan),
+                effectList: PriorityQueue.init().withInserted(element: EventQueuePrinterEffect().withEffect(uuid: UUID(), owner: UUID()), priority: Int.max)
         ), rng: randomSource)
     }
 }

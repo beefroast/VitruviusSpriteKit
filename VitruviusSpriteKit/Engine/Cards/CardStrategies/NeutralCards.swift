@@ -70,6 +70,10 @@ class CSDefend: CardStrategy {
     }
     
     func resolve(card: Card, source: Actor, gameState: GameState, target: Actor?) {
+        
+        // Pay for the card
+        gameState.currentBattle!.eventHandler.push(event: EventType.turnBegan(source.uuid), priority: self.costFor(card: card))
+        
         gameState.currentBattle!.eventHandler.push(events: [
             EventType.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
             EventType.willGainBlock(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: card.uuid, amount: self.amount(card: card)))

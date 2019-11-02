@@ -28,10 +28,15 @@ class CSRecall : CardStrategy {
     }
     
     func resolve(card: Card, source: Actor, gameState: GameState, target: Actor?) {
-//        battleState.eventHandler.push(events: [
-//            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
-//            Event.willDrawCards(DrawCardsEvent.init(actorUuid: source.uuid, amount: 3))
-//        ])
+        
+        // Pay for the card
+        gameState.currentBattle!.eventHandler.push(event: EventType.turnBegan(source.uuid), priority: self.costFor(card: card))
+        
+        gameState.currentBattle!.eventHandler.push(events: [
+            EventType.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
+            EventType.willDrawCards(DrawCardsEvent.init(actorUuid: source.uuid, amount: 3))
+        ])
+        
     }
     
     func onDrawn(card: Card, source: Actor, gameState: GameState) {}
