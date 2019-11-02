@@ -79,10 +79,10 @@ class PlayerData: Codable {
             CSStrike().instance(),
             CSStrike().instance(),
             CSStrike().instance(),
-            CSStrike().instance(),
-            CSStrike().instance(),
-            CSStrike().instance(),
-            CSStrike().instance(),
+            CSDefend().instance(),
+            CSDefend().instance(),
+            CSDefend().instance(),
+            CSDefend().instance(),
         ]
         
         switch characterClass {

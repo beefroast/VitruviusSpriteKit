@@ -379,7 +379,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
                   self.dispatchPopAndHandle()
               }
             
-        case .enemyTurn(let uuid):
+        case .turnBegan(let uuid):
             self.dispatchPopAndHandle()
               
           case .onBattleWon:
@@ -472,8 +472,11 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
           case .willLoseBlock(_): fallthrough
           case .willGainHp(_): fallthrough
           case .willGainBlock(_): fallthrough
+        case .concentrationBroken(_): fallthrough
           case .onBattleLost: self.dispatchPopAndHandle()
         
+        
+            
         }
     }
     

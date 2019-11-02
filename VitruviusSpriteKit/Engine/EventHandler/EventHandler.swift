@@ -67,6 +67,31 @@ class Effect: Codable {
     }
 }
 
+class EChannel: EffectStrategy {
+    
+    let actorUuid: UUID
+    let eventUuid: UUID
+    
+    init(actorUuid: UUID, eventUuid: UUID) {
+        self.actorUuid = actorUuid
+        self.eventUuid = eventUuid
+    }
+    
+    func handle(effect: Effect, event: Event, gameState: GameState) -> EffectResult {
+        switch event {
+        
+        case .concentrationBroken(let e):
+            guard e.actorUuid == actorUuid else { return EffectResult.noChange }
+            // TODO: Cancel the event
+            
+            return EffectResult.consumeEffect
+            
+        default: return EffectResult.noChange
+        
+        }
+    }
+}
+
 
 //protocol EventHandlerDelegate: AnyObject {
 //    func onEvent(sender: EventHandler, battleState: BattleState, event: Event)

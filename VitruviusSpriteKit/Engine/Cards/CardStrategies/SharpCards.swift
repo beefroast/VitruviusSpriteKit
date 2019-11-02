@@ -43,7 +43,7 @@ class CSFireball: CardStrategy {
     let cardNumber: Int = 7
     
     var name: String = "Fireball"
-    var cardText: String { get { return "Attack each enemy for 8." }}
+    var cardText: String { get { return "Channel. Then deal 8 damage to each enemy." }}
     var requiresSingleTarget: Bool = false
 
     let rarity: CardRarity = CardRarity.basic
@@ -54,10 +54,15 @@ class CSFireball: CardStrategy {
         self.cardText
     }
     
-    func costFor(card: Card) -> Int { return card.level > 0 ? 1 : 2 }
+    func costFor(card: Card) -> Int { return card.level > 0 ? 4 : 3 }
         
     func resolve(card: Card, source: Actor, gameState: GameState, target: Actor?) {
         
+        guard let battleState = gameState.currentBattle else {
+            return
+        }
+        
+//        battleState.eventHandler.push(event: Event.addEffect(Effect.))
         
         
 //        let targets = battleState.getAllOpponentActors(faction: source.faction).map({ $0.uuid })

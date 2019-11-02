@@ -97,7 +97,7 @@ class CrabEnemyStrategy: EnemyStrategy {
         }
         
         // Queue up our next turn
-        state.eventHandler.push(event: Event.enemyTurn(enemy.uuid), priority: 10)
+        state.eventHandler.push(event: Event.turnBegan(enemy.uuid), priority: 10)
         
         self.nextAction = nextAction
     }

@@ -21,8 +21,8 @@ class EventQueueHandler: Codable {
         self.effectList = effectList
     }
     
-    func push(event: Event, priority: Int = 0) {
-        _ = self.eventQueue.insert(element: event, priority: priority)
+    func push(event: Event, priority: Int = 0, shouldQueue: Bool = false) {
+        _ = self.eventQueue.insert(element: event, priority: priority, shouldQueue: shouldQueue)
     }
     
     func push(events: [Event]) {
@@ -72,7 +72,7 @@ class EventQueueHandler: Codable {
             }
             
             // It's the player's turn
-            _ = self.push(event: Event.playerInputRequired)
+            _ = self.push(event: Event.turnBegan(battleState.player.uuid))
             
             // The player draws their hand
             _ = self.push(event: Event.willDrawCards(DrawCardsEvent.init(actorUuid: battleState.player.uuid, amount: 5)))
@@ -312,10 +312,24 @@ class EventQueueHandler: Codable {
                 self.push(event: Event.onBattleWon)
             }
             
-        case .enemyTurn(let uuid):
+        case .turnBegan(let uuid):
             
-            let enemy = battleState.enemies.first { $0.uuid == uuid }
-            enemy?.planTurn(state: battleState)
+            guard let actor = battleState.actorWith(uuid: uuid) else { return nil }
+            
+            switch actor.faction {
+                
+            case .player:
+                // Enqueue the player input required event after anything
+                // that was triggered by the turn starting.
+                self.push(event: Event.playerInputRequired, priority: 0, shouldQueue: true)
+                
+            case .enemies:
+                (actor as? Enemy)?.planTurn(state: battleState)
+                
+            default: return nil
+            }
+            
+            
 
         case .onBattleWon:
             break
@@ -323,7 +337,10 @@ class EventQueueHandler: Codable {
         case .onBattleLost:
             // Push a player input required here
             self.push(event: Event.playerInputRequired)
-                
+         
+        case .concentrationBroken(_):
+            break
+            
         }
         
         return e

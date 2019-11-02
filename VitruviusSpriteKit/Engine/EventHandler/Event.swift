@@ -14,6 +14,7 @@ enum Event: Codable {
     case playerInputRequired
     case onBattleBegan
     
+    case turnBegan(UUID)
     case addEffect(Effect)
     case removeEffect(Effect)
     
@@ -43,9 +44,9 @@ enum Event: Codable {
     
     case playCard(PlayCardEvent)
     case attack(AttackEvent)
-    
-    case enemyTurn(UUID)
     case onEnemyDefeated(ActorEvent)
+    
+    case concentrationBroken(ActorEvent)
     
     case onBattleWon
     case onBattleLost
@@ -181,6 +182,12 @@ enum Event: Codable {
         
         switch self {
             
+        case .turnBegan(_):
+            fatalError()
+            
+        case .concentrationBroken(_):
+            fatalError()
+            
         case .tick:
             try container.encode("tick", forKey: .type)
         
@@ -289,9 +296,6 @@ enum Event: Codable {
         case .onEnemyDefeated(let e):
             try container.encode("onEnemyDefeated", forKey: .type)
             try container.encode(e, forKey: .data)
-            
-        case .enemyTurn(let e):
-            fatalError()
             
         case .onBattleWon:
             try container.encode("onBattleWon", forKey: .type)

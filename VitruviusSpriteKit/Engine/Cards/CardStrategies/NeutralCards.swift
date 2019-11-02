@@ -59,17 +59,18 @@ class CSDefend: CardStrategy {
         return (card.level > 0 ? 8 : 5)
     }
     
-    func costFor(card: Card) -> Int { return 1 }
+    func costFor(card: Card) -> Int { return 3 }
     
     func textFor(card: Card) -> String {
         return "Block for \(amount(card:card))"
     }
     
     func resolve(card: Card, source: Actor, gameState: GameState, target: Actor?) {
-//        battleState.eventHandler.push(events: [
-//            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
-//            Event.willGainBlock(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: card.uuid, amount: self.amount(card: card)))
-//        ])
+        gameState.currentBattle!.eventHandler.push(events: [
+            Event.discardCard(CardEvent.init(actorUuid: source.uuid, cardUuid: card.uuid)),
+            Event.willGainBlock(UpdateAmountEvent.init(targetActorUuid: source.uuid, sourceUuid: card.uuid, amount: self.amount(card: card)))
+        
+        ])
     }
     
     func onDrawn(card: Card, source: Actor, gameState: GameState) {}
