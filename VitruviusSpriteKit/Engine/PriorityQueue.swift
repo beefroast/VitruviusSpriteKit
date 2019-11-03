@@ -21,13 +21,8 @@ class PriorityQueueElement<T>: Codable where T: Codable {
         self.priority = priority
     }
     
-    func insert(elt: PriorityQueueElement<T>, insertedIndex: inout Int, shouldQueue: Bool = false) -> PriorityQueueElement {
-        
-        let appearsBeforeElement = shouldQueue
-            ? elt.priority < self.priority  // If we should queue, we place after each element with the same priority
-            : elt.priority <= self.priority // Otherwise we 'push' it at the start of things with the same priority
-        
-        if appearsBeforeElement {
+    func insert(elt: PriorityQueueElement<T>, insertedIndex: inout Int) -> PriorityQueueElement {
+        if elt.priority <= self.priority {
             elt.next = self
             return elt
         } else {
@@ -83,8 +78,8 @@ class NoisyPriorityQueue<T>: PriorityQueue<T> where T: Codable {
         print("===ENDQUEUE")
     }
     
-    override func insert(element: T, priority: Int = 0, shouldQueue: Bool = false) -> Int {
-        let x = super.insert(element: element, priority: priority, shouldQueue: shouldQueue)
+    override func insert(element: T, priority: Int = 0) -> Int {
+        let x = super.insert(element: element, priority: priority)
         printSelf()
         return x
     }
@@ -108,10 +103,10 @@ class PriorityQueue<T>: Codable where T: Codable {
     
     init() {}
     
-    func insert(element: T, priority: Int = 0, shouldQueue: Bool = false) -> Int {
+    func insert(element: T, priority: Int = 0) -> Int {
         var insertedIndex = 0
         let elt = PriorityQueueElement(element: element, priority: priority)
-        self.head = self.head?.insert(elt: elt, insertedIndex: &insertedIndex, shouldQueue: shouldQueue) ?? elt
+        self.head = self.head?.insert(elt: elt, insertedIndex: &insertedIndex) ?? elt
         return insertedIndex
     }
     

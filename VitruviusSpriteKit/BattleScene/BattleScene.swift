@@ -8,6 +8,7 @@
 
 import UIKit
 import SpriteKit
+import PromiseKit
 
 protocol BattleSceneDelegate: AnyObject {
     func onBattleWon(sender: BattleScene)
@@ -102,8 +103,10 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
         
         self.gameState.currentBattle!.eventHandler.delegate = self
         
+        self.currentAnimationPromise = Promise<Void>.value(())
+        
         // Now pop the first event of the stack
-        self.dispatchPopAndHandle()
+        self.popAndHandle()
 
     }
     
@@ -149,56 +152,75 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
     
     // MARK: - EventHandlerDelegate Implementation
     
-    func dispatchPopAndHandle()  {
-        DispatchQueue.main.async { self.popAndHandle() }
+    var currentAnimationPromise: Promise<Void> = Promise<Void>.value(())
+    
+    func blockOnAnimation(then: @escaping () -> Void) {
+        self.currentAnimationPromise = self.currentAnimationPromise.done(then)
+    }
+    
+    func updateGameStateThenPop() {
+        self.battleState.eventHandler.popAndHandle(state: self.gameState)
+        self.popAndHandle()
     }
     
     func popAndHandle()  {
         
-        guard self.battleState.eventHandler.hasCurrentEvent() else {
-            self.battleState.eventHandler.push(event: EventType.tick)
-            dispatchPopAndHandle()
+        guard let event = self.battleState.eventHandler.hasCurrentEvent() else {
+            
+            // There is no next event, so let's wait until our current animation stack is finished
+            // And then push a tick...
+            
+            self.blockOnAnimation {
+                self.battleState.eventHandler.push(event: EventType.tick)
+                self.updateGameStateThenPop()
+                return
+            }
             return
         }
         
-        let event = self.battleState.eventHandler.popAndHandle(state: self.gameState)
-                
         let state = self.battleState
         
         switch event {
-              
+            
+        case .tick:
+            self.blockOnAnimation {
+                self.updateGameStateThenPop()
+            }
+            
           case .onCardDrawn(let e):
             
+            self.blockOnAnimation {
+             
+                guard let card = state.player.cardZones.hand.cardWith(uuid: e.cardUuid) else {
+                    self.updateGameStateThenPop()
+                    return
+                }
+                
+                // Raise the hand
+                self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
 
-              guard let card = state.player.cardZones.hand.cardWith(uuid: e.cardUuid) else {
-                  self.dispatchPopAndHandle()
-                  return
-              }
-              
-              // Raise the hand
-              self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
-
-              // Make the card
-              let cardNode = self.cardNodePool.getFromPool()
-              cardNode.isUserInteractionEnabled = false
-              cardNode.setupWith(card: card, delegate: self)
-              cardNode.removeFromParent()
-              self.drawNode.addChild(cardNode)
-              
-              cardNode.setScale(0.2)
-              cardNode.alpha = 0.0
-              cardNode.position = CGPoint.zero
-              cardNode.zRotation = 0.0
-              
-              let drawAction = self.handNode.addCardAndAnimationIntoPosiiton(cardNode: cardNode)
-              self.run(drawAction) {
-                  self.dispatchPopAndHandle()
-              }
-              
-              // Update the count on the draw pile
-              if let label = self.drawNode.childNode(withName: "count") as? SKLabelNode {
-                  label.text = "\(self.battleState.player.cardZones.drawPile.count)"
-              }
+                // Make the card
+                let cardNode = self.cardNodePool.getFromPool()
+                cardNode.isUserInteractionEnabled = false
+                cardNode.setupWith(card: card, delegate: self)
+                cardNode.removeFromParent()
+                self.drawNode.addChild(cardNode)
+                
+                cardNode.setScale(0.2)
+                cardNode.alpha = 0.0
+                cardNode.position = CGPoint.zero
+                cardNode.zRotation = 0.0
+                
+                let drawAction = self.handNode.addCardAndAnimationIntoPosiiton(cardNode: cardNode)
+                self.run(drawAction) {
+                    self.updateGameStateThenPop()
+                }
+                
+                // Update the count on the draw pile
+                if let label = self.drawNode.childNode(withName: "count") as? SKLabelNode {
+                    label.text = "\(self.battleState.player.cardZones.drawPile.count)"
+                }
+            }
               
           case .discardCard(let e):
 
@@ -206,7 +228,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
               guard let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in
                   (node as? CardNode)?.card.uuid == e.cardUuid
               }) else {
-                  self.dispatchPopAndHandle()
+                  self.updateGameStateThenPop()
                   return
               }
               
@@ -233,7 +255,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
               }
               
               // Discarding doesn't block
-              self.dispatchPopAndHandle()
+              self.updateGameStateThenPop()
               
           case .shuffleDiscardIntoDrawPile(_):
               
@@ -247,10 +269,10 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
                   label.text = "\(self.battleState.player.cardZones.discard.getCount())"
               }
               
-              self.dispatchPopAndHandle()
+              self.updateGameStateThenPop()
               
         case .refreshHand:
-            self.dispatchPopAndHandle()
+            self.updateGameStateThenPop()
               
           case .playerInputRequired:
               self.handNode.run(SKAction.moveTo(y: -200, duration: 0.2))
@@ -261,16 +283,18 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
               self.handNode.cards.forEach { (cardNode) in
                    cardNode.isUserInteractionEnabled = true
               }
+              self.battleState.eventHandler.popAndHandle(state: self.gameState)
+
               
           case .didLoseHp(let e):
               
               guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
-                  self.dispatchPopAndHandle()
+                  self.updateGameStateThenPop()
                   return
               }
               
               guard let actorNode = self.playArea.actorNode(withUuid: actor.uuid) else {
-                  self.dispatchPopAndHandle()
+                  self.updateGameStateThenPop()
                   return
               }
               
@@ -304,58 +328,58 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
                   label.removeFromParent()
               }
               
-              self.dispatchPopAndHandle()
+              self.updateGameStateThenPop()
               
           case .didLoseBlock(let e):
               guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
-                  self.dispatchPopAndHandle()
+                  self.popAndHandle()
                   return
               }
               
               if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
                   actorNode.setBlock(amount: actor.body.block)
               }
-              self.dispatchPopAndHandle()
+              self.updateGameStateThenPop()
               
           case .didGainHp(let e):
               guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
-                  self.dispatchPopAndHandle()
+                  self.popAndHandle()
                   return
               }
               if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
                   actorNode.details?.text = actor.body.description
               }
-              self.dispatchPopAndHandle()
+              self.updateGameStateThenPop()
               
           case .didGainBlock(let e):
               guard let actor = state.actorWith(uuid: e.targetActorUuid) else {
-                  self.dispatchPopAndHandle()
+                  self.popAndHandle()
                   return
               }
               if let actorNode = self.playArea.actorNode(withUuid: actor.uuid) {
                   actorNode.setBlock(amount: actor.body.block)
               }
-              self.dispatchPopAndHandle()
+              self.updateGameStateThenPop()
            
           case .willLoseMana(let e):
            if let label = self.manaNode.childNode(withName: "count") as? SKLabelNode {
                label.text = "\(self.battleState.player.currentMana)"
            }
-           self.dispatchPopAndHandle()
+           self.updateGameStateThenPop()
            
           case .willGainMana(let e):
            if let label = self.manaNode.childNode(withName: "count") as? SKLabelNode {
                label.text = "\(self.battleState.player.currentMana)"
            }
-           self.dispatchPopAndHandle()
+           self.updateGameStateThenPop()
               
           case .attack(let e):
               guard let ownerActor = state.actorWith(uuid: e.sourceOwner) else {
-                  self.dispatchPopAndHandle()
+                  self.updateGameStateThenPop()
                   return
               }
               guard let actorNode = self.playArea.actorNode(withUuid: ownerActor.uuid) else {
-                  self.dispatchPopAndHandle()
+                  self.updateGameStateThenPop()
                   return
               }
               
@@ -364,7 +388,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
               let xBump: CGFloat = ownerActor.faction == .player ? 40.0 : -40.0
               
               actorNode.run(SKAction.moveBy(x: xBump, y: 0, duration: 0.1)) {
-                  self.dispatchPopAndHandle()
+                  self.updateGameStateThenPop()
                   DispatchQueue.main.async {
                       actorNode.run(SKAction.moveBy(x: -xBump, y: 0, duration: 0.1))
                   }
@@ -372,16 +396,16 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
               
           case .onEnemyDefeated(let e):
               guard let a = self.playArea.actorNode(withUuid: e.actorUuid) else {
-                  self.dispatchPopAndHandle()
+                  self.updateGameStateThenPop()
                   return
               }
               a.run(SKAction.fadeAlpha(to: 0.0, duration: 0.1)) {
                   a.removeFromParent()
-                  self.dispatchPopAndHandle()
+                  self.updateGameStateThenPop()
               }
             
         case .turnBegan(let uuid):
-            self.dispatchPopAndHandle()
+            self.updateGameStateThenPop()
               
           case .onBattleWon:
               
@@ -394,7 +418,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
            guard let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in
                (node as? CardNode)?.card.uuid == e.cardUuid
            }) else {
-               self.dispatchPopAndHandle()
+               self.updateGameStateThenPop()
                return
            }
            
@@ -413,7 +437,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
 
            
            // Destroying doesn't block
-           self.dispatchPopAndHandle()
+           self.updateGameStateThenPop()
            
           case .expendCard(let e):
            
@@ -421,7 +445,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
            guard let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in
                (node as? CardNode)?.card.uuid == e.cardUuid
            }) else {
-               self.dispatchPopAndHandle()
+               self.updateGameStateThenPop()
                return
            }
            
@@ -440,7 +464,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
 
            
            // Destroying doesn't block
-           self.dispatchPopAndHandle()
+           self.updateGameStateThenPop()
            
           case .upgradeCard(let e):
            
@@ -449,21 +473,19 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
            // Find the card and node
            guard let card = battleState.actorWith(uuid: e.actorUuid)?.cardZones.hand.cardWith(uuid: e.cardUuid),
                let cardNode = self.getFirstChildRecursive(fn: { (node) -> Bool in (node as? CardNode)?.card.uuid == e.cardUuid }) as? CardNode else {
-                   self.dispatchPopAndHandle()
+                   self.popAndHandle()
                    return
            }
            
            cardNode.setupWith(card: card, delegate: self)
            
-           self.dispatchPopAndHandle()
+           self.updateGameStateThenPop()
            
            case .playCard(_):
                self.handNode.setCardsInteraction(enabled: false)
-               self.dispatchPopAndHandle()
+               self.updateGameStateThenPop()
             
         case .cancelChanelledEvent(let uuid): fallthrough
-            case .some(.tick): fallthrough
-        case .none: fallthrough
           case .onBattleBegan: fallthrough
           case .addEffect(_): fallthrough
           case .removeEffect(_): fallthrough
@@ -476,10 +498,9 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
           case .willGainBlock(_): fallthrough
         case .concentrationBroken(_): fallthrough
         case .chanelledEvent(_): fallthrough
-          case .onBattleLost: self.dispatchPopAndHandle()
+          case .onBattleLost:
+            self.updateGameStateThenPop()
         
-        
-            
         }
     }
     
@@ -487,7 +508,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
     
     func endTurnPressed(button: EndTurnButton) {
         self.battleState.eventHandler.push(event: EventType.refreshHand)
-        self.dispatchPopAndHandle()
+        self.popAndHandle()
     }
     
     // MARK: - CardNodeTouchDelegate Implementation
@@ -577,7 +598,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
                         )
                     )
                 )
-                self.dispatchPopAndHandle()
+                self.popAndHandle()
                 return
                 
             }
@@ -613,7 +634,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
                 target: actorNode.actorUuid
             )))
                 
-            self.dispatchPopAndHandle()
+            self.popAndHandle()
             
             
         } else {

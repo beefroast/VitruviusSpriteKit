@@ -717,12 +717,14 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-VitruviusSpriteKit/Pods-VitruviusSpriteKit-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CollectionNode/CollectionNode.framework",
+				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CollectionNode.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

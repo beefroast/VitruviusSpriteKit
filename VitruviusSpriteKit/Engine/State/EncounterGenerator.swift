@@ -68,6 +68,14 @@ class EncounterGenerator {
                 body: Body(block: 0, hp: 100, maxHp: 100),
                 cardZones: CardZones.newEmpty(),
                 enemyStrategy: CrabEnemyStrategy()
+            ),
+            Enemy(
+                uuid: UUID(),
+                name: "Crab",
+                faction: .enemies,
+                body: Body(block: 0, hp: 100, maxHp: 100),
+                cardZones: CardZones.newEmpty(),
+                enemyStrategy: CrabEnemyStrategy()
             )
         ])
         

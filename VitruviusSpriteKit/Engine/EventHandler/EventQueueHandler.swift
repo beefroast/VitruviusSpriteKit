@@ -15,12 +15,15 @@ protocol EventQueueHandlerDelegate: AnyObject {
 class EventQueueHandler: Codable {
     
     weak var delegate: EventQueueHandlerDelegate? = nil
+    private var stack: StackQueue<EventType>
     private var eventQueue: PriorityQueue<EventType>
     private var effectList: PriorityQueue<Effect>
     
     init(
+        stack: StackQueue<EventType> = StackQueue(),
         eventQueue: PriorityQueue<EventType> = PriorityQueue(),
         effectList: PriorityQueue<Effect> = PriorityQueue()) {
+        self.stack = stack
         self.eventQueue = eventQueue
         self.effectList = effectList
     }
@@ -28,46 +31,64 @@ class EventQueueHandler: Codable {
     // MARK: - Codable Implementation
     
     private enum CodingKeys: String, CodingKey {
+        case stack
         case eventQueue
         case effectList
     }
     
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.stack = try values.decode(StackQueue<EventType>.self, forKey: .stack)
         self.eventQueue = try values.decode(PriorityQueue<EventType>.self, forKey: .eventQueue)
         self.effectList = try values.decode(PriorityQueue<Effect>.self, forKey: .effectList)
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.stack, forKey: .stack)
         try container.encode(self.eventQueue, forKey: .eventQueue)
         try container.encode(self.effectList, forKey: .effectList)
     }
     
     
-    func push(event: EventType, priority: Int = 0, shouldQueue: Bool = false) {
-        _ = self.eventQueue.insert(element: event, priority: priority, shouldQueue: shouldQueue)
-        
-        if priority > 0 || shouldQueue == true {
-            self.delegate?.eventQueue(handler: self, enqueued: event, withPriority: priority)
-        }
+    func enqueue(event: EventType, ticks: Int) {
+        _ = self.eventQueue.insert(element: event, priority: ticks)
+    }
+    
+    func push(event: EventType) {
+        self.stack.push(elt: event)
     }
     
     func push(events: [EventType]) {
         for e in events.reversed() {
-            _ = self.eventQueue.insert(element: e, priority: 0)
+            self.stack.push(elt: e)
         }
     }
     
-    func hasCurrentEvent() -> Bool {
-        return self.eventQueue.head?.priority == 0
-    }
-
     
+    func hasCurrentEvent() -> EventType? {
+        if let e = self.stack.peek() {
+            return e
+        } else if let e = eventQueue.head {
+            return e.priority == 0 ? e.element : nil
+        }
+        return nil
+    }
+    
+
     func popAndHandle(state: GameState) -> EventType? {
         
         guard let battleState = state.currentBattle else { return nil }
-        guard let e = self.eventQueue.popNext() else { return nil }
+        
+        var nextEvent: EventType?
+        
+        if self.stack.isEmpty == false {
+            nextEvent = self.stack.pop()
+        } else {
+            nextEvent = self.eventQueue.popNext()
+        }
+
+        guard let e = nextEvent else { return nil }
         
         var isEventConsumed: Bool = false
         
@@ -93,7 +114,7 @@ class EventQueueHandler: Codable {
             
         case .chanelledEvent(let e):
             e.onChannelled(battleState: battleState)
-            self.push(event: EventType.turnBegan(e.sourceOwner), priority: 0, shouldQueue: true)
+            self.enqueue(event: EventType.turnBegan(e.sourceOwner), ticks: 0)
             
         case .cancelChanelledEvent(let uuid):
             self.eventQueue.removeWhere { (e) -> Bool in
@@ -208,7 +229,7 @@ class EventQueueHandler: Codable {
             let actor = battleState.player
             
             // Costs 5 by default, maybe this can be upgraded
-            self.push(event: EventType.turnBegan(actor.uuid), priority: 5)
+            self.enqueue(event: EventType.turnBegan(actor.uuid), ticks: 5)
             
             self.push(events: [
                 EventType.discardHand(ActorEvent.init(actorUuid: actor.uuid)),
@@ -361,9 +382,8 @@ class EventQueueHandler: Codable {
             switch actor.faction {
                 
             case .player:
-                // Enqueue the player input required event after anything
-                // that was triggered by the turn starting.
-                self.push(event: EventType.playerInputRequired, priority: 0, shouldQueue: true)
+                // Enqueue the player's input required
+                self.enqueue(event: EventType.playerInputRequired, ticks: 0)
                 
             case .enemies:
                 (actor as? Enemy)?.planTurn(state: battleState)

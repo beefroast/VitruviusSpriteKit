@@ -8,7 +8,7 @@ target 'VitruviusSpriteKit' do
   # Pods for VitruviusSpriteKit
 
    pod 'CollectionNode'
-
+   pod 'PromiseKit'
 
   target 'VitruviusSpriteKitTests' do
     inherit! :search_paths
