@@ -53,6 +53,7 @@ class EventQueueHandler: Codable {
     
     func enqueue(event: EventType, ticks: Int) {
         _ = self.eventQueue.insert(element: event, priority: ticks)
+        self.delegate?.eventQueue(handler: self, enqueued: event, withPriority: ticks)
     }
     
     func push(event: EventType) {
@@ -133,7 +134,7 @@ class EventQueueHandler: Codable {
             }
             
             // It's the player's turn
-            _ = self.push(event: EventType.turnBegan(battleState.player.uuid))
+            self.enqueue(event: EventType.turnBegan(battleState.player.uuid), ticks: 0)
             
             // The player draws their hand
             _ = self.push(event: EventType.willDrawCards(DrawCardsEvent.init(actorUuid: battleState.player.uuid, amount: 5)))

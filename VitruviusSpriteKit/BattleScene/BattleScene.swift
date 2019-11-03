@@ -44,6 +44,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
     var arrow: ArrowNode!
     var touchNode: SKNode!
     var isPickingReward: Bool = false
+    var queuedEventsNode: QueuedEventsNode!
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -104,6 +105,13 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
         self.gameState.currentBattle!.eventHandler.delegate = self
         
         self.currentAnimationPromise = Promise<Void>.value(())
+
+        // Add a queued events node
+        let queuedEventsNode = QueuedEventsNode()
+        self.addChild(queuedEventsNode)
+        queuedEventsNode.position = CGPoint.init(x: -self.size.width/2.0 + 200, y: self.size.height/2.0 - 100)
+        self.queuedEventsNode = queuedEventsNode
+        self.queuedEventsNode.setupTurnBeginsNodes(actors: [playerActorNode] + enemyNodes)
         
         // Now pop the first event of the stack
         self.popAndHandle()
@@ -172,7 +180,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
             
             self.blockOnAnimation {
                 self.battleState.eventHandler.push(event: EventType.tick)
-                self.updateGameStateThenPop()
+                self.popAndHandle()
                 return
             }
             return
@@ -184,7 +192,9 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
             
         case .tick:
             self.blockOnAnimation {
-                self.updateGameStateThenPop()
+                self.queuedEventsNode.animateTick().done { (_) in
+                    self.updateGameStateThenPop()
+                }
             }
             
           case .onCardDrawn(let e):
@@ -658,7 +668,7 @@ class BattleScene: SKScene, EndTurnButtonDelegate, CardNodeTouchDelegate, Choose
     // MARK: - EventQueueHandlerDelegate Implementation
     
     func eventQueue(handler: EventQueueHandler, enqueued: EventType, withPriority: Int) {
-        print("WE CARE ABOUT: \(enqueued)")
+        self.queuedEventsNode.handleEnqueuedEvent(event: enqueued, time: withPriority)
     }
     
 }

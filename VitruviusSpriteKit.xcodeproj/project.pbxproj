@@ -67,6 +67,7 @@
 		6472DF0C234C11B6009B75C0 /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0B234C11B6009B75C0 /* EventType.swift */; };
 		6472DF0F234C3D0F009B75C0 /* BattleScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6472DF0E234C3D0F009B75C0 /* BattleScene.swift */; };
 		647ED9AE236D3E2500ACF452 /* QueuedEventsNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647ED9AD236D3E2500ACF452 /* QueuedEventsNode.swift */; };
+		647ED9B0236E668B00ACF452 /* SKActionPromiseExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647ED9AF236E668B00ACF452 /* SKActionPromiseExtension.swift */; };
 		64A030982367E76400AF8618 /* BuildingNodeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 64A030972367E76400AF8618 /* BuildingNodeScene.sks */; };
 		64B4546B235EBE9000D43450 /* ViewDeckScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 64B4546A235EBE9000D43450 /* ViewDeckScene.sks */; };
 		64B4546D235EBE9F00D43450 /* ViewDeckScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B4546C235EBE9F00D43450 /* ViewDeckScene.swift */; };
@@ -176,6 +177,7 @@
 		6472DF0B234C11B6009B75C0 /* EventType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventType.swift; sourceTree = "<group>"; };
 		6472DF0E234C3D0F009B75C0 /* BattleScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleScene.swift; sourceTree = "<group>"; };
 		647ED9AD236D3E2500ACF452 /* QueuedEventsNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueuedEventsNode.swift; sourceTree = "<group>"; };
+		647ED9AF236E668B00ACF452 /* SKActionPromiseExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKActionPromiseExtension.swift; sourceTree = "<group>"; };
 		64A030972367E76400AF8618 /* BuildingNodeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BuildingNodeScene.sks; sourceTree = "<group>"; };
 		64B4546A235EBE9000D43450 /* ViewDeckScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ViewDeckScene.sks; sourceTree = "<group>"; };
 		64B4546C235EBE9F00D43450 /* ViewDeckScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDeckScene.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 			isa = PBXGroup;
 			children = (
 				6472DF0E234C3D0F009B75C0 /* BattleScene.swift */,
+				647ED9AF236E668B00ACF452 /* SKActionPromiseExtension.swift */,
 				647ED9AD236D3E2500ACF452 /* QueuedEventsNode.swift */,
 				6472DEB223461A7E009B75C0 /* BattleScene.sks */,
 				641836262362B28400FABF66 /* BattleViewController.swift */,
@@ -775,6 +778,7 @@
 				643588C02345FD8F007334D9 /* GameViewController.swift in Sources */,
 				64FF02CD235588540000C93E /* SeededRandomNumberGenerator.swift in Sources */,
 				6472DF032349D8B4009B75C0 /* CardNodeImageProvider.swift in Sources */,
+				647ED9B0236E668B00ACF452 /* SKActionPromiseExtension.swift in Sources */,
 				643588B82345FD8F007334D9 /* AppDelegate.swift in Sources */,
 				6472DEF823487BAE009B75C0 /* IBody.swift in Sources */,
 				644450D6236172B2002567FF /* TownViewController.swift in Sources */,
